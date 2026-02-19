@@ -1,0 +1,4277 @@
+[
+  {
+    "name": "Crop Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "crops",
+      "consulting",
+      "farming"
+    ]
+  },
+  {
+    "name": "Rice Cultivation Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "rice",
+      "cereal crops",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Wheat Farming Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "wheat",
+      "cereal crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Maize Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "maize",
+      "corn",
+      "cereal crops"
+    ]
+  },
+  {
+    "name": "Vegetable Crop Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "vegetables",
+      "horticulture",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Fruit Cultivation Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "fruits",
+      "orchards",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Spice Farming Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "spices",
+      "specialty crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Oilseed Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "oilseeds",
+      "crops",
+      "production"
+    ]
+  },
+  {
+    "name": "Legume Farming Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "legumes",
+      "pulses",
+      "nitrogen-fixing"
+    ]
+  },
+  {
+    "name": "Medicinal Plant Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "medicinal plants",
+      "herbs",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Floriculture Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "flowers",
+      "floriculture",
+      "horticulture"
+    ]
+  },
+  {
+    "name": "Tea Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "tea",
+      "plantation crops",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Coffee Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "coffee",
+      "plantation crops",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Cotton Farming Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "cotton",
+      "fiber crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Potato Cultivation Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "potatoes",
+      "tuber crops",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Sugarcane Farming Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "sugarcane",
+      "industrial crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Tobacco Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "tobacco",
+      "cash crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "High-Value Crop Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "high-value crops",
+      "specialty crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Specialty Crop Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "specialty crops",
+      "niche farming",
+      "consulting"
+    ]
+  },
+  {
+    "name": "Greenhouse Technician",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "greenhouse",
+      "controlled environment",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Vertical Farming Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "vertical farming",
+      "urban agriculture",
+      "modern"
+    ]
+  },
+  {
+    "name": "Hydroponics Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "hydroponics",
+      "soilless cultivation",
+      "modern"
+    ]
+  },
+  {
+    "name": "Aquaponics Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "aquaponics",
+      "integrated systems",
+      "modern"
+    ]
+  },
+  {
+    "name": "Drip Irrigation Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "drip irrigation",
+      "irrigation technology",
+      "water-saving"
+    ]
+  },
+  {
+    "name": "Intercropping Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "intercropping",
+      "mixed cropping",
+      "farming systems"
+    ]
+  },
+  {
+    "name": "Crop Rotation Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "crop rotation",
+      "soil health",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Seed Technology Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "seeds",
+      "technology",
+      "genetics"
+    ]
+  },
+  {
+    "name": "Plant Breeding Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "plant breeding",
+      "genetics",
+      "improvement"
+    ]
+  },
+  {
+    "name": "Nursery Management Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "nursery",
+      "plant propagation",
+      "management"
+    ]
+  },
+  {
+    "name": "Urban Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "urban farming",
+      "city farming",
+      "modern agriculture"
+    ]
+  },
+  {
+    "name": "Livestock Nutritionist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "livestock",
+      "nutrition",
+      "animal health"
+    ]
+  },
+  {
+    "name": "Dairy Farming Expert",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy",
+      "cattle",
+      "milk production"
+    ]
+  },
+  {
+    "name": "Poultry Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "poultry",
+      "chicken",
+      "eggs"
+    ]
+  },
+  {
+    "name": "Goat Farming Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "goats",
+      "small ruminants",
+      "farming"
+    ]
+  },
+  {
+    "name": "Sheep Farming Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "sheep",
+      "small ruminants",
+      "farming"
+    ]
+  },
+  {
+    "name": "Fish Farming Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "aquaculture",
+      "fish",
+      "water-based"
+    ]
+  },
+  {
+    "name": "Shrimp Farming Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "aquaculture",
+      "shrimp",
+      "water-based"
+    ]
+  },
+  {
+    "name": "Beekeeping Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "beekeeping",
+      "honey",
+      "pollination"
+    ]
+  },
+  {
+    "name": "Livestock Breeding Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "breeding",
+      "genetics",
+      "animal improvement"
+    ]
+  },
+  {
+    "name": "Livestock Health Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "animal health",
+      "veterinary",
+      "disease management"
+    ]
+  },
+  {
+    "name": "Veterinary Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "veterinary",
+      "animal health",
+      "disease"
+    ]
+  },
+  {
+    "name": "Cattle Nutritionist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "cattle",
+      "nutrition",
+      "feed management"
+    ]
+  },
+  {
+    "name": "Dairy Nutritionist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy",
+      "nutrition",
+      "milk production"
+    ]
+  },
+  {
+    "name": "Duck Farming Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "ducks",
+      "poultry",
+      "water birds"
+    ]
+  },
+  {
+    "name": "Livestock Marketing Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "marketing",
+      "sales",
+      "livestock trade"
+    ]
+  },
+  {
+    "name": "Livestock Waste Management Expert",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "waste management",
+      "manure",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Milk Processing Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "milk processing",
+      "dairy",
+      "value addition"
+    ]
+  },
+  {
+    "name": "Meat Production Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "meat",
+      "production",
+      "processing"
+    ]
+  },
+  {
+    "name": "Egg Production Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "eggs",
+      "poultry",
+      "production"
+    ]
+  },
+  {
+    "name": "Honey Production Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "honey",
+      "beekeeping",
+      "value addition"
+    ]
+  },
+  {
+    "name": "Livestock Cooperative Organizer",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "cooperatives",
+      "organization",
+      "collective farming"
+    ]
+  },
+  {
+    "name": "Livestock Finance Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "finance",
+      "credit",
+      "livestock"
+    ]
+  },
+  {
+    "name": "Livestock Insurance Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "insurance",
+      "risk management",
+      "livestock"
+    ]
+  },
+  {
+    "name": "Livestock Extension Officer",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "extension",
+      "farmer training",
+      "knowledge transfer"
+    ]
+  },
+  {
+    "name": "Livestock Sustainability Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "sustainability",
+      "environment",
+      "livestock"
+    ]
+  },
+  {
+    "name": "Soil Scientist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "soil",
+      "science",
+      "soil health"
+    ]
+  },
+  {
+    "name": "Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation",
+      "water management",
+      "planning"
+    ]
+  },
+  {
+    "name": "Water Management Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water management",
+      "irrigation",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Water Harvesting Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water harvesting",
+      "water conservation",
+      "rainwater"
+    ]
+  },
+  {
+    "name": "Nutrient Management Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "nutrients",
+      "fertilizer",
+      "soil health"
+    ]
+  },
+  {
+    "name": "Fertilizer Management Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "fertilizer",
+      "nutrient management",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Composting Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "composting",
+      "waste management",
+      "organic matter"
+    ]
+  },
+  {
+    "name": "Vermicomposting Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "vermicomposting",
+      "organic matter",
+      "worms"
+    ]
+  },
+  {
+    "name": "Biofertilizer Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "biofertilizer",
+      "microorganisms",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Mulching Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "mulching",
+      "soil conservation",
+      "water retention"
+    ]
+  },
+  {
+    "name": "Erosion Control Advisor",
+    "category": "Soil & Water Management",
+    "tags": [
+      "erosion",
+      "soil conservation",
+      "water management"
+    ]
+  },
+  {
+    "name": "Nitrogen Management Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "nitrogen",
+      "nutrient management",
+      "fertilizer"
+    ]
+  },
+  {
+    "name": "Water Quality Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water quality",
+      "testing",
+      "irrigation"
+    ]
+  },
+  {
+    "name": "Micro-irrigation Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "micro-irrigation",
+      "drip",
+      "sprinkler"
+    ]
+  },
+  {
+    "name": "Soil Health Consultant",
+    "category": "Soil & Water Management",
+    "tags": [
+      "soil health",
+      "fertility",
+      "productivity"
+    ]
+  },
+  {
+    "name": "Groundwater Advisor",
+    "category": "Soil & Water Management",
+    "tags": [
+      "groundwater",
+      "water",
+      "management"
+    ]
+  },
+  {
+    "name": "Soil Testing Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "soil testing",
+      "analysis",
+      "diagnostics"
+    ]
+  },
+  {
+    "name": "Green Manure Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "green manure",
+      "cover crops",
+      "soil improvement"
+    ]
+  },
+  {
+    "name": "Manure Management Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "manure",
+      "organic matter",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Drought Management Advisor",
+    "category": "Soil & Water Management",
+    "tags": [
+      "drought",
+      "water scarcity",
+      "adaptation"
+    ]
+  },
+  {
+    "name": "Salinity Management Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "salinity",
+      "soil health",
+      "reclamation"
+    ]
+  },
+  {
+    "name": "Soil Mapping Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "soil mapping",
+      "GIS",
+      "technology"
+    ]
+  },
+  {
+    "name": "Xeriscaping Consultant",
+    "category": "Soil & Water Management",
+    "tags": [
+      "dry farming",
+      "water conservation",
+      "drought"
+    ]
+  },
+  {
+    "name": "Sustainable Water Management Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "sustainability",
+      "water management",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Rainwater Harvesting Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "rainwater",
+      "water harvesting",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Integrated Pest Management (IPM) Expert",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "IPM",
+      "pest control",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Plant Pathologist",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "plant diseases",
+      "pathology",
+      "disease management"
+    ]
+  },
+  {
+    "name": "Crop Disease Management Expert",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "crop disease",
+      "disease management",
+      "prevention"
+    ]
+  },
+  {
+    "name": "Entomologist (Insect Control)",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "insects",
+      "pest control",
+      "entomology"
+    ]
+  },
+  {
+    "name": "Biocontrol Specialist",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "biocontrol",
+      "biological control",
+      "natural enemies"
+    ]
+  },
+  {
+    "name": "Weed Control Advisor",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "weeds",
+      "weed management",
+      "herbicides"
+    ]
+  },
+  {
+    "name": "Organic Pest Control Advisor",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "organic",
+      "pest control",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Non-chemical Pest Control Expert",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "non-chemical",
+      "organic",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Nematology Specialist",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "nematodes",
+      "soil pests",
+      "disease"
+    ]
+  },
+  {
+    "name": "Biosecurity Advisor",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "biosecurity",
+      "disease prevention",
+      "quarantine"
+    ]
+  },
+  {
+    "name": "Crop Protection Advisor",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "crop protection",
+      "pest management",
+      "disease"
+    ]
+  },
+  {
+    "name": "Disease Diagnostics Specialist",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "disease diagnostics",
+      "testing",
+      "identification"
+    ]
+  },
+  {
+    "name": "Insect Control Consultant",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "insects",
+      "pest control",
+      "damage management"
+    ]
+  },
+  {
+    "name": "Biological Pest Control Expert",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "biological control",
+      "natural enemies",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Pest Monitoring Specialist",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "pest monitoring",
+      "surveillance",
+      "early detection"
+    ]
+  },
+  {
+    "name": "Organic Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic",
+      "sustainable",
+      "chemical-free"
+    ]
+  },
+  {
+    "name": "Regenerative Agriculture Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "regenerative",
+      "sustainability",
+      "soil health"
+    ]
+  },
+  {
+    "name": "Natural Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "natural farming",
+      "organic",
+      "sustainable"
+    ]
+  },
+  {
+    "name": "Climate Smart Agriculture Expert",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "climate change",
+      "adaptation",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Carbon Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "carbon",
+      "climate change",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Agroforestry Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "agroforestry",
+      "trees",
+      "integrated farming"
+    ]
+  },
+  {
+    "name": "Permaculture Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "permaculture",
+      "sustainable design",
+      "organic"
+    ]
+  },
+  {
+    "name": "Zero Budget Natural Farming (ZBNF) Coach",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "ZBNF",
+      "zero budget",
+      "natural farming"
+    ]
+  },
+  {
+    "name": "Biodiversity Conservation Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "biodiversity",
+      "conservation",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Forest Farming Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "forest farming",
+      "agroforestry",
+      "trees"
+    ]
+  },
+  {
+    "name": "Indigenous Farming Practices Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "indigenous",
+      "traditional",
+      "local knowledge"
+    ]
+  },
+  {
+    "name": "Organic Certification Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic certification",
+      "compliance",
+      "standards"
+    ]
+  },
+  {
+    "name": "Non-GMO Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "non-GMO",
+      "organic",
+      "natural"
+    ]
+  },
+  {
+    "name": "Eco-Farming Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "eco-farming",
+      "sustainable",
+      "environmental"
+    ]
+  },
+  {
+    "name": "Sustainable Farming Strategist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "sustainable",
+      "strategy",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Wildlife Conservation in Agriculture Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "wildlife",
+      "conservation",
+      "biodiversity"
+    ]
+  },
+  {
+    "name": "Environmental Farming Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "environment",
+      "sustainability",
+      "farming"
+    ]
+  },
+  {
+    "name": "Mixed Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "mixed farming",
+      "integrated systems",
+      "diversification"
+    ]
+  },
+  {
+    "name": "Transition Farming Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "transition",
+      "organic conversion",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Farm Sustainability Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "sustainability",
+      "farm management",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Precision Agriculture Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "precision agriculture",
+      "technology",
+      "data"
+    ]
+  },
+  {
+    "name": "Smart Farming Technology Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "smart farming",
+      "IoT",
+      "technology"
+    ]
+  },
+  {
+    "name": "Digital Farming Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "digital",
+      "technology",
+      "data"
+    ]
+  },
+  {
+    "name": "Agricultural Drone Technician",
+    "category": "Technology & Innovation",
+    "tags": [
+      "drones",
+      "UAV",
+      "technology"
+    ]
+  },
+  {
+    "name": "Agricultural Data Analyst",
+    "category": "Technology & Innovation",
+    "tags": [
+      "data analysis",
+      "analytics",
+      "technology"
+    ]
+  },
+  {
+    "name": "Geographic Information Systems (GIS) in Agriculture Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "GIS",
+      "mapping",
+      "technology"
+    ]
+  },
+  {
+    "name": "Mobile Agri-Tech Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "mobile",
+      "technology",
+      "app-based"
+    ]
+  },
+  {
+    "name": "Farm Technology Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "technology",
+      "farm management",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Biotechnology in Agriculture Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "biotechnology",
+      "genetic engineering",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Plant Tissue Culture Expert",
+    "category": "Technology & Innovation",
+    "tags": [
+      "tissue culture",
+      "biotechnology",
+      "propagation"
+    ]
+  },
+  {
+    "name": "Bioinformatics in Agriculture Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "bioinformatics",
+      "data",
+      "genetics"
+    ]
+  },
+  {
+    "name": "Crop Biotechnology Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "biotechnology",
+      "crop improvement",
+      "genetics"
+    ]
+  },
+  {
+    "name": "X-ray Technology in Agriculture Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "X-ray",
+      "quality",
+      "inspection"
+    ]
+  },
+  {
+    "name": "Automation in Agriculture Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "automation",
+      "technology",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Agricultural Equipment Advisor",
+    "category": "Technology & Innovation",
+    "tags": [
+      "equipment",
+      "machinery",
+      "technology"
+    ]
+  },
+  {
+    "name": "Tractor & Equipment Advisor",
+    "category": "Technology & Innovation",
+    "tags": [
+      "tractor",
+      "equipment",
+      "mechanization"
+    ]
+  },
+  {
+    "name": "Farm Machinery Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "machinery",
+      "equipment",
+      "mechanization"
+    ]
+  },
+  {
+    "name": "Mechanization Advisor",
+    "category": "Technology & Innovation",
+    "tags": [
+      "mechanization",
+      "equipment",
+      "technology"
+    ]
+  },
+  {
+    "name": "Agricultural Economist",
+    "category": "Business & Economics",
+    "tags": [
+      "economics",
+      "market analysis",
+      "policy"
+    ]
+  },
+  {
+    "name": "Agricultural Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "finance",
+      "credit",
+      "farm management"
+    ]
+  },
+  {
+    "name": "Farm Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "finance",
+      "farm planning",
+      "credit"
+    ]
+  },
+  {
+    "name": "Agricultural Marketing Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "marketing",
+      "sales",
+      "market linkage"
+    ]
+  },
+  {
+    "name": "Market Linkage Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "market linkage",
+      "supply chain",
+      "trade"
+    ]
+  },
+  {
+    "name": "Value Chain Development Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "value chain",
+      "supply chain",
+      "development"
+    ]
+  },
+  {
+    "name": "Agricultural Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "logistics",
+      "supply chain",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Agricultural Export Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "export",
+      "international trade",
+      "business"
+    ]
+  },
+  {
+    "name": "International Agri-Trade Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "trade",
+      "export",
+      "international"
+    ]
+  },
+  {
+    "name": "Agricultural Insurance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "insurance",
+      "risk management",
+      "finance"
+    ]
+  },
+  {
+    "name": "Crop Insurance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "insurance",
+      "risk management",
+      "crops"
+    ]
+  },
+  {
+    "name": "Farm Management Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "farm management",
+      "planning",
+      "operations"
+    ]
+  },
+  {
+    "name": "Supply Chain Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "supply chain",
+      "logistics",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Food Processing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "food processing",
+      "value addition",
+      "business"
+    ]
+  },
+  {
+    "name": "Cooperative Organizer",
+    "category": "Business & Economics",
+    "tags": [
+      "cooperatives",
+      "organization",
+      "collective farming"
+    ]
+  },
+  {
+    "name": "Rural Development Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "rural development",
+      "community",
+      "economic growth"
+    ]
+  },
+  {
+    "name": "Agricultural Startup Mentor",
+    "category": "Business & Economics",
+    "tags": [
+      "startup",
+      "entrepreneurship",
+      "mentoring"
+    ]
+  },
+  {
+    "name": "Agri-Business Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "agri-business",
+      "entrepreneurship",
+      "business"
+    ]
+  },
+  {
+    "name": "Trade & Export Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "export",
+      "trade",
+      "international business"
+    ]
+  },
+  {
+    "name": "Cost Optimization Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "cost management",
+      "efficiency",
+      "profitability"
+    ]
+  },
+  {
+    "name": "Food Safety Advisor",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "food safety",
+      "hygiene",
+      "quality"
+    ]
+  },
+  {
+    "name": "Quality Control Advisor",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "quality control",
+      "standards",
+      "inspection"
+    ]
+  },
+  {
+    "name": "Quality Assurance Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "quality assurance",
+      "standards",
+      "compliance"
+    ]
+  },
+  {
+    "name": "Organic Certification Consultant",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "certification",
+      "standards",
+      "compliance"
+    ]
+  },
+  {
+    "name": "Traceability Consultant",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "traceability",
+      "supply chain",
+      "transparency"
+    ]
+  },
+  {
+    "name": "Hazard Analysis and Critical Control Points (HACCP) Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "HACCP",
+      "food safety",
+      "quality"
+    ]
+  },
+  {
+    "name": "Post-Harvest Management Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "post-harvest",
+      "storage",
+      "preservation"
+    ]
+  },
+  {
+    "name": "Food Standards Advisor",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "standards",
+      "compliance",
+      "regulation"
+    ]
+  },
+  {
+    "name": "Packaging Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "packaging",
+      "preservation",
+      "presentation"
+    ]
+  },
+  {
+    "name": "Testing & Certification Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "testing",
+      "certification",
+      "quality"
+    ]
+  },
+  {
+    "name": "Chemical Analysis Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "chemical analysis",
+      "testing",
+      "quality"
+    ]
+  },
+  {
+    "name": "Microbiology in Agriculture Consultant",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "microbiology",
+      "testing",
+      "quality"
+    ]
+  },
+  {
+    "name": "Agricultural Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "training",
+      "farmer education",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Agricultural Extension Officer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "extension",
+      "knowledge transfer",
+      "farmer support"
+    ]
+  },
+  {
+    "name": "Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "training",
+      "facilitation",
+      "education"
+    ]
+  },
+  {
+    "name": "Knowledge Transfer Specialist",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "knowledge transfer",
+      "education",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Youth in Agriculture Mentor",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "youth",
+      "mentoring",
+      "farm entry"
+    ]
+  },
+  {
+    "name": "Agricultural Content Creator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "content creation",
+      "education",
+      "communication"
+    ]
+  },
+  {
+    "name": "Community Farming Organizer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "community",
+      "organization",
+      "social"
+    ]
+  },
+  {
+    "name": "Kitchen Garden Coach",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "kitchen garden",
+      "home gardening",
+      "household"
+    ]
+  },
+  {
+    "name": "Farmer Group Leader Training",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "group leadership",
+      "organization",
+      "training"
+    ]
+  },
+  {
+    "name": "Technology Demonstration Specialist",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "technology",
+      "demonstration",
+      "farmer education"
+    ]
+  },
+  {
+    "name": "Farmer-to-Farmer Learning Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "farmer training",
+      "peer learning",
+      "extension"
+    ]
+  },
+  {
+    "name": "Gender Mainstreaming in Agriculture Specialist",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "gender",
+      "women empowerment",
+      "social"
+    ]
+  },
+  {
+    "name": "Digital Literacy Trainer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "digital literacy",
+      "technology",
+      "education"
+    ]
+  },
+  {
+    "name": "Agricultural Leadership Coach",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "leadership",
+      "mentoring",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Monitoring & Evaluation Expert",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "M&E",
+      "impact assessment",
+      "evaluation"
+    ]
+  },
+  {
+    "name": "Agricultural Policy Analyst",
+    "category": "Policy & Governance",
+    "tags": [
+      "policy",
+      "analysis",
+      "governance"
+    ]
+  },
+  {
+    "name": "Farm Policy Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "policy",
+      "farm management",
+      "governance"
+    ]
+  },
+  {
+    "name": "Agricultural Legal Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "legal",
+      "compliance",
+      "governance"
+    ]
+  },
+  {
+    "name": "Agricultural Compliance Officer",
+    "category": "Policy & Governance",
+    "tags": [
+      "compliance",
+      "standards",
+      "governance"
+    ]
+  },
+  {
+    "name": "Land Use Planner",
+    "category": "Policy & Governance",
+    "tags": [
+      "land use",
+      "planning",
+      "policy"
+    ]
+  },
+  {
+    "name": "Water Policy Analyst",
+    "category": "Policy & Governance",
+    "tags": [
+      "water policy",
+      "governance",
+      "management"
+    ]
+  },
+  {
+    "name": "Environmental Policy Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "environment",
+      "policy",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Crop Insurance Policy Specialist",
+    "category": "Policy & Governance",
+    "tags": [
+      "insurance policy",
+      "risk management",
+      "governance"
+    ]
+  },
+  {
+    "name": "Rural Policy Analyst",
+    "category": "Policy & Governance",
+    "tags": [
+      "rural policy",
+      "development",
+      "governance"
+    ]
+  },
+  {
+    "name": "Trade Policy Analyst",
+    "category": "Policy & Governance",
+    "tags": [
+      "trade policy",
+      "international",
+      "governance"
+    ]
+  },
+  {
+    "name": "Renewable Energy in Agriculture Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "renewable energy",
+      "solar",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Solar Energy in Agriculture Advisor",
+    "category": "Energy & Environment",
+    "tags": [
+      "solar",
+      "energy",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Biogas Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "biogas",
+      "bioenergy",
+      "waste management"
+    ]
+  },
+  {
+    "name": "Bioenergy Crop Consultant",
+    "category": "Energy & Environment",
+    "tags": [
+      "bioenergy",
+      "energy crops",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Energy Crops Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "energy crops",
+      "bioenergy",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Waste Recycling Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "waste recycling",
+      "circular economy",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Waste-to-Energy Consultant",
+    "category": "Energy & Environment",
+    "tags": [
+      "waste to energy",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Agricultural Waste Management Expert",
+    "category": "Energy & Environment",
+    "tags": [
+      "waste management",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Biochar Expert",
+    "category": "Energy & Environment",
+    "tags": [
+      "biochar",
+      "soil health",
+      "carbon"
+    ]
+  },
+  {
+    "name": "Ecological Farming Consultant",
+    "category": "Energy & Environment",
+    "tags": [
+      "ecological",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Wind Energy in Agriculture Advisor",
+    "category": "Energy & Environment",
+    "tags": [
+      "wind energy",
+      "renewable",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Green Energy Farming Advisor",
+    "category": "Energy & Environment",
+    "tags": [
+      "green energy",
+      "renewable",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Horticulture Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticulture",
+      "fruits",
+      "vegetables"
+    ]
+  },
+  {
+    "name": "Herb Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "herbs",
+      "medicinal plants",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Herbal Medicine Crop Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "herbal medicine",
+      "medicinal plants",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Spice Cultivation Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "spices",
+      "specialty crops",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Orchid Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "orchids",
+      "floriculture",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Mushroom Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "mushrooms",
+      "cultivation",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Bamboo Cultivation Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "bamboo",
+      "forestry",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Beekeeping & Apiculture Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "beekeeping",
+      "honey",
+      "pollination"
+    ]
+  },
+  {
+    "name": "Silkworm Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "sericulture",
+      "silk",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Lac Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "lac",
+      "specialty crops",
+      "forestry"
+    ]
+  },
+  {
+    "name": "Coconut Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "coconut",
+      "plantation crops",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Vanilla Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "vanilla",
+      "spices",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Saffron Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "saffron",
+      "spices",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Viticulture Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "grapes",
+      "viticulture",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Turmeric Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "turmeric",
+      "spices",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Agricultural Climate Resilience Expert",
+    "category": "Climate & Resilience",
+    "tags": [
+      "climate resilience",
+      "adaptation",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Climate Change Adaptation Specialist",
+    "category": "Climate & Resilience",
+    "tags": [
+      "climate change",
+      "adaptation",
+      "resilience"
+    ]
+  },
+  {
+    "name": "Crop Yield Optimization Consultant",
+    "category": "Climate & Resilience",
+    "tags": [
+      "yield optimization",
+      "efficiency",
+      "productivity"
+    ]
+  },
+  {
+    "name": "Flood Management Advisor",
+    "category": "Climate & Resilience",
+    "tags": [
+      "flood",
+      "water management",
+      "climate"
+    ]
+  },
+  {
+    "name": "Heat Stress Management Expert",
+    "category": "Climate & Resilience",
+    "tags": [
+      "heat stress",
+      "climate adaptation",
+      "resilience"
+    ]
+  },
+  {
+    "name": "Weather Forecasting Specialist",
+    "category": "Climate & Resilience",
+    "tags": [
+      "weather",
+      "forecasting",
+      "data"
+    ]
+  },
+  {
+    "name": "Disaster Risk Reduction Specialist",
+    "category": "Climate & Resilience",
+    "tags": [
+      "disaster risk",
+      "risk management",
+      "resilience"
+    ]
+  },
+  {
+    "name": "Agricultural Meteorologist",
+    "category": "Climate & Resilience",
+    "tags": [
+      "meteorology",
+      "weather",
+      "climate"
+    ]
+  },
+  {
+    "name": "Varietal Improvement for Climate Adaptation",
+    "category": "Climate & Resilience",
+    "tags": [
+      "crop variety",
+      "climate adaptation",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Water Stress Management Expert",
+    "category": "Climate & Resilience",
+    "tags": [
+      "water stress",
+      "drought",
+      "adaptation"
+    ]
+  },
+  {
+    "name": "Agricultural Research Scientist",
+    "category": "Research & Science",
+    "tags": [
+      "research",
+      "science",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Crop Genetics Specialist",
+    "category": "Research & Science",
+    "tags": [
+      "genetics",
+      "crop improvement",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Plant Genetics Specialist",
+    "category": "Research & Science",
+    "tags": [
+      "plant genetics",
+      "improvement",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Agronomist",
+    "category": "Research & Science",
+    "tags": [
+      "agronomy",
+      "crop science",
+      "farming"
+    ]
+  },
+  {
+    "name": "Horticulturist",
+    "category": "Research & Science",
+    "tags": [
+      "horticulture",
+      "fruits",
+      "vegetables"
+    ]
+  },
+  {
+    "name": "Silviculturist",
+    "category": "Research & Science",
+    "tags": [
+      "silviculture",
+      "forestry",
+      "trees"
+    ]
+  },
+  {
+    "name": "Forestry Specialist",
+    "category": "Research & Science",
+    "tags": [
+      "forestry",
+      "trees",
+      "woodland"
+    ]
+  },
+  {
+    "name": "Soil Microbiology Specialist",
+    "category": "Research & Science",
+    "tags": [
+      "microbiology",
+      "soil",
+      "microorganisms"
+    ]
+  },
+  {
+    "name": "Germplasm Conservation Expert",
+    "category": "Research & Science",
+    "tags": [
+      "germplasm",
+      "genetic resources",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Indigenous Crop Scientist",
+    "category": "Research & Science",
+    "tags": [
+      "indigenous crops",
+      "local varieties",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Mango Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "mango",
+      "fruits",
+      "plantation"
+    ]
+  },
+  {
+    "name": "Citrus Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "citrus",
+      "fruits",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Grape Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "grapes",
+      "fruits",
+      "viticulture"
+    ]
+  },
+  {
+    "name": "Apple Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "apples",
+      "fruits",
+      "temperate"
+    ]
+  },
+  {
+    "name": "Papaya Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "papaya",
+      "fruits",
+      "tropical"
+    ]
+  },
+  {
+    "name": "Pineapple Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "pineapple",
+      "fruits",
+      "tropical"
+    ]
+  },
+  {
+    "name": "Kiwi Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "kiwi",
+      "fruits",
+      "temperate"
+    ]
+  },
+  {
+    "name": "Jackfruit Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jackfruit",
+      "fruits",
+      "tropical"
+    ]
+  },
+  {
+    "name": "Date Palm Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "date palm",
+      "fruits",
+      "arid"
+    ]
+  },
+  {
+    "name": "Kinnow Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "kinnow",
+      "citrus",
+      "fruits"
+    ]
+  },
+  {
+    "name": "Groundnut Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "groundnut",
+      "legumes",
+      "oilseeds"
+    ]
+  },
+  {
+    "name": "Onion Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "onion",
+      "vegetables",
+      "bulb crops"
+    ]
+  },
+  {
+    "name": "Okra Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "okra",
+      "vegetables",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Mustard Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "mustard",
+      "oilseeds",
+      "crops"
+    ]
+  },
+  {
+    "name": "Barley Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "barley",
+      "cereal crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Oats Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "oats",
+      "cereal crops",
+      "farming"
+    ]
+  },
+  {
+    "name": "Millet Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "millet",
+      "cereal crops",
+      "nutrition"
+    ]
+  },
+  {
+    "name": "Kodo Millet Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "kodo millet",
+      "millets",
+      "cereals"
+    ]
+  },
+  {
+    "name": "Jute Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jute",
+      "fiber crops",
+      "plantation"
+    ]
+  },
+  {
+    "name": "Hemp Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "hemp",
+      "fiber crops",
+      "industrial"
+    ]
+  },
+  {
+    "name": "Rubber Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "rubber",
+      "plantation crops",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Jatropha Cultivation Advisor",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jatropha",
+      "biofuel",
+      "specialty crops"
+    ]
+  },
+  {
+    "name": "Jasmine Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jasmine",
+      "flowers",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Yam Cultivation Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "yam",
+      "tuber crops",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Yardlong Bean Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "yardlong bean",
+      "vegetables",
+      "legumes"
+    ]
+  },
+  {
+    "name": "Zucchini Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "zucchini",
+      "vegetables",
+      "cucurbits"
+    ]
+  },
+  {
+    "name": "Jalapeno Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jalapeno",
+      "peppers",
+      "vegetables"
+    ]
+  },
+  {
+    "name": "Kale & Leafy Greens Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "leafy greens",
+      "vegetables",
+      "nutrition"
+    ]
+  },
+  {
+    "name": "Kelp Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "kelp",
+      "seaweed",
+      "aquatic"
+    ]
+  },
+  {
+    "name": "Yarrow Farming Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "yarrow",
+      "medicinal plants",
+      "herbs"
+    ]
+  },
+  {
+    "name": "Zebu Cattle Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "zebu cattle",
+      "livestock",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Dairy Genetics Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy genetics",
+      "breeding",
+      "improvement"
+    ]
+  },
+  {
+    "name": "Dairy Processing Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy processing",
+      "value addition",
+      "business"
+    ]
+  },
+  {
+    "name": "Dairy Marketing Expert",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy marketing",
+      "sales",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Dairy Waste Management Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy waste",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Dairy Equipment Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy equipment",
+      "technology",
+      "machinery"
+    ]
+  },
+  {
+    "name": "Dairy Cooperative Organizer",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy cooperative",
+      "organization",
+      "collective"
+    ]
+  },
+  {
+    "name": "Dairy Extension Officer",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Dairy Sustainability Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy sustainability",
+      "environment",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Dairy Product Development Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "dairy products",
+      "value addition",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Yoghurt Production Consultant",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "yoghurt",
+      "dairy products",
+      "value addition"
+    ]
+  },
+  {
+    "name": "Yoghurt Marketing Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "yoghurt marketing",
+      "sales",
+      "business"
+    ]
+  },
+  {
+    "name": "Livestock Logistics Planner",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "logistics",
+      "supply chain",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Livestock Export Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "livestock export",
+      "international trade",
+      "business"
+    ]
+  },
+  {
+    "name": "Juvenile Livestock Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "juvenile livestock",
+      "young animals",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Zeolite Soil Amendment Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "zeolite",
+      "soil amendment",
+      "minerals"
+    ]
+  },
+  {
+    "name": "Zinc Fertilizer Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "zinc",
+      "micronutrients",
+      "fertilizer"
+    ]
+  },
+  {
+    "name": "Inorganic Fertilizer Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "inorganic fertilizer",
+      "chemicals",
+      "nutrients"
+    ]
+  },
+  {
+    "name": "Organic Fertilizer Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "organic fertilizer",
+      "sustainable",
+      "natural"
+    ]
+  },
+  {
+    "name": "Plant Nutrition Advisor",
+    "category": "Soil & Water Management",
+    "tags": [
+      "plant nutrition",
+      "nutrients",
+      "fertilizer"
+    ]
+  },
+  {
+    "name": "Irrigation Water Quality Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water quality",
+      "irrigation",
+      "testing"
+    ]
+  },
+  {
+    "name": "Irrigation Economics Consultant",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation economics",
+      "cost analysis",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Irrigation Policy Analyst",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation policy",
+      "governance",
+      "management"
+    ]
+  },
+  {
+    "name": "Irrigation Extension Officer",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation extension",
+      "farmer training",
+      "support"
+    ]
+  },
+  {
+    "name": "Irrigation Sustainability Consultant",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation sustainability",
+      "conservation",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Irrigation Soil Mapping Expert",
+    "category": "Soil & Water Management",
+    "tags": [
+      "soil mapping",
+      "GIS",
+      "irrigation"
+    ]
+  },
+  {
+    "name": "Irrigation Crop Yield Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "crop yield",
+      "irrigation",
+      "optimization"
+    ]
+  },
+  {
+    "name": "Irrigation Technology Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation technology",
+      "systems",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Organic Soil Health Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic",
+      "soil health",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Organic Irrigation Planner",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic",
+      "irrigation",
+      "planning"
+    ]
+  },
+  {
+    "name": "Organic Crop Yield Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic",
+      "crop yield",
+      "optimization"
+    ]
+  },
+  {
+    "name": "Organic Marketing Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic marketing",
+      "sales",
+      "organic products"
+    ]
+  },
+  {
+    "name": "Organic Policy Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic policy",
+      "governance",
+      "standards"
+    ]
+  },
+  {
+    "name": "Organic Extension Officer",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Organic Training Facilitator",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic training",
+      "education",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Organic Waste Management Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic waste",
+      "management",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Organic Cooperative Organizer",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic cooperative",
+      "organization",
+      "collective"
+    ]
+  },
+  {
+    "name": "Organic Finance Advisor",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic finance",
+      "credit",
+      "funding"
+    ]
+  },
+  {
+    "name": "Organic Insurance Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "organic insurance",
+      "risk management",
+      "protection"
+    ]
+  },
+  {
+    "name": "Green Manure Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "green manure",
+      "cover crops",
+      "soil improvement"
+    ]
+  },
+  {
+    "name": "Green Supply Chain Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "supply chain",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Green Packaging Specialist",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "eco-packaging",
+      "sustainability",
+      "environment"
+    ]
+  },
+  {
+    "name": "Green Policy Analyst",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "green policy",
+      "environment",
+      "governance"
+    ]
+  },
+  {
+    "name": "Green Certification Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "green certification",
+      "standards",
+      "compliance"
+    ]
+  },
+  {
+    "name": "Green Farming Extension Officer",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "green farming",
+      "extension",
+      "farmer support"
+    ]
+  },
+  {
+    "name": "Horticultural Genetics Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural genetics",
+      "breeding",
+      "improvement"
+    ]
+  },
+  {
+    "name": "Horticultural Waste Management Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural waste",
+      "sustainability",
+      "management"
+    ]
+  },
+  {
+    "name": "Horticultural Extension Officer",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Horticultural Policy Advisor",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural policy",
+      "governance",
+      "standards"
+    ]
+  },
+  {
+    "name": "Horticultural Training Facilitator",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural training",
+      "education",
+      "capacity"
+    ]
+  },
+  {
+    "name": "Horticultural Soil Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural soil",
+      "fertility",
+      "management"
+    ]
+  },
+  {
+    "name": "Horticultural Irrigation Planner",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural irrigation",
+      "water management",
+      "planning"
+    ]
+  },
+  {
+    "name": "Horticultural Marketing Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural marketing",
+      "sales",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Horticultural Therapy Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "horticultural therapy",
+      "wellness",
+      "health"
+    ]
+  },
+  {
+    "name": "Plant Protection Consultant",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "plant protection",
+      "pest management",
+      "disease"
+    ]
+  },
+  {
+    "name": "Plant Biotechnology Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "plant biotechnology",
+      "genetic engineering",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Plant Disease Management Consultant",
+    "category": "Pest & Disease Management",
+    "tags": [
+      "plant disease",
+      "management",
+      "prevention"
+    ]
+  },
+  {
+    "name": "Plant Extension Officer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "plant extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Plant Policy Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "plant policy",
+      "governance",
+      "standards"
+    ]
+  },
+  {
+    "name": "Plant Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "plant training",
+      "education",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Plant Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "plant soil",
+      "fertility",
+      "management"
+    ]
+  },
+  {
+    "name": "Plant Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "plant irrigation",
+      "water management",
+      "planning"
+    ]
+  },
+  {
+    "name": "Plant Crop Yield Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "plant crop yield",
+      "optimization",
+      "productivity"
+    ]
+  },
+  {
+    "name": "Plant Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "plant marketing",
+      "sales",
+      "distribution"
+    ]
+  },
+  {
+    "name": "In-vitro Plant Propagation Expert",
+    "category": "Technology & Innovation",
+    "tags": [
+      "in-vitro propagation",
+      "biotechnology",
+      "plant improvement"
+    ]
+  },
+  {
+    "name": "Vegetable Seed Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "vegetable seeds",
+      "seedling",
+      "technology"
+    ]
+  },
+  {
+    "name": "Vegetable Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "vegetable marketing",
+      "sales",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Vegetable Policy Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "vegetable policy",
+      "governance",
+      "standards"
+    ]
+  },
+  {
+    "name": "Vegetable Extension Officer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "vegetable extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Vegetable Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "vegetable training",
+      "education",
+      "capacity"
+    ]
+  },
+  {
+    "name": "Vegetable Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "vegetable soil",
+      "fertility",
+      "management"
+    ]
+  },
+  {
+    "name": "Vegetable Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "vegetable irrigation",
+      "water management",
+      "planning"
+    ]
+  },
+  {
+    "name": "Vegetable Crop Yield Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "vegetable yield",
+      "optimization",
+      "productivity"
+    ]
+  },
+  {
+    "name": "Vegetable Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "vegetable waste",
+      "management",
+      "recycling"
+    ]
+  },
+  {
+    "name": "Vegetable Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "vegetable sustainability",
+      "environment",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Vegetable Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "vegetable finance",
+      "credit",
+      "funding"
+    ]
+  },
+  {
+    "name": "Vegetable Insurance Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "vegetable insurance",
+      "risk management",
+      "protection"
+    ]
+  },
+  {
+    "name": "Vegetable Cooperative Organizer",
+    "category": "Business & Economics",
+    "tags": [
+      "vegetable cooperative",
+      "organization",
+      "collective"
+    ]
+  },
+  {
+    "name": "Water Extension Officer",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Water Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "water training",
+      "education",
+      "capacity building"
+    ]
+  },
+  {
+    "name": "Water Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water soil",
+      "management",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Water Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "water irrigation",
+      "planning",
+      "management"
+    ]
+  },
+  {
+    "name": "Water Crop Yield Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "water crop yield",
+      "optimization",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Water Livestock Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "water livestock",
+      "animal health",
+      "hydration"
+    ]
+  },
+  {
+    "name": "Water Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "water waste management",
+      "recycling",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Water Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "water sustainability",
+      "conservation",
+      "environment"
+    ]
+  },
+  {
+    "name": "Water Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "water finance",
+      "credit",
+      "infrastructure"
+    ]
+  },
+  {
+    "name": "Water Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "water marketing",
+      "resource allocation",
+      "trade"
+    ]
+  },
+  {
+    "name": "Urban Soil Health Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "urban soil",
+      "city farming",
+      "quality"
+    ]
+  },
+  {
+    "name": "Urban Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "urban irrigation",
+      "city farming",
+      "water"
+    ]
+  },
+  {
+    "name": "Urban Crop Yield Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "urban crop yield",
+      "city farming",
+      "productivity"
+    ]
+  },
+  {
+    "name": "Urban Livestock Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "urban livestock",
+      "city farming",
+      "small animals"
+    ]
+  },
+  {
+    "name": "Urban Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "urban waste management",
+      "recycling",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Urban Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "urban sustainability",
+      "city farming",
+      "environment"
+    ]
+  },
+  {
+    "name": "Urban Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "urban finance",
+      "credit",
+      "city farming"
+    ]
+  },
+  {
+    "name": "Urban Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "urban marketing",
+      "sales",
+      "city markets"
+    ]
+  },
+  {
+    "name": "Urban Extension Officer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "urban extension",
+      "farmer support",
+      "city farming"
+    ]
+  },
+  {
+    "name": "Urban Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "urban training",
+      "education",
+      "city farming"
+    ]
+  },
+  {
+    "name": "Urban Cooperative Organizer",
+    "category": "Business & Economics",
+    "tags": [
+      "urban cooperative",
+      "organization",
+      "city"
+    ]
+  },
+  {
+    "name": "Urban Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "urban logistics",
+      "supply chain",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Urban Export Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "urban export",
+      "trade",
+      "business"
+    ]
+  },
+  {
+    "name": "Urban Certification Consultant",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "urban certification",
+      "standards",
+      "compliance"
+    ]
+  },
+  {
+    "name": "Urban Quality Control Advisor",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "urban quality",
+      "testing",
+      "standards"
+    ]
+  },
+  {
+    "name": "Urban Technology Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "urban technology",
+      "city farming",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Rural Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "rural soil",
+      "fertility",
+      "management"
+    ]
+  },
+  {
+    "name": "Rural Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "rural irrigation",
+      "planning",
+      "management"
+    ]
+  },
+  {
+    "name": "Rural Crop Yield Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "rural crop yield",
+      "productivity",
+      "optimization"
+    ]
+  },
+  {
+    "name": "Rural Livestock Advisor",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "rural livestock",
+      "farming",
+      "development"
+    ]
+  },
+  {
+    "name": "Rural Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "rural waste management",
+      "sustainability",
+      "recycling"
+    ]
+  },
+  {
+    "name": "Rural Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "rural sustainability",
+      "environment",
+      "long-term"
+    ]
+  },
+  {
+    "name": "Rural Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "rural logistics",
+      "supply chain",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Quality Standards Advisor",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "quality standards",
+      "compliance",
+      "regulation"
+    ]
+  },
+  {
+    "name": "Quality Policy Analyst",
+    "category": "Policy & Governance",
+    "tags": [
+      "quality policy",
+      "standards",
+      "governance"
+    ]
+  },
+  {
+    "name": "Quality Extension Officer",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "quality extension",
+      "farmer support",
+      "training"
+    ]
+  },
+  {
+    "name": "Quality Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "quality training",
+      "education",
+      "capacity"
+    ]
+  },
+  {
+    "name": "Quality Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "quality soil",
+      "testing",
+      "management"
+    ]
+  },
+  {
+    "name": "Quality Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "quality irrigation",
+      "water management",
+      "planning"
+    ]
+  },
+  {
+    "name": "Quality Crop Yield Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "quality crop yield",
+      "optimization",
+      "standards"
+    ]
+  },
+  {
+    "name": "Quality Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "quality marketing",
+      "sales",
+      "premium"
+    ]
+  },
+  {
+    "name": "Quality Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "quality finance",
+      "credit",
+      "premium pricing"
+    ]
+  },
+  {
+    "name": "Quality Insurance Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "quality insurance",
+      "risk management",
+      "protection"
+    ]
+  },
+  {
+    "name": "Quality Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "quality logistics",
+      "supply chain",
+      "preservation"
+    ]
+  },
+  {
+    "name": "Quality Export Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "quality export",
+      "international trade",
+      "standards"
+    ]
+  },
+  {
+    "name": "Quality Cooperative Organizer",
+    "category": "Business & Economics",
+    "tags": [
+      "quality cooperative",
+      "organization",
+      "collective"
+    ]
+  },
+  {
+    "name": "Quality Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "quality waste management",
+      "sustainability",
+      "byproducts"
+    ]
+  },
+  {
+    "name": "Quality Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "quality sustainability",
+      "long-term",
+      "environment"
+    ]
+  },
+  {
+    "name": "Zoning Extension Officer",
+    "category": "Policy & Governance",
+    "tags": [
+      "zoning extension",
+      "land use",
+      "planning"
+    ]
+  },
+  {
+    "name": "Zoning Training Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "zoning training",
+      "education",
+      "planning"
+    ]
+  },
+  {
+    "name": "Zoning Soil Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "zoning soil",
+      "mapping",
+      "regional"
+    ]
+  },
+  {
+    "name": "Zoning Irrigation Planner",
+    "category": "Soil & Water Management",
+    "tags": [
+      "zoning irrigation",
+      "regional planning",
+      "water"
+    ]
+  },
+  {
+    "name": "Zoning Crop Yield Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "zoning crop yield",
+      "regional optimization",
+      "planning"
+    ]
+  },
+  {
+    "name": "Zoning Waste Management Specialist",
+    "category": "Energy & Environment",
+    "tags": [
+      "zoning waste management",
+      "regional",
+      "sustainability"
+    ]
+  },
+  {
+    "name": "Zoning Sustainability Consultant",
+    "category": "Sustainable & Organic Farming",
+    "tags": [
+      "zoning sustainability",
+      "regional",
+      "environment"
+    ]
+  },
+  {
+    "name": "Zoning Finance Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning finance",
+      "regional credit",
+      "infrastructure"
+    ]
+  },
+  {
+    "name": "Zoning Marketing Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning marketing",
+      "regional trade",
+      "logistics"
+    ]
+  },
+  {
+    "name": "Zoning Insurance Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning insurance",
+      "regional risk management",
+      "protection"
+    ]
+  },
+  {
+    "name": "Zoning Cooperative Organizer",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning cooperative",
+      "regional organization",
+      "collective"
+    ]
+  },
+  {
+    "name": "Zoning Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning logistics",
+      "regional supply chain",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Zoning Export Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "zoning export",
+      "regional trade",
+      "international"
+    ]
+  },
+  {
+    "name": "Zoning Policy Advisor",
+    "category": "Policy & Governance",
+    "tags": [
+      "zoning policy",
+      "governance",
+      "regional"
+    ]
+  },
+  {
+    "name": "Agricultural Engineer",
+    "category": "Technology & Innovation",
+    "tags": [
+      "agricultural engineering",
+      "infrastructure",
+      "design"
+    ]
+  },
+  {
+    "name": "Farm Irrigation Engineer",
+    "category": "Soil & Water Management",
+    "tags": [
+      "irrigation engineering",
+      "design",
+      "infrastructure"
+    ]
+  },
+  {
+    "name": "Bio-systems Engineer",
+    "category": "Technology & Innovation",
+    "tags": [
+      "biosystems",
+      "engineering",
+      "integrated"
+    ]
+  },
+  {
+    "name": "Eco-Engineering Consultant",
+    "category": "Energy & Environment",
+    "tags": [
+      "eco-engineering",
+      "sustainability",
+      "design"
+    ]
+  },
+  {
+    "name": "Garden Farming Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "garden farming",
+      "small scale",
+      "household"
+    ]
+  },
+  {
+    "name": "Backyard Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "backyard farming",
+      "small scale",
+      "home"
+    ]
+  },
+  {
+    "name": "Household Farming Advisor",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "household farming",
+      "home",
+      "small scale"
+    ]
+  },
+  {
+    "name": "Edible Landscaping Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "edible landscaping",
+      "design",
+      "food"
+    ]
+  },
+  {
+    "name": "Ethnobotany Advisor",
+    "category": "Research & Science",
+    "tags": [
+      "ethnobotany",
+      "traditional knowledge",
+      "plants"
+    ]
+  },
+  {
+    "name": "Botanical Farming Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "botanical farming",
+      "plants",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Diversified Farming Advisor",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "diversified farming",
+      "variety",
+      "resilience"
+    ]
+  },
+  {
+    "name": "Smallholder Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "smallholder",
+      "small farms",
+      "development"
+    ]
+  },
+  {
+    "name": "Intensive Farming Advisor",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "intensive farming",
+      "productivity",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Non-traditional Crop Specialist",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "non-traditional",
+      "specialty crops",
+      "innovation"
+    ]
+  },
+  {
+    "name": "Forage Crop Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "forage crops",
+      "livestock feed",
+      "farming"
+    ]
+  },
+  {
+    "name": "Fodder Crop Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "fodder crops",
+      "livestock feed",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Root Crop Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "root crops",
+      "tubers",
+      "underground"
+    ]
+  },
+  {
+    "name": "Underutilized Crop Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "underutilized crops",
+      "traditional",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Native Crop Specialist",
+    "category": "Research & Science",
+    "tags": [
+      "native crops",
+      "local varieties",
+      "traditional"
+    ]
+  },
+  {
+    "name": "Tropical Crop Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "tropical crops",
+      "climate",
+      "region"
+    ]
+  },
+  {
+    "name": "Desert Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "desert farming",
+      "arid climate",
+      "adaptation"
+    ]
+  },
+  {
+    "name": "Non-irrigated Farming Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "rainfed farming",
+      "dry farming",
+      "climate"
+    ]
+  },
+  {
+    "name": "Industrial Crop Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "industrial crops",
+      "manufacturing",
+      "processing"
+    ]
+  },
+  {
+    "name": "Non-traditional Livestock Specialist",
+    "category": "Livestock & Animal Husbandry",
+    "tags": [
+      "non-traditional livestock",
+      "new animals",
+      "specialty"
+    ]
+  },
+  {
+    "name": "Jungle Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "jungle farming",
+      "forest farming",
+      "agroforestry"
+    ]
+  },
+  {
+    "name": "Grassland Management Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "grassland",
+      "rangelands",
+      "pasture"
+    ]
+  },
+  {
+    "name": "Rangeland Management Advisor",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "rangeland",
+      "pasture",
+      "grazing"
+    ]
+  },
+  {
+    "name": "Turf Management Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "turf",
+      "lawn care",
+      "sports fields"
+    ]
+  },
+  {
+    "name": "Modern Farming Techniques Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "modern techniques",
+      "innovation",
+      "technology"
+    ]
+  },
+  {
+    "name": "Equipment Optimization Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "equipment optimization",
+      "efficiency",
+      "machinery"
+    ]
+  },
+  {
+    "name": "Crop Mechanization Expert",
+    "category": "Technology & Innovation",
+    "tags": [
+      "mechanization",
+      "machinery",
+      "automation"
+    ]
+  },
+  {
+    "name": "Harvesting Technology Advisor",
+    "category": "Technology & Innovation",
+    "tags": [
+      "harvesting technology",
+      "machinery",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Post-Harvest Management Specialist",
+    "category": "Food Safety & Quality",
+    "tags": [
+      "post-harvest",
+      "storage",
+      "preservation"
+    ]
+  },
+  {
+    "name": "Food Processing Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "food processing",
+      "value addition",
+      "business"
+    ]
+  },
+  {
+    "name": "Juice Processing Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "juice processing",
+      "value addition",
+      "food"
+    ]
+  },
+  {
+    "name": "Jaggery Production Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "jaggery",
+      "food processing",
+      "value addition"
+    ]
+  },
+  {
+    "name": "Jerky Production Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "jerky",
+      "meat processing",
+      "value addition"
+    ]
+  },
+  {
+    "name": "Hay Production Expert",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "hay",
+      "animal feed",
+      "cultivation"
+    ]
+  },
+  {
+    "name": "Grain Production Advisor",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "grain",
+      "cereal crops",
+      "production"
+    ]
+  },
+  {
+    "name": "Crop Post-Harvest Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "post-harvest",
+      "storage",
+      "crop management"
+    ]
+  },
+  {
+    "name": "Mulch Production Specialist",
+    "category": "Soil & Water Management",
+    "tags": [
+      "mulch",
+      "soil cover",
+      "conservation"
+    ]
+  },
+  {
+    "name": "Hybrid Seed Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "hybrid seeds",
+      "genetics",
+      "breeding"
+    ]
+  },
+  {
+    "name": "Transgenic Crop Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "transgenic",
+      "genetic engineering",
+      "GMO"
+    ]
+  },
+  {
+    "name": "Genetic Crop Improvement Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "genetic improvement",
+      "breeding",
+      "quality"
+    ]
+  },
+  {
+    "name": "Crop Yield Optimization Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "yield optimization",
+      "productivity",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Temperature Management Specialist",
+    "category": "Greenhouse Technician",
+    "tags": [
+      "climate control",
+      "temperature",
+      "environment"
+    ]
+  },
+  {
+    "name": "Greenhouse Climate Control Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "greenhouse climate",
+      "environment control",
+      "technology"
+    ]
+  },
+  {
+    "name": "Controlled Environment Agriculture Specialist",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "CEA",
+      "controlled environment",
+      "modern"
+    ]
+  },
+  {
+    "name": "Innovation in Agriculture Advisor",
+    "category": "Technology & Innovation",
+    "tags": [
+      "innovation",
+      "new technology",
+      "research"
+    ]
+  },
+  {
+    "name": "Input Supply Chain Specialist",
+    "category": "Business & Economics",
+    "tags": [
+      "input supply",
+      "logistics",
+      "distribution"
+    ]
+  },
+  {
+    "name": "Global Agri-Trade Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "global trade",
+      "export",
+      "international"
+    ]
+  },
+  {
+    "name": "Transport & Logistics Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "transport",
+      "logistics",
+      "supply chain"
+    ]
+  },
+  {
+    "name": "Resource Planner",
+    "category": "Business & Economics",
+    "tags": [
+      "resource planning",
+      "farm management",
+      "efficiency"
+    ]
+  },
+  {
+    "name": "Japanese Farming Techniques Specialist",
+    "category": "Technology & Innovation",
+    "tags": [
+      "Japanese techniques",
+      "innovation",
+      "farming"
+    ]
+  },
+  {
+    "name": "Traditional Farming Practices Expert",
+    "category": "Research & Science",
+    "tags": [
+      "traditional practices",
+      "local knowledge",
+      "heritage"
+    ]
+  },
+  {
+    "name": "Green Revolution Historian/Advisor",
+    "category": "Research & Science",
+    "tags": [
+      "green revolution",
+      "history",
+      "policy"
+    ]
+  },
+  {
+    "name": "Agricultural Content Creator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "content creation",
+      "communication",
+      "education"
+    ]
+  },
+  {
+    "name": "Knowledge Management in Agriculture Consultant",
+    "category": "Technology & Innovation",
+    "tags": [
+      "knowledge management",
+      "data",
+      "information"
+    ]
+  },
+  {
+    "name": "Farmer-to-Farmer Learning Facilitator",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "farmer learning",
+      "peer education",
+      "extension"
+    ]
+  },
+  {
+    "name": "Technology Demonstration Specialist",
+    "category": "Capacity Building & Training",
+    "tags": [
+      "technology demo",
+      "training",
+      "education"
+    ]
+  },
+  {
+    "name": "Xylophone Bamboo Farming Consultant",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "bamboo",
+      "specialty crops",
+      "forestry"
+    ]
+  },
+  {
+    "name": "Xylocarp Farming Expert",
+    "category": "Specialized Crops & Niche",
+    "tags": [
+      "coconut",
+      "specialty crops",
+      "plantation"
+    ]
+  },
+  {
+    "name": "Non-renewable Resource Management Specialist",
+    "category": "Policy & Governance",
+    "tags": [
+      "resource management",
+      "sustainability",
+      "governance"
+    ]
+  },
+  {
+    "name": "Non-seasonal Crop Consultant",
+    "category": "Crop Production & Cultivation",
+    "tags": [
+      "year-round crops",
+      "greenhouse",
+      "perennial"
+    ]
+  },
+  {
+    "name": "Non-profit Agri-Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "non-profit",
+      "social enterprise",
+      "development"
+    ]
+  },
+  {
+    "name": "Job Creation in Agriculture Consultant",
+    "category": "Business & Economics",
+    "tags": [
+      "job creation",
+      "rural development",
+      "employment"
+    ]
+  },
+  {
+    "name": "Joint Farming Cooperative Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "cooperative farming",
+      "collective",
+      "organization"
+    ]
+  },
+  {
+    "name": "Joint Venture Agri-Business Advisor",
+    "category": "Business & Economics",
+    "tags": [
+      "joint venture",
+      "business partnership",
+      "development"
+    ]
+  }
+]

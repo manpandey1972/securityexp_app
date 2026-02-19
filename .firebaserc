@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "greenhive-service"
+  },
+  "targets": {},
+  "etags": {}
+}

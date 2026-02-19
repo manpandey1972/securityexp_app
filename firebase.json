@@ -1,0 +1,76 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "greenhive-service",
+          "appId": "1:1054913877112:android:84654b1b4e0249a112898d",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "greenhive-service",
+          "appId": "1:1054913877112:ios:076f7d8ba3ca91f912898d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "greenhive-service",
+          "appId": "1:1054913877112:ios:076f7d8ba3ca91f912898d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "greenhive-service",
+          "configurations": {
+            "android": "1:1054913877112:android:84654b1b4e0249a112898d",
+            "ios": "1:1054913877112:ios:076f7d8ba3ca91f912898d",
+            "macos": "1:1054913877112:ios:076f7d8ba3ca91f912898d",
+            "web": "1:1054913877112:web:f0ad4e836010646a12898d",
+            "windows": "1:1054913877112:web:1169f51b96a19da312898d"
+          }
+        }
+      }
+    }
+  },
+  "functions": {
+    "source": "functions",
+    "codebase": "default",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log"
+    ],
+    "predeploy": []
+  },
+  "firestore": {
+    "database": "green-hive-db"
+  },
+  "storage": {},
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "database": {
+      "port": 9000
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
+}

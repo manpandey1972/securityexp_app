@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1054913877112",
+    "project_id": "greenhive-service",
+    "storage_bucket": "greenhive-service.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054913877112:android:84654b1b4e0249a112898d",
+        "android_client_info": {
+          "package_name": "com.example.securityexperts_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054913877112-hjn1odpia3vfqvdelnrfka2000p20d9f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWJxZLhNVUTPN84l6jyjSPY9urMkuCa0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054913877112-hjn1odpia3vfqvdelnrfka2000p20d9f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1054913877112-gkai1rogp8b68u26n29bonuon0na8869.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.securityexpertsApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

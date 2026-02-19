@@ -1,0 +1,61 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chrome - WebRTC Testing",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--web-hostname=localhost",
+        "--web-port=5003",
+        "-d",
+        "chrome"
+      ]
+    },
+    {
+      "name": "Flutter Web - Port 5002",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--web-hostname 0.0.0.0 --web-port=5002", "-d", "chrome"]
+    },
+    {
+      "name": "Flutter Web - Port 5001",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--web-hostname 0.0.0.0 --web-port=5001", "-d", "chrome"]
+    },
+    {
+      "name": "Flutter iOS",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "iPhone 17 Pro"]
+    },
+    {
+      "name": "Flutter iOS - manish",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "args": ["-d", "Manish-iphone"]
+    },
+    {
+      "name": "Flutter Android Simulator",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "emulator-5554"]
+    },
+    {
+      "name": "Flutter Android Simulator (Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "args": ["-d", "emulator-5554"]
+    }
+  ]
+}
