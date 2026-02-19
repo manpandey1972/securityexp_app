@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:greenhive_app/features/chat/services/audio_recording_manager.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/features/chat/services/audio_recording_manager.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 /// Handles recording UI logic (permission checks, snackbars)
 class ChatRecordingHandler {

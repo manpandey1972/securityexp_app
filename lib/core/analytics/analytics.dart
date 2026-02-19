@@ -1,7 +1,7 @@
 // Analytics barrel export file
 //
 // Import this file to access all analytics classes:
-// import 'package:greenhive_app/core/analytics/analytics.dart';
+// import 'package:securityexperts_app/core/analytics/analytics.dart';
 
 export 'analytics_service.dart';
 export 'analytics_route_observer.dart';

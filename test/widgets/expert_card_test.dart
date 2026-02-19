@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/features/home/widgets/expert_card.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/home/widgets/expert_card.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 @GenerateMocks([AppLogger])
 import 'expert_card_test.mocks.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/firebase_options.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/firebase_options.dart';
 
 /// Helper class to setup test environment
 class TestSetup {

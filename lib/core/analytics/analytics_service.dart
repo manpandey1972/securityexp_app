@@ -2,8 +2,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Check if Crashlytics is supported on the current platform.
 /// Crashlytics is NOT supported on web.

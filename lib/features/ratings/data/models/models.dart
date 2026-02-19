@@ -2,7 +2,7 @@
 ///
 /// Usage:
 /// ```dart
-/// import 'package:greenhive_app/features/ratings/data/models/models.dart';
+/// import 'package:securityexperts_app/features/ratings/data/models/models.dart';
 ///
 /// final rating = Rating(...);
 /// ```

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/features/admin/data/models/admin_skill.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/features/admin/data/models/admin_skill.dart';
 
 /// Repository for admin skills data operations.
 ///

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
 
 /// Service for managing user roles and permissions.
 ///

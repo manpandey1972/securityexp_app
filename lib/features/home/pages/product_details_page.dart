@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final Map<String, dynamic> product;

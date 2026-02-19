@@ -1,6 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Service to manage dynamic configuration via Firebase Remote Config
 /// Allows runtime changes without app updates

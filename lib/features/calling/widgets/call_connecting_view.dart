@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Banner-style connecting view (similar to incoming call banner)
 /// Shows a compact draggable banner while connecting to the call

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Service to manage user presence status in Firebase Realtime Database.
 ///

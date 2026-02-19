@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/models/chat_message_actions.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
-import 'package:greenhive_app/shared/services/media_download_service.dart';
-import 'package:greenhive_app/features/chat/services/chat_scroll_handler.dart';
-import 'package:greenhive_app/features/chat/services/chat_stream_service.dart';
-import 'package:greenhive_app/features/chat/services/reply_management_service.dart';
-import 'package:greenhive_app/features/chat/services/audio_recording_manager.dart';
-import 'package:greenhive_app/features/chat/services/chat_media_cache_helper.dart';
-import 'package:greenhive_app/features/chat/services/chat_media_handler.dart';
-import 'package:greenhive_app/features/chat/services/message_send_handler.dart';
-import 'package:greenhive_app/features/chat/services/chat_recording_handler.dart';
-import 'package:greenhive_app/features/chat/utils/chat_navigation_helper.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/chat_message_actions.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/shared/services/media_download_service.dart';
+import 'package:securityexperts_app/features/chat/services/chat_scroll_handler.dart';
+import 'package:securityexperts_app/features/chat/services/chat_stream_service.dart';
+import 'package:securityexperts_app/features/chat/services/reply_management_service.dart';
+import 'package:securityexperts_app/features/chat/services/audio_recording_manager.dart';
+import 'package:securityexperts_app/features/chat/services/chat_media_cache_helper.dart';
+import 'package:securityexperts_app/features/chat/services/chat_media_handler.dart';
+import 'package:securityexperts_app/features/chat/services/message_send_handler.dart';
+import 'package:securityexperts_app/features/chat/services/chat_recording_handler.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_navigation_helper.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Result container for initialized chat page services and state
 class ChatPageInitializationResult {

@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/shared/widgets/profanity_filtered_text_field.dart';
-import 'package:greenhive_app/features/chat/widgets/camera_widgets.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/widgets/profanity_filtered_text_field.dart';
+import 'package:securityexperts_app/features/chat/widgets/camera_widgets.dart';
 
 class ChatInputConstants {
   static const double inputPadding = AppSpacing.spacing8;

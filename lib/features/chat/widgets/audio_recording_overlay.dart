@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
 
 /// Compact audio recording bar - inline with chat input
 /// Sleek, single-row design similar to modern messaging apps

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/calling/domain/repositories/call_history_repository.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/domain/repositories/call_history_repository.dart';
 
 /// Firebase implementation of [CallHistoryRepository]
 ///

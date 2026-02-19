@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/widgets/error_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/empty_state_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/widgets/error_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/empty_state_widget.dart';
 
 /// Reusable Products Tab widget.
 ///

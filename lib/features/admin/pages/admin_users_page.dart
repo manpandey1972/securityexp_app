@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/features/admin/presentation/view_models/admin_users_view_model.dart';
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart';
-import 'package:greenhive_app/features/admin/widgets/user/user_widgets.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/features/admin/widgets/admin_section_wrapper.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/features/admin/presentation/view_models/admin_users_view_model.dart';
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
+import 'package:securityexperts_app/features/admin/widgets/user/user_widgets.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/admin/widgets/admin_section_wrapper.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
 
 /// Admin page for managing users.
 class AdminUsersPage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:greenhive_app/data/repositories/product/product_repository.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/repositories/product/product_repository.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 void main() {
   group('ProductRepository', () {

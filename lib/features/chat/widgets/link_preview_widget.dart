@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Widget that displays a rich preview for URLs in chat messages
 ///

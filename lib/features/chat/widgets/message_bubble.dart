@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
 import '_message_content_widget.dart';
 import '_reply_preview_widget.dart';
 import '_message_bubble_menu.dart';

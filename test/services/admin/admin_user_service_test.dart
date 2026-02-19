@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/admin/data/repositories/admin_user_repository.dart';
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/admin/data/repositories/admin_user_repository.dart';
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
 
 @GenerateMocks([
   AdminUserRepository,

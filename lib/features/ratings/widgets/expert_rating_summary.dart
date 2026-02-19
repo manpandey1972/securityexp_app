@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/ratings/widgets/star_rating_input.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/ratings/widgets/star_rating_input.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
 
 /// Widget that displays an expert's rating summary.
 ///

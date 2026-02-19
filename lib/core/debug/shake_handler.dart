@@ -1,7 +1,7 @@
 import 'package:shake_detector/shake_detector.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 /// Manages shake gesture detection for toggling verbose logging.
 ///

@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 /// iOS CallKit-style incoming call banner with expand/collapse functionality
 /// Starts as a compact banner at the top and can expand to full screen

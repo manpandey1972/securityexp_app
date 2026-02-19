@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:greenhive_app/data/repositories/expert/expert_repository.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/repositories/expert/expert_repository.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 
 void main() {

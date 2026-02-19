@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Full-screen PDF viewer page with navigation, zoom, and search.

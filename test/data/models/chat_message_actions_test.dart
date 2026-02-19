@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/data/models/chat_message_actions.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/chat_message_actions.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 void main() {
   group('ChatMessageActions', () {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/calling/services/call_navigation_coordinator.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/services/call_navigation_coordinator.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 /// Consolidated service for call initiation and coordination
 /// Combines CallService and CallInitiatorService functionality

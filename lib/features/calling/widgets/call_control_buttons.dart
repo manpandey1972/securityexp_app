@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
-import 'package:greenhive_app/features/calling/services/audio_device_service.dart';
-import 'package:greenhive_app/features/calling/widgets/audio_device_selector.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/features/calling/services/audio_device_service.dart';
+import 'package:securityexperts_app/features/calling/widgets/audio_device_selector.dart';
 
 /// Control buttons for call operations (mute, video, speaker, end call, etc.)
 /// Extracted from call_page.dart for better reusability and separation

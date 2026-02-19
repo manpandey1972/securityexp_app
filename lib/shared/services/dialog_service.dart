@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 /// Unified service for showing standardized dialogs
 /// Consolidates all dialog patterns used throughout the app

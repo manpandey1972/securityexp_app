@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/calling/services/analytics/call_analytics.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/services/analytics/call_analytics.dart';
 
 @GenerateMocks([AppLogger])
 import 'call_analytics_test.mocks.dart';

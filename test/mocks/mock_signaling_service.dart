@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/data/models/call_session.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/signaling_service.dart';
+import 'package:securityexperts_app/data/models/call_session.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/signaling_service.dart';
 
 /// Mock implementation of SignalingService for testing
 ///

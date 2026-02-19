@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
-import 'package:greenhive_app/features/support/widgets/ticket_card.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/support/widgets/ticket_card.dart';
 
 void main() {
   group('TicketCard', () {

@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/features/chat/services/unread_messages_service.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
 
 import 'chat_list_view_model_test.mocks.dart';
 

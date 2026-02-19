@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
 
 /// Date separator widget shown between messages from different days
 class DateSeparatorWidget extends StatelessWidget {

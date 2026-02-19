@@ -1,4 +1,4 @@
-import 'package:greenhive_app/core/config/remote_config_service.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
 
 /// Configuration for the call system
 ///

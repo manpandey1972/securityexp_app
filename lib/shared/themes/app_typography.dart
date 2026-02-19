@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
 
 /// Text styles and typography configuration for the Greenhive app dark theme.
 class AppTypography {

@@ -5,11 +5,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i6;
-import 'package:greenhive_app/data/models/models.dart' as _i2;
-import 'package:greenhive_app/data/repositories/chat/chat_message_repository.dart'
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i6;
+import 'package:securityexperts_app/data/models/models.dart' as _i2;
+import 'package:securityexperts_app/data/repositories/chat/chat_message_repository.dart'
     as _i3;
-import 'package:greenhive_app/data/repositories/interfaces/repository_interfaces.dart'
+import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart'
     as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 

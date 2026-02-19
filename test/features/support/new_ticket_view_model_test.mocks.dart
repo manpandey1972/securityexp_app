@@ -6,13 +6,13 @@
 import 'dart:async' as _i4;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i6;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i7;
-import 'package:greenhive_app/features/support/data/models/models.dart' as _i5;
-import 'package:greenhive_app/features/support/services/support_analytics.dart'
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i7;
+import 'package:securityexperts_app/features/support/data/models/models.dart' as _i5;
+import 'package:securityexperts_app/features/support/services/support_analytics.dart'
     as _i8;
-import 'package:greenhive_app/features/support/services/support_models.dart'
+import 'package:securityexperts_app/features/support/services/support_models.dart'
     as _i2;
-import 'package:greenhive_app/features/support/services/support_service.dart'
+import 'package:securityexperts_app/features/support/services/support_service.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 

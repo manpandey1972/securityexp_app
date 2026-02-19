@@ -1,6 +1,6 @@
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/features/calling/services/call_logger.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/features/calling/services/call_logger.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'call_errors.dart';
 
 /// Handles call errors with appropriate recovery strategies

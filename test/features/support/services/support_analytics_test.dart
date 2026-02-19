@@ -5,8 +5,8 @@
 // in unit tests. These tests verify the service API structure and enums.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/support/services/support_analytics.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/support/services/support_analytics.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

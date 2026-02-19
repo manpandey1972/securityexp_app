@@ -26,99 +26,99 @@ import 'package:flutter/material.dart' as _i15;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart' as _i13;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as _i46;
-import 'package:greenhive_app/core/analytics/analytics_service.dart' as _i28;
-import 'package:greenhive_app/core/auth/role_service.dart' as _i26;
-import 'package:greenhive_app/core/config/remote_config_service.dart' as _i29;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i25;
-import 'package:greenhive_app/core/permissions/permission_types.dart' as _i27;
-import 'package:greenhive_app/core/validators/base_validator.dart' as _i22;
-import 'package:greenhive_app/core/validators/phone_validator.dart' as _i78;
-import 'package:greenhive_app/data/models/models.dart' as _i12;
-import 'package:greenhive_app/data/models/upload_state.dart' as _i56;
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart'
+import 'package:securityexperts_app/core/analytics/analytics_service.dart' as _i28;
+import 'package:securityexperts_app/core/auth/role_service.dart' as _i26;
+import 'package:securityexperts_app/core/config/remote_config_service.dart' as _i29;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i25;
+import 'package:securityexperts_app/core/permissions/permission_types.dart' as _i27;
+import 'package:securityexperts_app/core/validators/base_validator.dart' as _i22;
+import 'package:securityexperts_app/core/validators/phone_validator.dart' as _i78;
+import 'package:securityexperts_app/data/models/models.dart' as _i12;
+import 'package:securityexperts_app/data/models/upload_state.dart' as _i56;
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart'
     as _i35;
-import 'package:greenhive_app/data/repositories/chat/chat_room_repository.dart'
+import 'package:securityexperts_app/data/repositories/chat/chat_room_repository.dart'
     as _i34;
-import 'package:greenhive_app/data/repositories/expert/expert_repository.dart'
+import 'package:securityexperts_app/data/repositories/expert/expert_repository.dart'
     as _i32;
-import 'package:greenhive_app/data/repositories/interfaces/repository_interfaces.dart'
+import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart'
     as _i36;
-import 'package:greenhive_app/data/repositories/product/product_repository.dart'
+import 'package:securityexperts_app/data/repositories/product/product_repository.dart'
     as _i33;
-import 'package:greenhive_app/data/repositories/user/user_repository.dart'
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart'
     as _i31;
-import 'package:greenhive_app/data/services/firestore_instance.dart' as _i30;
-import 'package:greenhive_app/features/admin/data/models/admin_skill.dart'
+import 'package:securityexperts_app/data/services/firestore_instance.dart' as _i30;
+import 'package:securityexperts_app/features/admin/data/models/admin_skill.dart'
     as _i76;
-import 'package:greenhive_app/features/admin/data/models/admin_user.dart'
+import 'package:securityexperts_app/features/admin/data/models/admin_user.dart'
     as _i74;
-import 'package:greenhive_app/features/admin/data/models/faq.dart' as _i70;
-import 'package:greenhive_app/features/admin/data/models/internal_note.dart'
+import 'package:securityexperts_app/features/admin/data/models/faq.dart' as _i70;
+import 'package:securityexperts_app/features/admin/data/models/internal_note.dart'
     as _i72;
-import 'package:greenhive_app/features/admin/data/models/ticket_stats.dart'
+import 'package:securityexperts_app/features/admin/data/models/ticket_stats.dart'
     as _i21;
-import 'package:greenhive_app/features/admin/services/admin_faq_service.dart'
+import 'package:securityexperts_app/features/admin/services/admin_faq_service.dart'
     as _i77;
-import 'package:greenhive_app/features/admin/services/admin_skills_service.dart'
+import 'package:securityexperts_app/features/admin/services/admin_skills_service.dart'
     as _i75;
-import 'package:greenhive_app/features/admin/services/admin_ticket_service.dart'
+import 'package:securityexperts_app/features/admin/services/admin_ticket_service.dart'
     as _i71;
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart'
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart'
     as _i73;
-import 'package:greenhive_app/features/chat/services/audio_recording_manager.dart'
+import 'package:securityexperts_app/features/chat/services/audio_recording_manager.dart'
     as _i59;
-import 'package:greenhive_app/features/chat/services/chat_page_service.dart'
+import 'package:securityexperts_app/features/chat/services/chat_page_service.dart'
     as _i61;
-import 'package:greenhive_app/features/chat/services/reply_management_service.dart'
+import 'package:securityexperts_app/features/chat/services/reply_management_service.dart'
     as _i60;
-import 'package:greenhive_app/features/chat/services/unread_messages_service.dart'
+import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart'
     as _i58;
-import 'package:greenhive_app/features/chat/services/user_presence_service.dart'
+import 'package:securityexperts_app/features/chat/services/user_presence_service.dart'
     as _i62;
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart'
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart'
     as _i63;
-import 'package:greenhive_app/features/profile/services/profile_picture_service.dart'
+import 'package:securityexperts_app/features/profile/services/profile_picture_service.dart'
     as _i65;
-import 'package:greenhive_app/features/profile/services/skills_service.dart'
+import 'package:securityexperts_app/features/profile/services/skills_service.dart'
     as _i66;
-import 'package:greenhive_app/features/ratings/data/models/rating.dart' as _i40;
-import 'package:greenhive_app/features/ratings/data/repositories/rating_repository.dart'
+import 'package:securityexperts_app/features/ratings/data/models/rating.dart' as _i40;
+import 'package:securityexperts_app/features/ratings/data/repositories/rating_repository.dart'
     as _i39;
-import 'package:greenhive_app/features/ratings/services/rating_service.dart'
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart'
     as _i20;
-import 'package:greenhive_app/features/support/data/models/models.dart' as _i18;
-import 'package:greenhive_app/features/support/data/repositories/support_attachment_repository.dart'
+import 'package:securityexperts_app/features/support/data/models/models.dart' as _i18;
+import 'package:securityexperts_app/features/support/data/repositories/support_attachment_repository.dart'
     as _i38;
-import 'package:greenhive_app/features/support/data/repositories/support_repository.dart'
+import 'package:securityexperts_app/features/support/data/repositories/support_repository.dart'
     as _i37;
-import 'package:greenhive_app/features/support/services/device_info_service.dart'
+import 'package:securityexperts_app/features/support/services/device_info_service.dart'
     as _i67;
-import 'package:greenhive_app/features/support/services/faq_service.dart'
+import 'package:securityexperts_app/features/support/services/faq_service.dart'
     as _i69;
-import 'package:greenhive_app/features/support/services/support_models.dart'
+import 'package:securityexperts_app/features/support/services/support_models.dart'
     as _i19;
-import 'package:greenhive_app/features/support/services/support_service.dart'
+import 'package:securityexperts_app/features/support/services/support_service.dart'
     as _i68;
-import 'package:greenhive_app/shared/services/dialog_service.dart' as _i53;
-import 'package:greenhive_app/shared/services/error_handler.dart' as _i44;
-import 'package:greenhive_app/shared/services/event_bus.dart' as _i54;
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart'
+import 'package:securityexperts_app/shared/services/dialog_service.dart' as _i53;
+import 'package:securityexperts_app/shared/services/error_handler.dart' as _i44;
+import 'package:securityexperts_app/shared/services/event_bus.dart' as _i54;
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart'
     as _i47;
-import 'package:greenhive_app/shared/services/media_cache_service.dart' as _i51;
-import 'package:greenhive_app/shared/services/media_download_service.dart'
+import 'package:securityexperts_app/shared/services/media_cache_service.dart' as _i51;
+import 'package:securityexperts_app/shared/services/media_download_service.dart'
     as _i50;
-import 'package:greenhive_app/shared/services/media_upload_service.dart'
+import 'package:securityexperts_app/shared/services/media_upload_service.dart'
     as _i49;
-import 'package:greenhive_app/shared/services/notification_service.dart'
+import 'package:securityexperts_app/shared/services/notification_service.dart'
     as _i45;
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart'
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart'
     as _i57;
-import 'package:greenhive_app/shared/services/profanity/profanity_models.dart'
+import 'package:securityexperts_app/shared/services/profanity/profanity_models.dart'
     as _i14;
-import 'package:greenhive_app/shared/services/ringtone_service.dart' as _i52;
-import 'package:greenhive_app/shared/services/upload_manager.dart' as _i55;
-import 'package:greenhive_app/shared/services/user_cache_service.dart' as _i43;
-import 'package:greenhive_app/shared/services/user_profile_service.dart'
+import 'package:securityexperts_app/shared/services/ringtone_service.dart' as _i52;
+import 'package:securityexperts_app/shared/services/upload_manager.dart' as _i55;
+import 'package:securityexperts_app/shared/services/user_cache_service.dart' as _i43;
+import 'package:securityexperts_app/shared/services/user_profile_service.dart'
     as _i41;
 import 'package:local_auth/local_auth.dart' as _i64;
 import 'package:mockito/mockito.dart' as _i1;

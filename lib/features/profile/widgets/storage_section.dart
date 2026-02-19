@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 /// Widget for displaying and managing storage/cache section.
 class StorageSection extends StatefulWidget {

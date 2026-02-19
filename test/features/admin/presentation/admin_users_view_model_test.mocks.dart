@@ -6,10 +6,10 @@
 import 'dart:async' as _i3;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i5;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i6;
-import 'package:greenhive_app/features/admin/data/models/admin_user.dart'
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i6;
+import 'package:securityexperts_app/features/admin/data/models/admin_user.dart'
     as _i4;
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart'
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 

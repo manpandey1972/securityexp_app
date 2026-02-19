@@ -2,15 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:greenhive_app/features/chat/services/message_send_handler.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/features/chat/services/message_send_handler.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_models.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_models.dart';
 
 import 'message_send_handler_test.mocks.dart';
 

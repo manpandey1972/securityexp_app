@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/admin/data/models/faq.dart';
-import 'package:greenhive_app/features/admin/services/admin_faq_service.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_shape_config.dart';
-import 'package:greenhive_app/shared/themes/app_shape_extensions.dart';
-import 'package:greenhive_app/features/admin/widgets/admin_section_wrapper.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/admin/data/models/faq.dart';
+import 'package:securityexperts_app/features/admin/services/admin_faq_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_config.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_extensions.dart';
+import 'package:securityexperts_app/features/admin/widgets/admin_section_wrapper.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
 
 /// Page for creating or editing an FAQ.
 class AdminFaqEditorPage extends StatefulWidget {

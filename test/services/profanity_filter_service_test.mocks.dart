@@ -9,8 +9,8 @@ import 'package:firebase_core/firebase_core.dart' as _i2;
 import 'package:firebase_remote_config/firebase_remote_config.dart' as _i6;
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart'
     as _i3;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i4;
-import 'package:greenhive_app/shared/services/snackbar_service.dart' as _i5;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i4;
+import 'package:securityexperts_app/shared/services/snackbar_service.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
 

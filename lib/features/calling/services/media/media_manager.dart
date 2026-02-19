@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/call_session.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/data/models/call_session.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
 
 /// Abstract base class for Media Management (WebRTC vs LiveKit)
 /// The UI interacts ONLY with this class, never with specific providers.

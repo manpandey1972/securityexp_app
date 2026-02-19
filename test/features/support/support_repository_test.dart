@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:greenhive_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
 
 /// Unit tests for Support models
 ///

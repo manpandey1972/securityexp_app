@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Displays local camera preview in a small corner window (Picture-in-Picture style)
 /// When video is disabled, shows "Video Off" indicator instead

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/support/data/models/pending_attachment.dart';
-import 'package:greenhive_app/features/support/widgets/attachment_picker.dart';
+import 'package:securityexperts_app/features/support/data/models/pending_attachment.dart';
+import 'package:securityexperts_app/features/support/widgets/attachment_picker.dart';
 
 import '../../../helpers/widget_test_helpers.dart';
 

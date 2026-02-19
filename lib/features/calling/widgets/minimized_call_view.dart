@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/calling/pages/call_controller.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
 
 class MinimizedCallView extends StatefulWidget {
   final CallController controller;

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/core/constants.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/core/constants.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
 
 void main() {
   group('AppConstants', () {

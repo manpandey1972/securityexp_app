@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/validators/pii_validator.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/validators/pii_validator.dart';
 
 /// State for the rating submission page.
 class RatingState {

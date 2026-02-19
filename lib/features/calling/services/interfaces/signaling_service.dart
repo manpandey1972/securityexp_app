@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/data/models/call_session.dart';
+import 'package:securityexperts_app/data/models/call_session.dart';
 
 /// Status of a call in the signaling layer
 enum CallStatus { connecting, ringing, connected, ended, rejected, failed }

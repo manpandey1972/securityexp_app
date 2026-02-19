@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Global user profile service that maintains the current user's profile
 /// across the entire application. Uses the ChangeNotifier pattern for reactive updates.

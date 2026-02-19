@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 
 /// Manages media caching with LRU eviction policy and parallel prefetching
 class ChatMediaCacheHelper {

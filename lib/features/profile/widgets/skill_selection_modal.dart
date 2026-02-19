@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/data/models/skill.dart';
-import 'package:greenhive_app/features/profile/presentation/view_models/user_profile_view_model.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/data/models/skill.dart';
+import 'package:securityexperts_app/features/profile/presentation/view_models/user_profile_view_model.dart';
 
 /// Skills selection modal for profile page.
 class SkillSelectionModal extends StatelessWidget {

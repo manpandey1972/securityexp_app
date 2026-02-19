@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/widgets/shimmer_loading.dart';
+import 'package:securityexperts_app/shared/widgets/shimmer_loading.dart';
 
 import '../helpers/widget_test_helpers.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 typedef OnReplyChanged = void Function(Message? replyingTo);
 

@@ -1,4 +1,4 @@
-import 'package:greenhive_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/data/models/models.dart' as models;
 
 /// Immutable state for ChatPage
 class ChatListState {

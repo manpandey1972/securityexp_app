@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/data/models/skill.dart';
+import 'package:securityexperts_app/data/models/skill.dart';
 
 void main() {
   group('Skill Model', () {

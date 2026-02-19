@@ -41,53 +41,52 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCFJU1ZSrkTScFxefLApd5aZPQ9hhuyVwE',
-    appId: '1:1054913877112:web:f0ad4e836010646a12898d',
-    messagingSenderId: '1054913877112',
-    projectId: 'greenhive-service',
-    authDomain: 'greenhive-service.firebaseapp.com',
-    databaseURL: 'https://greenhive-service-default-rtdb.firebaseio.com',
-    storageBucket: 'greenhive-service.firebasestorage.app',
-    measurementId: 'G-MXN7VL3EYS',
+    apiKey: 'AIzaSyBNcNVnt6Td9FJ_0aOLcLSU-t4DLdYFlHk',
+    appId: '1:1015827376061:web:03f59d7cd8330245ca54d4',
+    messagingSenderId: '1015827376061',
+    projectId: 'securityexp-app',
+    authDomain: 'securityexp-app.firebaseapp.com',
+    databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
+    storageBucket: 'securityexp-app.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBWJxZLhNVUTPN84l6jyjSPY9urMkuCa0Q',
-    appId: '1:1054913877112:android:84654b1b4e0249a112898d',
-    messagingSenderId: '1054913877112',
-    projectId: 'greenhive-service',
-    storageBucket: 'greenhive-service.firebasestorage.app',
+    apiKey: 'AIzaSyBe9D55nX2YJq1aIMf6uPW4gFNokaffbVo',
+    appId: '1:1015827376061:android:30b282d2d31bcaadca54d4',
+    messagingSenderId: '1015827376061',
+    projectId: 'securityexp-app',
+    databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
+    storageBucket: 'securityexp-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDGO8k0rMKrLe6OHSZSTvivK9aa_0ozTjo',
-    appId: '1:1054913877112:ios:076f7d8ba3ca91f912898d',
-    messagingSenderId: '1054913877112',
-    projectId: 'greenhive-service',
-    storageBucket: 'greenhive-service.firebasestorage.app',
-    iosClientId:
-        '1054913877112-gkai1rogp8b68u26n29bonuon0na8869.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAbp_cYNPSnPOlYMnTtnGKJUCbwOSbtvbM',
+    appId: '1:1015827376061:ios:23864d39adb5e70cca54d4',
+    messagingSenderId: '1015827376061',
+    projectId: 'securityexp-app',
+    databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
+    storageBucket: 'securityexp-app.firebasestorage.app',
     iosBundleId: 'com.example.securityexpertsApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDGO8k0rMKrLe6OHSZSTvivK9aa_0ozTjo',
-    appId: '1:1054913877112:ios:076f7d8ba3ca91f912898d',
-    messagingSenderId: '1054913877112',
-    projectId: 'greenhive-service',
-    storageBucket: 'greenhive-service.firebasestorage.app',
-    iosClientId:
-        '1054913877112-gkai1rogp8b68u26n29bonuon0na8869.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAbp_cYNPSnPOlYMnTtnGKJUCbwOSbtvbM',
+    appId: '1:1015827376061:ios:23864d39adb5e70cca54d4',
+    messagingSenderId: '1015827376061',
+    projectId: 'securityexp-app',
+    databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
+    storageBucket: 'securityexp-app.firebasestorage.app',
     iosBundleId: 'com.example.securityexpertsApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCFJU1ZSrkTScFxefLApd5aZPQ9hhuyVwE',
-    appId: '1:1054913877112:web:1169f51b96a19da312898d',
-    messagingSenderId: '1054913877112',
-    projectId: 'greenhive-service',
-    authDomain: 'greenhive-service.firebaseapp.com',
-    storageBucket: 'greenhive-service.firebasestorage.app',
-    measurementId: 'G-GGTPCD51N5',
+    apiKey: 'AIzaSyBNcNVnt6Td9FJ_0aOLcLSU-t4DLdYFlHk',
+    appId: '1:1015827376061:web:0f03cd329136db44ca54d4',
+    messagingSenderId: '1015827376061',
+    projectId: 'securityexp-app',
+    authDomain: 'securityexp-app.firebaseapp.com',
+    databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
+    storageBucket: 'securityexp-app.firebasestorage.app',
   );
+
 }

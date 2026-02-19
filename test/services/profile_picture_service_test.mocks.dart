@@ -15,8 +15,8 @@ import 'package:firebase_performance/firebase_performance.dart' as _i9;
 import 'package:firebase_storage/firebase_storage.dart' as _i5;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart'
     as _i6;
-import 'package:greenhive_app/core/analytics/analytics_service.dart' as _i15;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i14;
+import 'package:securityexperts_app/core/analytics/analytics_service.dart' as _i15;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i14;
 import 'package:image_picker/image_picker.dart' as _i13;
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
     as _i8;

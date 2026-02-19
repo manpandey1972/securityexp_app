@@ -2,13 +2,13 @@
 ///
 /// Import this file to access all models:
 /// ```dart
-/// import 'package:greenhive_app/data/models/models.dart';
+/// import 'package:securityexperts_app/data/models/models.dart';
 /// ```
 ///
 /// Individual models can also be imported directly:
 /// ```dart
-/// import 'package:greenhive_app/data/models/user.dart';
-/// import 'package:greenhive_app/data/models/message.dart';
+/// import 'package:securityexperts_app/data/models/user.dart';
+/// import 'package:securityexperts_app/data/models/message.dart';
 /// ```
 library;
 

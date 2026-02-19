@@ -1,4 +1,4 @@
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Immutable state class for user profile management
 class UserProfileState {

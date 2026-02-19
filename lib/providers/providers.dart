@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/providers/auth_provider.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// App-level Provider setup and initialization
 

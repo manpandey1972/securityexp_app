@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/admin/presentation/state/admin_state.dart';
-import 'package:greenhive_app/features/admin/services/admin_ticket_service.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/admin/presentation/state/admin_state.dart';
+import 'package:securityexperts_app/features/admin/services/admin_ticket_service.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
 
 /// ViewModel for the admin tickets list page.
 class AdminTicketsViewModel extends ChangeNotifier {

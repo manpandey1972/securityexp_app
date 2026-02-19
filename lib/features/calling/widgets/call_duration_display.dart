@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
 
 /// Displays the call duration with formatted time (HH:MM:SS or MM:SS)
 /// Extracted from call_page.dart for reusability

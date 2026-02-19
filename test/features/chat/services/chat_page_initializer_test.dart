@@ -6,7 +6,7 @@
 // to unit test comprehensively without a full widget environment.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/chat/services/chat_page_initializer.dart';
+import 'package:securityexperts_app/features/chat/services/chat_page_initializer.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

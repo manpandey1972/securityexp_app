@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
-import 'package:greenhive_app/features/support/pages/new_ticket_page.dart';
-import 'package:greenhive_app/shared/services/pending_notification_handler.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/support/pages/new_ticket_page.dart';
+import 'package:securityexperts_app/shared/services/pending_notification_handler.dart';
 
 /// Helper class for reporting issues from error states.
 ///

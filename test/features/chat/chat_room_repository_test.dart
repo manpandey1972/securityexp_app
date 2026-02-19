@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_room_repository.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_room_repository.dart';
 
 /// Unit tests for ChatRoomRepository
 ///

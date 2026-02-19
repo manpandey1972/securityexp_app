@@ -1,4 +1,4 @@
-/// @Deprecated('Import AppStrings from package:greenhive_app/core/constants.dart instead')
+/// @Deprecated('Import AppStrings from package:securityexperts_app/core/constants.dart instead')
 ///
 /// This file re-exports AppStrings from the canonical location.
 /// The AppStrings class and all phone-auth constants are now in
@@ -6,7 +6,7 @@
 /// (especially phone_auth) continue to work via this re-export.
 library;
 
-export 'package:greenhive_app/core/constants.dart' show AppStrings;
+export 'package:securityexperts_app/core/constants.dart' show AppStrings;
 
 /// Country codes list for phone authentication
 class AppCountries {

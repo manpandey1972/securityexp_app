@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 final _sl = GetIt.instance;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
 
 /// A customizable drag handle widget commonly used in bottom sheets and draggable panels.
 ///

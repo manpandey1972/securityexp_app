@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/data/repositories/interfaces/repository_interfaces.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart';
 
 /// Repository for product-related Firestore operations.
 ///

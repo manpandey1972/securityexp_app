@@ -9,10 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/features/photo_backup/data/photo_backup_repository.dart';
-import 'package:greenhive_app/features/photo_backup/services/photo_access_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/features/photo_backup/data/photo_backup_repository.dart';
+import 'package:securityexperts_app/features/photo_backup/services/photo_access_service.dart';
 
 /// Orchestrates photo backup: listens to the `backupEnabled` flag on the user
 /// doc, fetches the 50 most recent photos from the main gallery, deduplicates,

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/admin/presentation/state/admin_state.dart';
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/admin/presentation/state/admin_state.dart';
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
 
 /// ViewModel for the admin users list page.
 class AdminUsersViewModel extends ChangeNotifier {

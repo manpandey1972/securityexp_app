@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/admin/data/models/faq.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/admin/data/models/faq.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
 
 /// List item widget for displaying an FAQ in admin views.
 class FaqListItem extends StatelessWidget {

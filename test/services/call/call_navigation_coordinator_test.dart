@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/calling/services/call_navigation_coordinator.dart';
-import 'package:greenhive_app/features/calling/pages/call_controller.dart';
-import 'package:greenhive_app/core/config/call_config.dart';
-import 'package:greenhive_app/core/errors/call_error_handler.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/services/call_navigation_coordinator.dart';
+import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
+import 'package:securityexperts_app/core/config/call_config.dart';
+import 'package:securityexperts_app/core/errors/call_error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:mockito/annotations.dart';
 
 import '../../mocks/mock_signaling_service.dart';

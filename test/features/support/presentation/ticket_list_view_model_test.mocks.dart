@@ -5,8 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:greenhive_app/features/support/data/models/models.dart' as _i4;
-import 'package:greenhive_app/features/support/services/support_analytics.dart'
+import 'package:securityexperts_app/features/support/data/models/models.dart' as _i4;
+import 'package:securityexperts_app/features/support/services/support_analytics.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 

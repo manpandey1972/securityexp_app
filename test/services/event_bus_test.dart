@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/services/event_bus.dart';
+import 'package:securityexperts_app/shared/services/event_bus.dart';
 
 void main() {
   group('EventBus', () {

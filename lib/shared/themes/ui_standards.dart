@@ -82,8 +82,8 @@ library;
 // for the UI design system standards.
 
 // Export all theme components for easy access
-export 'package:greenhive_app/shared/themes/app_colors.dart';
-export 'package:greenhive_app/shared/themes/app_typography.dart';
-export 'package:greenhive_app/shared/themes/app_spacing.dart';
-export 'package:greenhive_app/shared/themes/app_borders.dart';
-export 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
+export 'package:securityexperts_app/shared/themes/app_colors.dart';
+export 'package:securityexperts_app/shared/themes/app_typography.dart';
+export 'package:securityexperts_app/shared/themes/app_spacing.dart';
+export 'package:securityexperts_app/shared/themes/app_borders.dart';
+export 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';

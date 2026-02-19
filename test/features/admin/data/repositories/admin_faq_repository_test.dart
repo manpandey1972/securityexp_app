@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:greenhive_app/features/admin/data/repositories/admin_faq_repository.dart';
-import 'package:greenhive_app/features/admin/data/models/faq.dart';
+import 'package:securityexperts_app/features/admin/data/repositories/admin_faq_repository.dart';
+import 'package:securityexperts_app/features/admin/data/models/faq.dart';
 
 import '../../../../helpers/service_mocks.mocks.dart';
 

@@ -4,9 +4,9 @@
 
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
-import 'package:greenhive_app/features/support/services/support_validator.dart';
-import 'package:greenhive_app/features/support/services/support_models.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/support/services/support_validator.dart';
+import 'package:securityexperts_app/features/support/services/support_models.dart';
 
 void main() {
   group('SupportValidator', () {

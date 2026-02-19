@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/home/services/home_data_loader.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/shared/services/event_bus.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/home/services/home_data_loader.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/event_bus.dart';
 import '../state/home_state.dart';
 
 /// ViewModel for HomePage - manages all business logic and state

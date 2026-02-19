@@ -4,11 +4,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenhive_app/features/onboarding/presentation/view_models/onboarding_view_model.dart';
-import 'package:greenhive_app/features/onboarding/presentation/state/onboarding_state.dart';
-import 'package:greenhive_app/data/models/skill.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/onboarding/presentation/view_models/onboarding_view_model.dart';
+import 'package:securityexperts_app/features/onboarding/presentation/state/onboarding_state.dart';
+import 'package:securityexperts_app/data/models/skill.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 import '../../../helpers/service_mocks.mocks.dart';
 

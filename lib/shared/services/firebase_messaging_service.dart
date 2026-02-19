@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:greenhive_app/shared/services/pending_notification_handler.dart';
-import 'package:greenhive_app/data/repositories/user/user_repository.dart';
-import 'package:greenhive_app/features/calling/services/incoming_call_manager.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/pending_notification_handler.dart';
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
+import 'package:securityexperts_app/features/calling/services/incoming_call_manager.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'notification_service.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 
 /// Handles Firebase Cloud Messaging (FCM) setup and message processing
 ///

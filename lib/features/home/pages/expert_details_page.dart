@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/features/profile/services/skills_service.dart';
-import 'package:greenhive_app/features/ratings/data/models/rating.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/features/ratings/widgets/expert_rating_summary.dart';
-import 'package:greenhive_app/features/ratings/widgets/rating_card.dart';
-import 'package:greenhive_app/features/ratings/pages/expert_reviews_page.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/themes/app_card_styles.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/features/profile/services/skills_service.dart';
+import 'package:securityexperts_app/features/ratings/data/models/rating.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/features/ratings/widgets/expert_rating_summary.dart';
+import 'package:securityexperts_app/features/ratings/widgets/rating_card.dart';
+import 'package:securityexperts_app/features/ratings/pages/expert_reviews_page.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/themes/app_card_styles.dart';
 
 class ExpertDetailsPage extends StatefulWidget {
   final models.User expert; // Required user object

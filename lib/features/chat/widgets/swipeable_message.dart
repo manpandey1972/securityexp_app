@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
 
 /// Wrapper widget that enables swipe-to-reply gesture on message bubbles
 /// Swipe direction depends on message position:

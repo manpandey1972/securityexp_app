@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/providers/app_state.dart';
+import 'package:securityexperts_app/providers/app_state.dart';
 
 void main() {
   group('AppState Base Classes', () {

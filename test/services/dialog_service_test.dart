@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/services/dialog_service.dart';
+import 'package:securityexperts_app/shared/services/dialog_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

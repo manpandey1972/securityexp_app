@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 void main() {
   group('DebugAppLogger', () {

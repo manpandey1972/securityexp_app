@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart';
-import 'package:greenhive_app/shared/services/notification_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
+import 'package:securityexperts_app/shared/services/notification_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 @GenerateMocks([
   FirebaseMessaging,

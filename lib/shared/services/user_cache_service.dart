@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Centralized service for caching user objects
 /// Stores user data in memory to avoid redundant Firestore queries

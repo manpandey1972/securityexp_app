@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'call_navigation_coordinator.dart';
 import 'callkit/callkit_service.dart';
 import 'incoming_call_manager.dart';

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/validators/pii_validator.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/validators/pii_validator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 /// Handles message sending logic in chat
 class MessageSendHandler {

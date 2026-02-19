@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/features/admin/data/models/faq.dart';
-import 'package:greenhive_app/features/admin/presentation/state/admin_state.dart';
-import 'package:greenhive_app/features/admin/presentation/view_models/admin_faqs_view_model.dart';
-import 'package:greenhive_app/features/admin/pages/admin_faq_editor_page.dart';
-import 'package:greenhive_app/features/admin/widgets/admin_compact_stat_card.dart';
-import 'package:greenhive_app/features/admin/widgets/faq/faq_widgets.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/animations/page_transitions.dart';
+import 'package:securityexperts_app/features/admin/data/models/faq.dart';
+import 'package:securityexperts_app/features/admin/presentation/state/admin_state.dart';
+import 'package:securityexperts_app/features/admin/presentation/view_models/admin_faqs_view_model.dart';
+import 'package:securityexperts_app/features/admin/pages/admin_faq_editor_page.dart';
+import 'package:securityexperts_app/features/admin/widgets/admin_compact_stat_card.dart';
+import 'package:securityexperts_app/features/admin/widgets/faq/faq_widgets.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/animations/page_transitions.dart';
 
 /// Embeddable content widget for FAQ management.
 /// Used in the admin dashboard's IndexedStack.

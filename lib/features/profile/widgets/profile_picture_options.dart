@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 /// Photo option widget for profile picture selection modal.
 class CircularPhotoOption extends StatelessWidget {

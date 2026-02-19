@@ -5,9 +5,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i5;
-import 'package:greenhive_app/features/ratings/data/models/rating.dart' as _i4;
-import 'package:greenhive_app/features/ratings/services/rating_service.dart'
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i5;
+import 'package:securityexperts_app/features/ratings/data/models/rating.dart' as _i4;
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 /// Popup menu for message actions (reply, copy, edit, delete)
 /// Extracted from MessageBubble for better testability

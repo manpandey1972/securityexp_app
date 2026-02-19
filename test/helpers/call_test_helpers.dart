@@ -1,6 +1,6 @@
-import 'package:greenhive_app/core/config/call_config.dart';
-import 'package:greenhive_app/core/config/remote_config_service.dart';
-import 'package:greenhive_app/data/models/call_session.dart';
+import 'package:securityexperts_app/core/config/call_config.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
+import 'package:securityexperts_app/data/models/call_session.dart';
 
 /// Test helper utilities for call system tests
 ///

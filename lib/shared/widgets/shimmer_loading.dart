@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_borders.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_borders.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
 
 /// Shimmer loading widgets for modern loading states
 /// Provides reusable shimmer components that match app theme

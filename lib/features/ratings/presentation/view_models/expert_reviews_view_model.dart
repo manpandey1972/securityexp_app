@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/features/ratings/data/models/rating.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/ratings/data/models/rating.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// State for the expert reviews page.
 class ExpertReviewsState {

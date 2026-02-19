@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/foundation.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Provider for managing and exposing user role state.
 ///

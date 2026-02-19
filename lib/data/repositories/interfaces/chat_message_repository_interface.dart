@@ -1,5 +1,5 @@
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/repositories/interfaces/pagination_cursor.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/repositories/interfaces/pagination_cursor.dart';
 
 /// Abstract interface for chat message repository operations.
 /// 

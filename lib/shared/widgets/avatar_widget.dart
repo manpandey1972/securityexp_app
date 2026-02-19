@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 /// A simple avatar widget for displaying profile pictures or initials.
 ///

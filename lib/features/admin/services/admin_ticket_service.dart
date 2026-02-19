@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/features/admin/data/models/internal_note.dart';
-import 'package:greenhive_app/features/admin/data/models/ticket_stats.dart';
-import 'package:greenhive_app/features/admin/data/repositories/admin_ticket_repository.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/features/admin/data/models/internal_note.dart';
+import 'package:securityexperts_app/features/admin/data/models/ticket_stats.dart';
+import 'package:securityexperts_app/features/admin/data/repositories/admin_ticket_repository.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 
-export 'package:greenhive_app/features/admin/data/models/internal_note.dart';
-export 'package:greenhive_app/features/admin/data/models/ticket_stats.dart';
+export 'package:securityexperts_app/features/admin/data/models/internal_note.dart';
+export 'package:securityexperts_app/features/admin/data/models/ticket_stats.dart';
 
 /// Service for admin ticket operations.
 ///

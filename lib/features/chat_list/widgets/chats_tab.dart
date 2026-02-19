@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/chat_list/pages/chat_page.dart';
+import 'package:securityexperts_app/features/chat_list/pages/chat_page.dart';
 
 /// Reusable Chats Tab Widget
 /// Self-contained chats interface with loading and error states

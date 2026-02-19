@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/providers/role_provider.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/providers/role_provider.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 /// Widget that conditionally shows its child based on user role.
 ///

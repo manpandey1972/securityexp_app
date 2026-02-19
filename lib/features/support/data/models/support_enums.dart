@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
 
 /// Types of support tickets that users can submit
 enum TicketType {

@@ -1,5 +1,5 @@
-import 'package:greenhive_app/features/calling/services/interfaces/media_manager_factory.dart';
-import 'package:greenhive_app/features/calling/services/media/media_manager.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/media_manager_factory.dart';
+import 'package:securityexperts_app/features/calling/services/media/media_manager.dart';
 import 'mock_media_manager.dart';
 
 /// Mock implementation of MediaManagerFactory for testing

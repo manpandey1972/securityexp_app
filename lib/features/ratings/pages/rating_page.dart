@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/ratings/presentation/view_models/rating_view_model.dart';
-import 'package:greenhive_app/features/ratings/widgets/star_rating_input.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/ratings/presentation/view_models/rating_view_model.dart';
+import 'package:securityexperts_app/features/ratings/widgets/star_rating_input.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Page for submitting a rating for an expert.
 ///

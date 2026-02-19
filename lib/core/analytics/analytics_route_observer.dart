@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Route observer that tracks screen views and measures screen load times.
 ///

@@ -4,12 +4,12 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:greenhive_app/features/authentication/pages/splash_screen.dart';
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart';
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart';
-import 'package:greenhive_app/data/repositories/user/user_repository.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/authentication/pages/splash_screen.dart';
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 @GenerateMocks([
   FirebaseAuth,

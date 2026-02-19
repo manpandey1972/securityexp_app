@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_shape_config.dart';
-import 'package:greenhive_app/shared/themes/app_shape_extensions.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/features/support/data/models/models.dart';
-import 'package:greenhive_app/features/admin/presentation/view_models/admin_ticket_detail_view_model.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_config.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_extensions.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/features/support/data/models/models.dart';
+import 'package:securityexperts_app/features/admin/presentation/view_models/admin_ticket_detail_view_model.dart';
 import 'ticket_badges.dart';
 
 /// Shows status picker bottom sheet

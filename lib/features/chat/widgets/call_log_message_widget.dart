@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
 
 /// Widget that displays a call log message (missed, rejected, ended)
 class CallLogMessageWidget extends StatelessWidget {

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 
 typedef OnMessagesUpdated = void Function(List<Message> messages);
 typedef OnError = void Function(String error);

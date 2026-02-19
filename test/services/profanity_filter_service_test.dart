@@ -3,9 +3,9 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 import '../helpers/test_setup.dart';
 
 // Generate mocks

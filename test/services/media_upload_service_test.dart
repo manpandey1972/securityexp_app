@@ -4,12 +4,12 @@ import 'package:mockito/annotations.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:greenhive_app/shared/services/media_upload_service.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_message_repository.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/services/media_upload_service.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_message_repository.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 @GenerateMocks([
   ChatMessageRepository,

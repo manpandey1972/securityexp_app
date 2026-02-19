@@ -5,10 +5,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/features/admin/presentation/view_models/admin_users_view_model.dart';
-import 'package:greenhive_app/features/admin/presentation/state/admin_state.dart';
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/admin/presentation/view_models/admin_users_view_model.dart';
+import 'package:securityexperts_app/features/admin/presentation/state/admin_state.dart';
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 @GenerateMocks([AdminUserService, AppLogger])
 import 'admin_users_view_model_test.mocks.dart';

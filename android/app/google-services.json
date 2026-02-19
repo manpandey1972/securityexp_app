@@ -1,43 +1,27 @@
 {
   "project_info": {
-    "project_number": "1054913877112",
-    "project_id": "greenhive-service",
-    "storage_bucket": "greenhive-service.firebasestorage.app"
+    "project_number": "1015827376061",
+    "firebase_url": "https://securityexp-app-default-rtdb.firebaseio.com",
+    "project_id": "securityexp-app",
+    "storage_bucket": "securityexp-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1054913877112:android:84654b1b4e0249a112898d",
+        "mobilesdk_app_id": "1:1015827376061:android:30b282d2d31bcaadca54d4",
         "android_client_info": {
           "package_name": "com.example.securityexperts_app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1054913877112-hjn1odpia3vfqvdelnrfka2000p20d9f.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBWJxZLhNVUTPN84l6jyjSPY9urMkuCa0Q"
+          "current_key": "AIzaSyBe9D55nX2YJq1aIMf6uPW4gFNokaffbVo"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1054913877112-hjn1odpia3vfqvdelnrfka2000p20d9f.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1054913877112-gkai1rogp8b68u26n29bonuon0na8869.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.securityexpertsApp"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

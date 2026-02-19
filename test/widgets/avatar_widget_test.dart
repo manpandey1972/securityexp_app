@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/widgets/avatar_widget.dart';
+import 'package:securityexperts_app/shared/widgets/avatar_widget.dart';
 
 import '../helpers/widget_test_helpers.dart';
 

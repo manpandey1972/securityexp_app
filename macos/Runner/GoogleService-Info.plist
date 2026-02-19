@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>1054913877112-gkai1rogp8b68u26n29bonuon0na8869.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1054913877112-gkai1rogp8b68u26n29bonuon0na8869</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDGO8k0rMKrLe6OHSZSTvivK9aa_0ozTjo</string>
+	<string>AIzaSyAbp_cYNPSnPOlYMnTtnGKJUCbwOSbtvbM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1054913877112</string>
+	<string>1015827376061</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.securityexpertsApp</string>
 	<key>PROJECT_ID</key>
-	<string>greenhive-service</string>
+	<string>securityexp-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>greenhive-service.firebasestorage.app</string>
+	<string>securityexp-app.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1054913877112:ios:076f7d8ba3ca91f912898d</string>
+	<string>1:1015827376061:ios:23864d39adb5e70cca54d4</string>
+	<key>DATABASE_URL</key>
+	<string>https://securityexp-app-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

@@ -3,8 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/features/chat/services/user_presence_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 @GenerateMocks([
   FirebaseDatabase,

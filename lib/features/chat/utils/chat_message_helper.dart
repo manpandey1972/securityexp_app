@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Helper class for message-related operations
 class ChatMessageHelper {

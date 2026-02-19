@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
-import 'package:greenhive_app/shared/services/dialog_service.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/shared/services/dialog_service.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 /// Helper class for chat-related dialogs
 class ChatDialogHelper {

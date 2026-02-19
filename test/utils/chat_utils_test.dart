@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 void main() {
   group('ChatConstants', () {

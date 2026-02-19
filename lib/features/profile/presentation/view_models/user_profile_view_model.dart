@@ -4,19 +4,19 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:greenhive_app/features/profile/presentation/state/user_profile_state.dart';
-import 'package:greenhive_app/data/repositories/user/user_repository.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/features/profile/services/profile_picture_service.dart';
-import 'package:greenhive_app/shared/services/user_profile_service.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/shared/services/event_bus.dart';
-import 'package:greenhive_app/features/profile/services/skills_service.dart';
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/data/models/skill.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/profile/presentation/state/user_profile_state.dart';
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/features/profile/services/profile_picture_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/services/event_bus.dart';
+import 'package:securityexperts_app/features/profile/services/skills_service.dart';
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/data/models/skill.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// ViewModel for user profile management
 class UserProfileViewModel extends ChangeNotifier {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:greenhive_app/features/chat/services/chat_media_cache_helper.dart';
-import 'package:greenhive_app/features/chat/widgets/video_widgets.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat/services/chat_media_cache_helper.dart';
+import 'package:securityexperts_app/features/chat/widgets/video_widgets.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Reusable widget for rendering video messages with caching support
 class MessageVideoWidget extends StatelessWidget {

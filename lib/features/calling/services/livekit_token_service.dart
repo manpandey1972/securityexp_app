@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:greenhive_app/core/config/livekit_config.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/config/livekit_config.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Service for generating LiveKit access tokens from cloud function
 class LiveKitTokenService {

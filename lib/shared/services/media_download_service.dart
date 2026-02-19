@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
 import 'media_cache_service.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 class MediaDownloadService {
   final MediaCacheService _mediaCacheService;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/providers/auth_provider.dart';
-import 'package:greenhive_app/providers/role_provider.dart';
-import 'package:greenhive_app/shared/services/upload_manager.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/providers/role_provider.dart';
+import 'package:securityexperts_app/shared/services/upload_manager.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
 
 /// Provider utilities and factory functions
 

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/features/home/services/home_data_loader.dart';
-import 'package:greenhive_app/features/chat/services/unread_messages_service.dart';
-import 'package:greenhive_app/features/home/presentation/view_models/home_view_model.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/features/home/services/home_data_loader.dart';
+import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
+import 'package:securityexperts_app/features/home/presentation/view_models/home_view_model.dart';
 
 @GenerateMocks([HomeDataLoader, UnreadMessagesService, AppLogger])
 import 'home_view_model_test.mocks.dart';

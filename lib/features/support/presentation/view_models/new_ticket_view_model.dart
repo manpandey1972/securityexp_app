@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/validators/pii_validator.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/validators/pii_validator.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
 import '../../data/models/models.dart';
 import '../../services/support_service.dart';

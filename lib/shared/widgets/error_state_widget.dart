@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/support/services/issue_reporter.dart';
+import 'package:securityexperts_app/features/support/services/issue_reporter.dart';
 import '../themes/app_colors.dart';
 import '../themes/app_spacing.dart';
 import '../themes/app_typography.dart';

@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
-import 'package:greenhive_app/features/chat/widgets/video_widgets.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/features/chat/widgets/video_widgets.dart';
 
 /// Handles navigation and preview operations in chat
 class ChatNavigationHelper {

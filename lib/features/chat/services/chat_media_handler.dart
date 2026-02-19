@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/services/upload_manager.dart';
-import 'package:greenhive_app/shared/services/media_confirmation_dialog_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/services/upload_manager.dart';
+import 'package:securityexperts_app/shared/services/media_confirmation_dialog_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Handles media-related operations in chat (file picking, uploading, audio confirmation)
 ///

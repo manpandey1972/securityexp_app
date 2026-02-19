@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/features/chat/widgets/linkified_text.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/chat/widgets/linkified_text.dart';
 
 import '../../../helpers/widget_test_helpers.dart';
 import '../../../helpers/service_mocks.mocks.dart';

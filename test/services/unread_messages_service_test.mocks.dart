@@ -14,8 +14,8 @@ import 'package:firebase_auth/firebase_auth.dart' as _i7;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     as _i6;
 import 'package:firebase_core/firebase_core.dart' as _i2;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i12;
-import 'package:greenhive_app/data/services/firestore_instance.dart' as _i11;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i12;
+import 'package:securityexperts_app/data/services/firestore_instance.dart' as _i11;
 import 'package:http/http.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i9;

@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/features/calling/widgets/call_duration_display.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/features/calling/widgets/call_room_constants.dart';
-import 'package:greenhive_app/features/calling/widgets/mute_indicator_badge.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/features/calling/widgets/call_duration_display.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/features/calling/widgets/call_room_constants.dart';
+import 'package:securityexperts_app/features/calling/widgets/mute_indicator_badge.dart';
 
 /// Widget for displaying the audio-only call UI.
 /// Shows peer avatar, name, duration, and mute indicator.

@@ -4,7 +4,7 @@
 ///
 /// Example:
 /// ```dart
-/// import 'package:greenhive_app/core/validators/validators.dart';
+/// import 'package:securityexperts_app/core/validators/validators.dart';
 ///
 /// // Validate email
 /// final emailResult = EmailValidator().validate('user@example.com');

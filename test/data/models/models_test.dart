@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 @GenerateMocks([Timestamp])
 void main() {

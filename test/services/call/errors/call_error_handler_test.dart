@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/errors/call_errors.dart';
-import 'package:greenhive_app/core/errors/call_error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/errors/call_errors.dart';
+import 'package:securityexperts_app/core/errors/call_error_handler.dart';
 
 import '../../../mocks/mock_call_logger.dart';
 

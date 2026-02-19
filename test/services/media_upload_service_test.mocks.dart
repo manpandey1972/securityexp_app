@@ -15,12 +15,12 @@ import 'package:firebase_performance/firebase_performance.dart' as _i3;
 import 'package:firebase_storage/firebase_storage.dart' as _i8;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart'
     as _i9;
-import 'package:greenhive_app/core/analytics/analytics_service.dart' as _i12;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i14;
-import 'package:greenhive_app/data/models/models.dart' as _i2;
-import 'package:greenhive_app/data/repositories/chat/chat_message_repository.dart'
+import 'package:securityexperts_app/core/analytics/analytics_service.dart' as _i12;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i14;
+import 'package:securityexperts_app/data/models/models.dart' as _i2;
+import 'package:securityexperts_app/data/repositories/chat/chat_message_repository.dart'
     as _i10;
-import 'package:greenhive_app/data/repositories/interfaces/repository_interfaces.dart'
+import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart'
     as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i13;

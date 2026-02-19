@@ -10,13 +10,13 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
     as _i3;
 import 'package:firebase_core/firebase_core.dart' as _i2;
 import 'package:firebase_messaging/firebase_messaging.dart' as _i13;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i10;
-import 'package:greenhive_app/data/models/models.dart' as _i5;
-import 'package:greenhive_app/data/repositories/user/user_repository.dart'
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i10;
+import 'package:securityexperts_app/data/models/models.dart' as _i5;
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart'
     as _i11;
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart'
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart'
     as _i8;
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart'
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart'
     as _i12;
 import 'package:local_auth/local_auth.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;

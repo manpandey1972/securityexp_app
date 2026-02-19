@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/validators/display_name_validator.dart';
+import 'package:securityexperts_app/core/validators/display_name_validator.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/themes/app_shape_config.dart';
-import 'package:greenhive_app/shared/themes/app_shape_extensions.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/profile/presentation/view_models/user_profile_view_model.dart';
-import 'package:greenhive_app/features/profile/widgets/profile_widgets.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/skill.dart';
-import 'package:greenhive_app/shared/widgets/profanity_filtered_text_field.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_config.dart';
+import 'package:securityexperts_app/shared/themes/app_shape_extensions.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/profile/presentation/view_models/user_profile_view_model.dart';
+import 'package:securityexperts_app/features/profile/widgets/profile_widgets.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/skill.dart';
+import 'package:securityexperts_app/shared/widgets/profanity_filtered_text_field.dart';
 
 /// User profile page with Provider state management
 class UserProfilePage extends StatelessWidget {

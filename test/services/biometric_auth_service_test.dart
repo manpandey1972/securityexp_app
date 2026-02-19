@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart';
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

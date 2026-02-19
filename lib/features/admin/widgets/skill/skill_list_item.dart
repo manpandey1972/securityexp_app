@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/admin/services/admin_skills_service.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/admin/services/admin_skills_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
 
 /// List item widget for displaying a skill in admin views.
 class SkillListItem extends StatelessWidget {

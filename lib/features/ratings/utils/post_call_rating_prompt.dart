@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/ratings/pages/rating_page.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/pending_notification_handler.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_borders.dart';
+import 'package:securityexperts_app/features/ratings/pages/rating_page.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/pending_notification_handler.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_borders.dart';
 
 /// Utility to show the post-call rating prompt.
 ///

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/shared/services/upload_manager.dart';
-import 'package:greenhive_app/data/models/upload_state.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_borders.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/services/upload_manager.dart';
+import 'package:securityexperts_app/data/models/upload_state.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_borders.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
 
 /// Global upload progress indicator widget.
 ///

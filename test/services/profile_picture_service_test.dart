@@ -3,10 +3,10 @@ import 'package:mockito/annotations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:greenhive_app/features/profile/services/profile_picture_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/profile/services/profile_picture_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 @GenerateMocks([
   FirebaseAuth,

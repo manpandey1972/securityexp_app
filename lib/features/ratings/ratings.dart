@@ -13,7 +13,7 @@
 ///
 /// ### Submitting a Rating
 /// ```dart
-/// import 'package:greenhive_app/features/ratings/ratings.dart';
+/// import 'package:securityexperts_app/features/ratings/ratings.dart';
 ///
 /// // Submit a rating
 /// final result = await sl<RatingService>().submitRating(

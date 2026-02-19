@@ -1,4 +1,4 @@
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Immutable state object for HomePage
 /// Consolidates all state variables into a single object for better state management

@@ -6,7 +6,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/services/media_audio_session_helper.dart';
+import 'package:securityexperts_app/shared/services/media_audio_session_helper.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

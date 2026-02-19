@@ -1,5 +1,5 @@
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Analytics events for user onboarding funnel.
 ///

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/features/calling/widgets/call_room_constants.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/features/calling/widgets/call_room_constants.dart';
 
 /// A widget that displays an avatar with a subtle breathing/pulsing animation.
 /// Used when video is turned off to show presence.

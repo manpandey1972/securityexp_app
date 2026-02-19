@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/widgets/empty_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/error_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/shimmer_loading.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/widgets/empty_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/error_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/shimmer_loading.dart';
 
 import '../data/models/models.dart';
 import '../services/support_service.dart';

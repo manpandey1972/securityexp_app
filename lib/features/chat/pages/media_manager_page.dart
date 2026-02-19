@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_borders.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
-import 'package:greenhive_app/features/home/constants/home_page_constants.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_borders.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/features/home/constants/home_page_constants.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_thumbnail/video_thumbnail.dart' as video_thumbnail;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/shared/themes/app_card_styles.dart';
-import 'package:greenhive_app/features/chat/widgets/cached_media_widgets.dart';
-import 'package:greenhive_app/features/chat/pages/pdf_viewer_page.dart';
-import 'package:greenhive_app/features/chat/pages/text_viewer_page.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/shared/themes/app_card_styles.dart';
+import 'package:securityexperts_app/features/chat/widgets/cached_media_widgets.dart';
+import 'package:securityexperts_app/features/chat/pages/pdf_viewer_page.dart';
+import 'package:securityexperts_app/features/chat/pages/text_viewer_page.dart';
 
 // Dedicated cached media page
 class CachedMediaPage extends StatefulWidget {

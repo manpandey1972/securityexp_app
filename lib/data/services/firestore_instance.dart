@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:greenhive_app/core/constants.dart';
+import 'package:securityexperts_app/core/constants.dart';
 
 /// Singleton class to manage Firestore instance across the app.
 /// Ensures all services use the same database instance.

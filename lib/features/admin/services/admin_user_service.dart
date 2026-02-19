@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/admin/data/models/admin_user.dart';
-import 'package:greenhive_app/features/admin/data/repositories/admin_user_repository.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/admin/data/models/admin_user.dart';
+import 'package:securityexperts_app/features/admin/data/repositories/admin_user_repository.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 
-export 'package:greenhive_app/features/admin/data/models/admin_user.dart';
+export 'package:securityexperts_app/features/admin/data/models/admin_user.dart';
 
 /// Service for managing users in admin panel.
 ///

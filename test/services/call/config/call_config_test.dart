@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/core/config/call_config.dart';
-import 'package:greenhive_app/core/config/remote_config_service.dart';
+import 'package:securityexperts_app/core/config/call_config.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import '../../../helpers/call_test_helpers.dart';
 
 void main() {

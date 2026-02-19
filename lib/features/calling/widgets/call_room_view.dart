@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/features/calling/widgets/call_control_buttons.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/features/calling/pages/call_controller.dart';
-import 'package:greenhive_app/features/calling/widgets/call_room_constants.dart';
-import 'package:greenhive_app/features/calling/widgets/audio_call_view.dart';
-import 'package:greenhive_app/features/calling/widgets/remote_video_placeholder.dart';
-import 'package:greenhive_app/features/calling/widgets/pip_video_layer.dart';
-import 'package:greenhive_app/features/calling/widgets/call_status_bar.dart';
-import 'package:greenhive_app/features/calling/widgets/mute_indicator_badge.dart';
-import 'package:greenhive_app/features/calling/widgets/breathing_avatar.dart';
-import 'package:greenhive_app/features/calling/services/audio_device_service.dart';
-import 'package:greenhive_app/core/di/call_dependencies.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/calling/widgets/call_control_buttons.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
+import 'package:securityexperts_app/features/calling/widgets/call_room_constants.dart';
+import 'package:securityexperts_app/features/calling/widgets/audio_call_view.dart';
+import 'package:securityexperts_app/features/calling/widgets/remote_video_placeholder.dart';
+import 'package:securityexperts_app/features/calling/widgets/pip_video_layer.dart';
+import 'package:securityexperts_app/features/calling/widgets/call_status_bar.dart';
+import 'package:securityexperts_app/features/calling/widgets/mute_indicator_badge.dart';
+import 'package:securityexperts_app/features/calling/widgets/breathing_avatar.dart';
+import 'package:securityexperts_app/features/calling/services/audio_device_service.dart';
+import 'package:securityexperts_app/core/di/call_dependencies.dart';
 
 /// Main view for an active call room, supporting both audio and video calls.
 /// Orchestrates sub-widgets for fullscreen video, PiP, controls, and status bar.

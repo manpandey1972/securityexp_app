@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/support/widgets/satisfaction_rating_dialog.dart';
+import 'package:securityexperts_app/features/support/widgets/satisfaction_rating_dialog.dart';
 
 void main() {
   group('SatisfactionRatingDialog', () {

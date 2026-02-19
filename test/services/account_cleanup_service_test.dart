@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:greenhive_app/shared/services/account_cleanup_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
-import 'package:greenhive_app/features/chat/services/user_presence_service.dart';
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart';
-import 'package:greenhive_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
-import 'package:greenhive_app/features/photo_backup/services/photo_backup_service.dart';
-import 'package:greenhive_app/shared/services/user_profile_service.dart';
+import 'package:securityexperts_app/shared/services/account_cleanup_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
+import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 
 @GenerateMocks([
   AppLogger,

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/models/call_log.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/models/call_log.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
 
 class CallLogService {
   final AppLogger _log = sl<AppLogger>();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/chat/widgets/uploading_message.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/chat/widgets/uploading_message.dart';
 
 void main() {
   group('UploadingMessageWidget', () {

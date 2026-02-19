@@ -7,35 +7,35 @@ import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 // App - Core
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 // App - Models
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 // App - ViewModels & State
-import 'package:greenhive_app/features/chat/presentation/view_models/chat_conversation_view_model.dart';
-import 'package:greenhive_app/features/chat/presentation/state/chat_conversation_state.dart';
+import 'package:securityexperts_app/features/chat/presentation/view_models/chat_conversation_view_model.dart';
+import 'package:securityexperts_app/features/chat/presentation/state/chat_conversation_state.dart';
 
 // App - Services
-import 'package:greenhive_app/features/calling/services/call_coordinator.dart';
+import 'package:securityexperts_app/features/calling/services/call_coordinator.dart';
 
 // App - Widgets
-import 'package:greenhive_app/features/chat/widgets/uploading_message.dart';
-import 'package:greenhive_app/features/chat/widgets/scroll_to_bottom_button.dart';
-import 'package:greenhive_app/features/chat/widgets/chat_app_bar_new.dart';
-import 'package:greenhive_app/features/chat/widgets/chat_input_widget.dart';
-import 'package:greenhive_app/features/chat/widgets/chat_message_list_item.dart';
-import 'package:greenhive_app/features/chat/widgets/audio_recording_overlay.dart';
+import 'package:securityexperts_app/features/chat/widgets/uploading_message.dart';
+import 'package:securityexperts_app/features/chat/widgets/scroll_to_bottom_button.dart';
+import 'package:securityexperts_app/features/chat/widgets/chat_app_bar_new.dart';
+import 'package:securityexperts_app/features/chat/widgets/chat_input_widget.dart';
+import 'package:securityexperts_app/features/chat/widgets/chat_message_list_item.dart';
+import 'package:securityexperts_app/features/chat/widgets/audio_recording_overlay.dart';
 import '../widgets/attachment_menu_sheet.dart';
 
 // App - Utils & UI
-import 'package:greenhive_app/features/chat/utils/chat_message_helper.dart';
-import 'package:greenhive_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_message_helper.dart';
+import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
 import 'media_manager_page.dart' show CachedMediaPage;
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/core/constants.dart' show AppStrings;
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/constants.dart' show AppStrings;
 
 class ChatConversationPage extends StatelessWidget {
   final String? roomId;

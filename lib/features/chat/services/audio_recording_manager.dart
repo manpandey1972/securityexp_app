@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 
 typedef OnRecordingStateChanged = void Function(bool isRecording);
 typedef OnRecordingDurationChanged = void Function(Duration duration);

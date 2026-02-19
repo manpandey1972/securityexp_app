@@ -1,32 +1,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/signaling_service.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/media_manager_factory.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/room_service.dart';
-import 'package:greenhive_app/features/calling/domain/repositories/call_repository.dart';
-import 'package:greenhive_app/features/calling/domain/repositories/call_history_repository.dart';
-import 'package:greenhive_app/features/calling/infrastructure/repositories/firebase_call_repository.dart';
-import 'package:greenhive_app/features/calling/infrastructure/repositories/firebase_call_history_repository.dart';
-import 'package:greenhive_app/features/calling/services/livekit_service.dart';
-import 'package:greenhive_app/features/calling/services/audio_device_service.dart';
-import 'package:greenhive_app/features/calling/services/call_logger.dart';
-import 'package:greenhive_app/features/calling/services/incoming_call_manager.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/signaling_service.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/media_manager_factory.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/features/calling/domain/repositories/call_repository.dart';
+import 'package:securityexperts_app/features/calling/domain/repositories/call_history_repository.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/firebase_call_repository.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/firebase_call_history_repository.dart';
+import 'package:securityexperts_app/features/calling/services/livekit_service.dart';
+import 'package:securityexperts_app/features/calling/services/audio_device_service.dart';
+import 'package:securityexperts_app/features/calling/services/call_logger.dart';
+import 'package:securityexperts_app/features/calling/services/incoming_call_manager.dart';
 import '../config/call_config.dart';
 import '../errors/call_error_handler.dart';
-import 'package:greenhive_app/features/calling/services/analytics/call_analytics.dart';
-import 'package:greenhive_app/features/calling/services/resilience/retry_manager.dart';
-import 'package:greenhive_app/features/calling/services/resilience/circuit_breaker.dart';
-import 'package:greenhive_app/features/calling/services/monitoring/network_quality_monitor.dart';
-import 'package:greenhive_app/features/calling/services/signaling/unified_signaling_service.dart';
-import 'package:greenhive_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
-import 'package:greenhive_app/core/config/remote_config_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/services/analytics/call_analytics.dart';
+import 'package:securityexperts_app/features/calling/services/resilience/retry_manager.dart';
+import 'package:securityexperts_app/features/calling/services/resilience/circuit_breaker.dart';
+import 'package:securityexperts_app/features/calling/services/monitoring/network_quality_monitor.dart';
+import 'package:securityexperts_app/features/calling/services/signaling/unified_signaling_service.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 // Re-export sl for files that import call_dependencies
-export 'package:greenhive_app/core/service_locator.dart' show sl;
+export 'package:securityexperts_app/core/service_locator.dart' show sl;
 
 /// Parameters for creating a CallController
 class CallParams {

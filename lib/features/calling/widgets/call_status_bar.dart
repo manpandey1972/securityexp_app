@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/features/calling/widgets/call_duration_display.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/features/calling/widgets/call_duration_display.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
 
 /// Top status bar for video calls showing duration and quality indicator.
 class CallStatusBar extends StatelessWidget {

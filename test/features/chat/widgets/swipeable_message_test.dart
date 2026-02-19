@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/features/chat/widgets/swipeable_message.dart';
+import 'package:securityexperts_app/features/chat/widgets/swipeable_message.dart';
 
 import '../../../helpers/widget_test_helpers.dart';
 

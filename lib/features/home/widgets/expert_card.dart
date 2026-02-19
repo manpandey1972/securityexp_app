@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/features/ratings/widgets/expert_rating_summary.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/features/ratings/widgets/expert_rating_summary.dart';
 
 /// Reusable Expert Card widget that displays expert info with action buttons.
 ///

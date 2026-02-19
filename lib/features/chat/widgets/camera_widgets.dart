@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/shared/themes/app_icon_sizes.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/media_confirmation_dialog_service.dart';
-import 'package:greenhive_app/shared/services/media_audio_session_helper.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/media_confirmation_dialog_service.dart';
+import 'package:securityexperts_app/shared/services/media_audio_session_helper.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 import 'dart:async';
 
 class LiveCameraScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:livekit_client/livekit_client.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
 
 /// Analyzes call quality metrics from LiveKit participants.
 ///

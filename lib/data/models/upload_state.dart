@@ -1,4 +1,4 @@
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Status of an upload task
 enum UploadStatus {

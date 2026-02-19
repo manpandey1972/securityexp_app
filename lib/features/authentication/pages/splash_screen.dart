@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/providers/auth_provider.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/features/phone_auth/pages/phone_auth_screen.dart';
-import 'package:greenhive_app/features/home/pages/home_page.dart';
-import 'package:greenhive_app/features/onboarding/pages/user_onboarding_page.dart';
-import 'package:greenhive_app/shared/services/user_profile_service.dart';
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart';
-import 'package:greenhive_app/data/repositories/user/user_repository.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/features/phone_auth/pages/phone_auth_screen.dart';
+import 'package:securityexperts_app/features/home/pages/home_page.dart';
+import 'package:securityexperts_app/features/onboarding/pages/user_onboarding_page.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 /// Result of biometric authentication attempt
 enum _BiometricResult {

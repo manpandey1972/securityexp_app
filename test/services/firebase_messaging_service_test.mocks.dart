@@ -11,8 +11,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
     as _i3;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as _i7;
-import 'package:greenhive_app/core/logging/app_logger.dart' as _i8;
-import 'package:greenhive_app/shared/services/notification_service.dart' as _i6;
+import 'package:securityexperts_app/core/logging/app_logger.dart' as _i8;
+import 'package:securityexperts_app/shared/services/notification_service.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint

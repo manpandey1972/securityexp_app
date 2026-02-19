@@ -2,95 +2,95 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:greenhive_app/core/di/call_dependencies.dart' as call_di;
+import 'package:securityexperts_app/core/di/call_dependencies.dart' as call_di;
 
 // Core Services
-import 'package:greenhive_app/core/config/remote_config_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/auth/role_service.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/auth/role_service.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
 
 // Data Services
-import 'package:greenhive_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
 
 // Shared Services
-import 'package:greenhive_app/shared/services/account_cleanup_service.dart';
-import 'package:greenhive_app/shared/services/user_profile_service.dart';
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
-import 'package:greenhive_app/shared/services/ringtone_service.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/shared/services/account_cleanup_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/shared/services/ringtone_service.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
 
 // Feature Services - Chat
-import 'package:greenhive_app/features/chat/services/unread_messages_service.dart';
-import 'package:greenhive_app/shared/services/media_upload_service.dart';
-import 'package:greenhive_app/shared/services/media_download_service.dart';
-import 'package:greenhive_app/shared/services/media_cache_service.dart';
-import 'package:greenhive_app/features/chat/services/audio_recording_manager.dart';
-import 'package:greenhive_app/features/chat/services/reply_management_service.dart';
-import 'package:greenhive_app/features/chat/services/chat_page_service.dart';
-import 'package:greenhive_app/shared/services/upload_manager.dart';
-import 'package:greenhive_app/features/chat/services/user_presence_service.dart';
-import 'package:greenhive_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
+import 'package:securityexperts_app/shared/services/media_upload_service.dart';
+import 'package:securityexperts_app/shared/services/media_download_service.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/features/chat/services/audio_recording_manager.dart';
+import 'package:securityexperts_app/features/chat/services/reply_management_service.dart';
+import 'package:securityexperts_app/features/chat/services/chat_page_service.dart';
+import 'package:securityexperts_app/shared/services/upload_manager.dart';
+import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
+import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 
 // Feature Services - Authentication & Profile
-import 'package:greenhive_app/features/profile/services/biometric_auth_service.dart';
-import 'package:greenhive_app/features/profile/services/profile_picture_service.dart';
-import 'package:greenhive_app/features/profile/services/skills_service.dart';
-import 'package:greenhive_app/data/repositories/user/user_repository.dart';
-import 'package:greenhive_app/data/repositories/expert/expert_repository.dart';
-import 'package:greenhive_app/data/repositories/product/product_repository.dart';
+import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
+import 'package:securityexperts_app/features/profile/services/profile_picture_service.dart';
+import 'package:securityexperts_app/features/profile/services/skills_service.dart';
+import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
+import 'package:securityexperts_app/data/repositories/expert/expert_repository.dart';
+import 'package:securityexperts_app/data/repositories/product/product_repository.dart';
 
 // Feature Services - Notifications
-import 'package:greenhive_app/shared/services/notification_service.dart';
-import 'package:greenhive_app/shared/services/firebase_messaging_service.dart';
+import 'package:securityexperts_app/shared/services/notification_service.dart';
+import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 
 // Utility Services
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/shared/services/event_bus.dart';
-import 'package:greenhive_app/shared/services/dialog_service.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/shared/services/event_bus.dart';
+import 'package:securityexperts_app/shared/services/dialog_service.dart';
 
 // Validators
-import 'package:greenhive_app/core/validators/phone_validator.dart';
+import 'package:securityexperts_app/core/validators/phone_validator.dart';
 
 // Home Feature Services
-import 'package:greenhive_app/features/home/services/home_data_loader.dart';
-import 'package:greenhive_app/features/home/presentation/view_models/home_view_model.dart';
+import 'package:securityexperts_app/features/home/services/home_data_loader.dart';
+import 'package:securityexperts_app/features/home/presentation/view_models/home_view_model.dart';
 
 // Chat Feature Services
-import 'package:greenhive_app/features/chat/presentation/view_models/chat_conversation_view_model.dart';
-import 'package:greenhive_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
+import 'package:securityexperts_app/features/chat/presentation/view_models/chat_conversation_view_model.dart';
+import 'package:securityexperts_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
 
 // Phone Auth Feature Services
-import 'package:greenhive_app/features/phone_auth/presentation/view_models/phone_auth_view_model.dart';
+import 'package:securityexperts_app/features/phone_auth/presentation/view_models/phone_auth_view_model.dart';
 
 // Onboarding Feature Services
-import 'package:greenhive_app/features/onboarding/presentation/view_models/onboarding_view_model.dart';
+import 'package:securityexperts_app/features/onboarding/presentation/view_models/onboarding_view_model.dart';
 
 // Profile Feature Services
-import 'package:greenhive_app/features/profile/presentation/view_models/user_profile_view_model.dart';
+import 'package:securityexperts_app/features/profile/presentation/view_models/user_profile_view_model.dart';
 
 // Support Feature Services
-import 'package:greenhive_app/features/support/data/repositories/support_repository.dart';
-import 'package:greenhive_app/features/support/data/repositories/support_attachment_repository.dart';
-import 'package:greenhive_app/features/support/services/device_info_service.dart';
-import 'package:greenhive_app/features/support/services/support_service.dart';
-import 'package:greenhive_app/features/support/services/support_analytics.dart';
-import 'package:greenhive_app/features/support/services/faq_service.dart';
+import 'package:securityexperts_app/features/support/data/repositories/support_repository.dart';
+import 'package:securityexperts_app/features/support/data/repositories/support_attachment_repository.dart';
+import 'package:securityexperts_app/features/support/services/device_info_service.dart';
+import 'package:securityexperts_app/features/support/services/support_service.dart';
+import 'package:securityexperts_app/features/support/services/support_analytics.dart';
+import 'package:securityexperts_app/features/support/services/faq_service.dart';
 
 // Admin Feature Services
-import 'package:greenhive_app/features/admin/services/admin_ticket_service.dart';
-import 'package:greenhive_app/features/admin/services/admin_faq_service.dart';
-import 'package:greenhive_app/features/admin/services/admin_skills_service.dart';
-import 'package:greenhive_app/features/admin/services/admin_user_service.dart';
+import 'package:securityexperts_app/features/admin/services/admin_ticket_service.dart';
+import 'package:securityexperts_app/features/admin/services/admin_faq_service.dart';
+import 'package:securityexperts_app/features/admin/services/admin_skills_service.dart';
+import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
 
 // Rating Feature Services
-import 'package:greenhive_app/features/ratings/data/repositories/rating_repository.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/features/ratings/data/repositories/rating_repository.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
 
 // Photo Backup Feature Services
-import 'package:greenhive_app/features/photo_backup/services/photo_access_service.dart';
-import 'package:greenhive_app/features/photo_backup/data/photo_backup_repository.dart';
-import 'package:greenhive_app/features/photo_backup/services/photo_backup_service.dart';
+import 'package:securityexperts_app/features/photo_backup/services/photo_access_service.dart';
+import 'package:securityexperts_app/features/photo_backup/data/photo_backup_repository.dart';
+import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
 
 /// Global service locator instance
 ///

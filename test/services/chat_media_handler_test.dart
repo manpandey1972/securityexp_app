@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/chat/services/chat_media_handler.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/chat/services/chat_media_handler.dart';
 
 import '../helpers/service_mocks.mocks.dart';
 

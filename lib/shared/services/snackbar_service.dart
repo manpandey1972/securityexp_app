@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/shared/themes/app_theme_dark.dart';
+import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 
 class SnackbarService {
   static final GlobalKey<ScaffoldMessengerState> messengerKey =

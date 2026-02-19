@@ -3,7 +3,7 @@
 // Tests for the media type helper service which categorizes files by extension.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:greenhive_app/shared/services/media_type_helper.dart';
+import 'package:securityexperts_app/shared/services/media_type_helper.dart';
 
 void main() {
   group('MediaTypeHelper', () {

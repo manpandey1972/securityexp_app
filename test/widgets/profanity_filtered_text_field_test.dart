@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenhive_app/shared/widgets/profanity_filtered_text_field.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_models.dart';
+import 'package:securityexperts_app/shared/widgets/profanity_filtered_text_field.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_models.dart';
 
 import '../helpers/widget_test_helpers.dart';
 import '../helpers/service_mocks.mocks.dart';

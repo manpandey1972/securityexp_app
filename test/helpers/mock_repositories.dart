@@ -1,5 +1,5 @@
 import 'package:mockito/mockito.dart';
-import 'package:greenhive_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/models.dart';
 
 /// Mock implementation of FirestoreChatService for testing
 class MockChatRepository extends Mock {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/ratings/presentation/view_models/expert_reviews_view_model.dart';
-import 'package:greenhive_app/features/ratings/widgets/rating_card.dart';
-import 'package:greenhive_app/features/ratings/widgets/expert_rating_summary.dart';
-import 'package:greenhive_app/features/ratings/services/rating_service.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/widgets/empty_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/error_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/shimmer_loading.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/ratings/presentation/view_models/expert_reviews_view_model.dart';
+import 'package:securityexperts_app/features/ratings/widgets/rating_card.dart';
+import 'package:securityexperts_app/features/ratings/widgets/expert_rating_summary.dart';
+import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/widgets/empty_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/error_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/shimmer_loading.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Page that displays all reviews for an expert.
 ///

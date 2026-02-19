@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:greenhive_app/features/admin/presentation/state/admin_state.dart';
-import 'package:greenhive_app/features/admin/presentation/view_models/admin_skills_view_model.dart';
-import 'package:greenhive_app/features/admin/services/admin_skills_service.dart';
-import 'package:greenhive_app/features/admin/pages/admin_skill_editor_page.dart';
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/features/admin/widgets/admin_section_wrapper.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
-import 'package:greenhive_app/features/admin/widgets/admin_compact_stat_card.dart';
-import 'package:greenhive_app/shared/animations/page_transitions.dart';
-import 'package:greenhive_app/core/permissions/permission_types.dart';
+import 'package:securityexperts_app/features/admin/presentation/state/admin_state.dart';
+import 'package:securityexperts_app/features/admin/presentation/view_models/admin_skills_view_model.dart';
+import 'package:securityexperts_app/features/admin/services/admin_skills_service.dart';
+import 'package:securityexperts_app/features/admin/pages/admin_skill_editor_page.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/features/admin/widgets/admin_section_wrapper.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/features/admin/widgets/admin_compact_stat_card.dart';
+import 'package:securityexperts_app/shared/animations/page_transitions.dart';
+import 'package:securityexperts_app/core/permissions/permission_types.dart';
 
 /// Admin page for managing skills that experts can have.
 class AdminSkillsPage extends StatelessWidget {

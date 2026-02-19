@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:greenhive_app/features/ratings/data/models/rating.dart';
-import 'package:greenhive_app/features/ratings/data/repositories/rating_repository.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/user_profile_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/data/services/firestore_instance.dart';
+import 'package:securityexperts_app/features/ratings/data/models/rating.dart';
+import 'package:securityexperts_app/features/ratings/data/repositories/rating_repository.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
 // ============================================================================
 // Error Types
 // ============================================================================

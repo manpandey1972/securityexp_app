@@ -5,34 +5,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // External packages
-import 'package:greenhive_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/providers/auth_provider.dart';
 
 // Internal - Models
-import 'package:greenhive_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/data/models/models.dart' as models;
 
 // Internal - Pages
-import 'package:greenhive_app/features/chat/pages/chat_conversation_page.dart';
+import 'package:securityexperts_app/features/chat/pages/chat_conversation_page.dart';
 
 // Internal - Services
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
 
 // Internal - Widgets
-import 'package:greenhive_app/shared/widgets/profile_picture_widget.dart';
-import 'package:greenhive_app/shared/widgets/shimmer_loading.dart';
-import 'package:greenhive_app/shared/widgets/error_state_widget.dart';
-import 'package:greenhive_app/shared/widgets/empty_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
+import 'package:securityexperts_app/shared/widgets/shimmer_loading.dart';
+import 'package:securityexperts_app/shared/widgets/error_state_widget.dart';
+import 'package:securityexperts_app/shared/widgets/empty_state_widget.dart';
 
 // Internal - Theme
-import 'package:greenhive_app/shared/themes/app_colors.dart';
-import 'package:greenhive_app/shared/themes/app_typography.dart';
-import 'package:greenhive_app/shared/themes/app_borders.dart';
-import 'package:greenhive_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/themes/app_typography.dart';
+import 'package:securityexperts_app/shared/themes/app_borders.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 // Internal - ViewModels & State
-import 'package:greenhive_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
-import 'package:greenhive_app/features/chat_list/presentation/state/chat_list_state.dart';
-import 'package:greenhive_app/shared/themes/app_spacing.dart';
+import 'package:securityexperts_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
+import 'package:securityexperts_app/features/chat_list/presentation/state/chat_list_state.dart';
+import 'package:securityexperts_app/shared/themes/app_spacing.dart';
 
 /// Chat list page displaying all active conversations
 ///

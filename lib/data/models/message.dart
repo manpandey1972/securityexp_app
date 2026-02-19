@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:greenhive_app/data/models/message_type.dart';
+import 'package:securityexperts_app/data/models/message_type.dart';
 
 export 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 

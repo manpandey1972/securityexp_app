@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:livekit_client/livekit_client.dart';
-import 'package:greenhive_app/features/calling/services/interfaces/room_service.dart';
-import 'package:greenhive_app/features/calling/services/call_logger.dart';
-import 'package:greenhive_app/features/calling/services/monitoring/call_quality_analyzer.dart';
-import 'package:greenhive_app/core/config/livekit_config.dart';
-import 'package:greenhive_app/core/errors/call_errors.dart';
+import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/features/calling/services/call_logger.dart';
+import 'package:securityexperts_app/features/calling/services/monitoring/call_quality_analyzer.dart';
+import 'package:securityexperts_app/core/config/livekit_config.dart';
+import 'package:securityexperts_app/core/errors/call_errors.dart';
 
 class LiveKitService implements RoomService {
   // ----------------------------------------------------------------

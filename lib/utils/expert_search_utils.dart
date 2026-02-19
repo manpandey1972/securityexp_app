@@ -1,8 +1,8 @@
-import 'package:greenhive_app/data/models/models.dart';
-import 'package:greenhive_app/features/profile/services/skills_service.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/features/profile/services/skills_service.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
 
 /// Utility service for expert search, filtering, and skill name mapping.
 /// Centralizes all expert-related filtering logic for reuse across multiple pages.

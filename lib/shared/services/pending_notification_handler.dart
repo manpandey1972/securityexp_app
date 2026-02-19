@@ -1,10 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/features/calling/pages/call_history_page.dart';
-import 'package:greenhive_app/features/chat/pages/chat_conversation_page.dart';
-import 'package:greenhive_app/features/support/pages/ticket_detail_page.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/calling/pages/call_history_page.dart';
+import 'package:securityexperts_app/features/chat/pages/chat_conversation_page.dart';
+import 'package:securityexperts_app/features/support/pages/ticket_detail_page.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Handles pending notifications that were tapped while app was terminated.
 ///

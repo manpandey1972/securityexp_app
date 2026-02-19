@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/shared/services/profanity/profanity_filter_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/profanity/profanity_filter_service.dart';
 
 /// Extensible text field with profanity filtering
 class ProfanityFilteredTextField extends StatefulWidget {

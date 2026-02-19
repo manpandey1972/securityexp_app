@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:greenhive_app/data/models/models.dart' as models;
-import 'package:greenhive_app/data/repositories/expert/expert_repository.dart';
-import 'package:greenhive_app/data/repositories/product/product_repository.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/features/chat/services/unread_messages_service.dart';
-import 'package:greenhive_app/shared/services/user_cache_service.dart';
-import 'package:greenhive_app/shared/services/error_handler.dart';
-import 'package:greenhive_app/utils/expert_search_utils.dart';
-import 'package:greenhive_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/data/models/models.dart' as models;
+import 'package:securityexperts_app/data/repositories/expert/expert_repository.dart';
+import 'package:securityexperts_app/data/repositories/product/product_repository.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
+import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
+import 'package:securityexperts_app/utils/expert_search_utils.dart';
+import 'package:securityexperts_app/core/analytics/analytics_service.dart';
 
 /// Consolidated data loading service for home page
 /// Handles all data initialization and loading operations

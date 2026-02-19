@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:greenhive_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
 
 import '../../../../helpers/service_mocks.mocks.dart';
 

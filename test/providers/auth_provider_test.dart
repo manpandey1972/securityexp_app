@@ -1,10 +1,10 @@
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenhive_app/providers/auth_provider.dart';
-import 'package:greenhive_app/core/service_locator.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/shared/services/account_cleanup_service.dart';
+import 'package:securityexperts_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/shared/services/account_cleanup_service.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}
 

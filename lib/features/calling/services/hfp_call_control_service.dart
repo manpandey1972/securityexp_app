@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:greenhive_app/core/logging/app_logger.dart';
-import 'package:greenhive_app/features/calling/services/call_navigation_coordinator.dart';
-import 'package:greenhive_app/features/calling/services/incoming_call_manager.dart';
-import 'package:greenhive_app/shared/services/snackbar_service.dart';
-import 'package:greenhive_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/calling/services/call_navigation_coordinator.dart';
+import 'package:securityexperts_app/features/calling/services/incoming_call_manager.dart';
+import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Service to handle Hands-Free Profile (HFP) call control from car Bluetooth systems
 /// This allows users to answer/end calls using physical buttons on their car steering wheel
