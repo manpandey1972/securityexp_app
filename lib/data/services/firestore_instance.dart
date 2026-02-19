@@ -13,7 +13,6 @@ class FirestoreInstance {
   FirestoreInstance._internal() {
     _firestore = FirebaseFirestore.instanceFor(
       app: Firebase.app(),
-      databaseId: 'green-hive-db',
     );
   }
 

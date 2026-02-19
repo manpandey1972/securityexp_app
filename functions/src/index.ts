@@ -95,7 +95,6 @@ function deriveRecipientFromRoomId(roomId: string, senderId?: string): string | 
 export const onMessageCreated = onDocumentCreated(
   {
     document: "chat_rooms/{room_id}/messages/{messageid}",
-    database: "green-hive-db",
   },
   async (event) => {
     const {room_id: roomId, messageid: messageId} = event.params;

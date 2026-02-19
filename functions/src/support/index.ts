@@ -162,7 +162,6 @@ async function createSystemMessage(
 export const onTicketCreate = onDocumentCreated(
   {
     document: `${TICKETS_COLLECTION}/{ticketId}`,
-    database: "green-hive-db",
   },
   async (event) => {
     const ticketId = event.params.ticketId;
@@ -283,7 +282,6 @@ async function notifySupportTeam(
 export const onSupportMessageCreate = onDocumentCreated(
   {
     document: `${TICKETS_COLLECTION}/{ticketId}/${MESSAGES_SUBCOLLECTION}/{messageId}`,
-    database: "green-hive-db",
   },
   async (event) => {
     const {ticketId, messageId} = event.params;
@@ -395,7 +393,6 @@ async function sendSupportMessageNotification(
 export const onTicketUpdate = onDocumentUpdated(
   {
     document: `${TICKETS_COLLECTION}/{ticketId}`,
-    database: "green-hive-db",
   },
   async (event) => {
     const ticketId = event.params.ticketId;

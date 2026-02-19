@@ -80,7 +80,7 @@ async function deleteStorageFolder(prefix: string): Promise<number> {
 export const onAccountDeletionRequested = onDocumentCreated(
   {
     document: "deletion_requests/{userId}",
-    database: "green-hive-db",
+
   },
   async (event) => {
     const userId = event.params.userId;

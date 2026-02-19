@@ -57,7 +57,7 @@ interface ExpertRating {
 export const onRatingCreated = onDocumentCreated(
   {
     document: "ratings/{ratingId}",
-    database: "green-hive-db",
+
   },
   async (event) => {
     const {ratingId} = event.params;

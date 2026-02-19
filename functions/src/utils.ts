@@ -7,17 +7,12 @@ if (!admin.apps.length) {
 }
 
 // Initialize Firestore instance lazily
-// Note: For emulator testing, use default database. In production, specify green-hive-db
+// Uses default Firestore database
 let _db: admin.firestore.Firestore | null = null;
 
 export function getDb(): admin.firestore.Firestore {
   if (!_db) {
-    if (process.env.FUNCTIONS_EMULATOR) {
-      _db = admin.firestore();
-    } else {
-      _db = admin.firestore();
-      _db.settings({databaseId: "green-hive-db"});
-    }
+    _db = admin.firestore();
   }
   return _db;
 }

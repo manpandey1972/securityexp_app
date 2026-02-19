@@ -48,7 +48,7 @@ interface CallData {
 export const sendCallNotification = onDocumentCreated(
   {
     document: "call_history/{docId}",
-    database: "green-hive-db",
+
   },
   async (event) => {
     try {
