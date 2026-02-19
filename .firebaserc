@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "greenhive-service"
+    "default": "securityexp-app"
   },
   "targets": {},
   "etags": {}
