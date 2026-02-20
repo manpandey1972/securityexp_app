@@ -10,7 +10,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 
 /// Service to manage call ringtone sounds using Web Audio API on web and audioplayers on native
 class RingtoneService {
-  static const platform = MethodChannel('com.greenhive.call/ringtone');
+  static const platform = MethodChannel('com.example.securityexpertsApp.call/ringtone');
   static final RingtoneService _instance = RingtoneService._internal();
   static const String _tag = 'RingtoneService';
 

@@ -76,9 +76,9 @@ class RemoteConfigService {
       'enable_wakelock': true,
       // ==================== BACKEND CONFIGURATION ====================
       'cloud_run_base_url':
-          'https://greenhive-service-1054913877112.us-west1.run.app',
+          'https://securityexperts-service-1054913877112.us-west1.run.app',
       'cloud_function_base_url':
-          'https://us-west1-greenhive-prod.cloudfunctions.net/roomMessageNotificationTrigger',
+          'https://us-west1-securityexp-app.cloudfunctions.net/roomMessageNotificationTrigger',
       'turn_server_urls': '',
       // SECURITY: TURN credentials must be configured in Firebase Remote Config
       // Do NOT hardcode credentials here - they will be fetched from Remote Config

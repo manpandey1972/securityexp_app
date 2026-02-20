@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Border radius and border-related styling constants for the Greenhive app.
+/// Border radius and border-related styling constants for the Security Experts app.
 class AppBorders {
   AppBorders._(); // Private constructor to prevent instantiation
 

@@ -1,4 +1,4 @@
-/// Spacing and sizing constants for consistent layout in the Greenhive app.
+/// Spacing and sizing constants for consistent layout in the Security Experts app.
 class AppSpacing {
   AppSpacing._(); // Private constructor to prevent instantiation
 

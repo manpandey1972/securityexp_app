@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Responsive design utilities for GreenHive app
+/// Responsive design utilities for Security Experts app
 /// Provides breakpoints and helper methods for adaptive layouts
 class Responsive {
   /// Breakpoint definitions (logical pixels)

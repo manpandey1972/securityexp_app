@@ -14,7 +14,7 @@ import 'app_typography.dart';
 import 'app_borders.dart';
 import 'app_shape_config.dart';
 
-/// Dark theme configuration for the Greenhive app.
+/// Dark theme configuration for the Security Experts app.
 /// This file orchestrates the complete Material 3 dark theme using component files.
 class AppThemeDarkConfig {
   AppThemeDarkConfig._(); // Private constructor to prevent instantiation

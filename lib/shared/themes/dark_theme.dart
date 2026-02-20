@@ -4,7 +4,7 @@ import 'app_spacing.dart';
 import 'app_theme.dart';
 import 'app_shape_config.dart';
 
-/// Dark theme configuration for the Greenhive app.
+/// Dark theme configuration for the Security Experts app.
 ///
 /// This file contains the complete ThemeData for dark mode,
 /// including all component themes (buttons, cards, inputs, etc.).

@@ -12,9 +12,9 @@ enum AudioDevice { speaker, headset, bluetooth, earpiece, carplay, unknown }
 /// Handles platform-specific audio device management (iOS/Android)
 /// Registered as a singleton in the DI container.
 class AudioDeviceService {
-  static const platform = MethodChannel('com.greenhive.call/audio');
+  static const platform = MethodChannel('com.example.securityexpertsApp.call/audio');
   static const eventChannel = EventChannel(
-    'com.greenhive.call/audioDeviceEvents',
+    'com.example.securityexpertsApp.call/audioDeviceEvents',
   );
 
   // Removed singleton pattern - lifecycle managed by GetIt

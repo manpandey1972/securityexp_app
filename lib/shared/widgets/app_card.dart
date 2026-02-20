@@ -3,7 +3,7 @@ import 'package:securityexperts_app/shared/themes/app_colors.dart';
 import 'package:securityexperts_app/shared/themes/app_borders.dart';
 import 'package:securityexperts_app/shared/themes/app_spacing.dart';
 
-/// A reusable card widget that follows the GreenHive design system.
+/// A reusable card widget that follows the Security Experts design system.
 ///
 /// Use this widget as the base for all card-like containers in the app
 /// to ensure consistent styling across features.

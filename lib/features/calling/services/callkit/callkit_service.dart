@@ -52,7 +52,7 @@ class CallKitAction {
 /// - Processing user actions from the native call UI
 /// - VoIP push token management
 class CallKitService {
-  static const _channelName = 'com.greenhive/callkit';
+  static const _channelName = 'com.example.securityexpertsApp/callkit';
 
   static CallKitService? _instance;
 

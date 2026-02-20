@@ -203,7 +203,7 @@ class _SplashPageState extends State<SplashPage>
 
     try {
       final authenticated = await _biometricService.authenticate(
-        localizedReason: 'Unlock Greenhive with $biometricName',
+        localizedReason: 'Unlock Security Experts with $biometricName',
       );
 
       if (!mounted) return _BiometricResult.failed;
@@ -308,7 +308,7 @@ class _SplashPageState extends State<SplashPage>
               ),
               const SizedBox(height: 32),
               Text(
-                'Welcome to GreenHive',
+                'Welcome to Security Experts',
                 style: AppTypography.headingLarge.copyWith(
                   color: AppColors.textPrimary,
                 ),

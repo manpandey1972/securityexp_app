@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Greenhive</string>
+	<string>Security Experts</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -58,7 +58,7 @@
 	<key>NSContactsUsageDescription</key>
 	<string>This app needs access to your contacts to help you find and connect with people</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Use Face ID to unlock Greenhive and secure your account</string>
+	<string>Use Face ID to unlock Security Experts and secure your account</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app uses local network to provide better connectivity for calls</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

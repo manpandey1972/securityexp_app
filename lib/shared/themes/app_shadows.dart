@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Shadow and elevation constants for depth and elevation in the Greenhive app.
+/// Shadow and elevation constants for depth and elevation in the Security Experts app.
 class AppShadows {
   AppShadows._(); // Private constructor to prevent instantiation
 

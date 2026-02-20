@@ -1,6 +1,6 @@
 {
-    "name": "greenhive_app",
-    "short_name": "greenhive_app",
+    "name": "Security Experts",
+    "short_name": "SecExperts",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

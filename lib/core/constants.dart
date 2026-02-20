@@ -1,4 +1,4 @@
-/// Central constants file for GreenHive app
+/// Central constants file for Security Experts app
 /// This file consolidates all app-wide constants in one place
 ///
 /// Organization:
@@ -435,7 +435,7 @@ class PlatformConstants {
 // ============================================================================
 
 class APIConstants {
-  static const String baseUrl = 'https://api.greenhive.local';
+  static const String baseUrl = 'https://api.securityexperts.local';
   static const int connectTimeout = 30000; // milliseconds
   static const int receiveTimeout = 30000; // milliseconds
 }

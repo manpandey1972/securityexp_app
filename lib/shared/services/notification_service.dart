@@ -218,7 +218,7 @@ class NotificationService {
       title: 'Incoming ${isVideo ? 'Video' : 'Audio'} Call',
       body: 'Call from $callerName',
       channelId: 'calls',
-      groupKey: 'com.greenhive.CALLS',
+      groupKey: 'com.example.securityexpertsApp.CALLS',
       payload: {
         'type': 'incoming_call',
         'caller_id': callerId,
@@ -239,7 +239,7 @@ class NotificationService {
       title: 'New message from $senderName',
       body: message,
       channelId: 'messages',
-      groupKey: 'com.greenhive.MESSAGES',
+      groupKey: 'com.example.securityexpertsApp.MESSAGES',
       payload: {
         'type': 'new_message',
         'sender_id': senderId,
@@ -258,7 +258,7 @@ class NotificationService {
       title: 'New Expert Request',
       body: '$requesterName is requesting your expertise',
       channelId: 'general',
-      groupKey: 'com.greenhive.EXPERT_REQUESTS',
+      groupKey: 'com.example.securityexpertsApp.EXPERT_REQUESTS',
       payload: {
         'type': 'expert_request',
         'requester_id': requesterId,
@@ -347,7 +347,7 @@ class NotificationService {
       operation: () async {
         if (!kIsWeb && Platform.isIOS) {
           // Clear badge by resetting it to 0 via platform channel
-          const platform = MethodChannel('com.greenhive.app/notifications');
+          const platform = MethodChannel('com.example.securityexpertsApp/notifications');
           await platform.invokeMethod('clearBadge');
         }
       },
@@ -360,7 +360,7 @@ class NotificationService {
     await ErrorHandler.handle<void>(
       operation: () async {
         if (!kIsWeb && Platform.isIOS) {
-          const platform = MethodChannel('com.greenhive.app/notifications');
+          const platform = MethodChannel('com.example.securityexpertsApp/notifications');
           await platform.invokeMethod('setBadge', {'count': count});
         }
       },
@@ -374,7 +374,7 @@ class NotificationService {
     return ErrorHandler.handle<int>(
       operation: () async {
         if (!kIsWeb && Platform.isIOS) {
-          const platform = MethodChannel('com.greenhive.app/notifications');
+          const platform = MethodChannel('com.example.securityexpertsApp/notifications');
           final result = await platform.invokeMethod<int>('incrementBadge', {
             'count': count,
           });
@@ -393,7 +393,7 @@ class NotificationService {
     return ErrorHandler.handle<int>(
       operation: () async {
         if (!kIsWeb && Platform.isIOS) {
-          const platform = MethodChannel('com.greenhive.app/notifications');
+          const platform = MethodChannel('com.example.securityexpertsApp/notifications');
           final result = await platform.invokeMethod<int>('getBadge');
           return result ?? 0;
         }

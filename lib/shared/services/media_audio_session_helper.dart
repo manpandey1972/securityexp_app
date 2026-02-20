@@ -35,7 +35,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 /// handles audio configuration in the didActivate callback, so you typically
 /// don't need to call configureForWebRTC() manually.
 class MediaAudioSessionHelper {
-  static const _platform = MethodChannel('com.greenhive.call/audio');
+  static const _platform = MethodChannel('com.example.securityexpertsApp.call/audio');
   static const String _tag = 'MediaAudioSessionHelper';
 
   /// Configure the iOS audio session for media playback.

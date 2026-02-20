@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:securityexperts_app/shared/themes/app_colors.dart';
 
-/// Text styles and typography configuration for the Greenhive app dark theme.
+/// Text styles and typography configuration for the Security Experts app dark theme.
 class AppTypography {
   AppTypography._(); // Private constructor to prevent instantiation
 

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_shape_config.dart';
 import 'app_spacing.dart';
 
-/// GreenHive Agricultural App Theme System
+/// Security Experts App Theme System
 /// Modern, earth-inspired color palette optimized for agricultural purposes
 class AppTheme {
   // ============================================================
@@ -714,7 +714,7 @@ const Color transparent = Color(0x00000000);
 // ACCESSIBILITY NOTES & WCAG COMPLIANCE
 // ============================================================
 ///
-/// GreenHive Theme System - Accessibility Features:
+/// Security Experts Theme System - Accessibility Features:
 ///
 /// 1. COLOR CONTRAST RATIOS:
 ///    - primaryGreen (#2D7A3E) on white: 7.2:1 (AAA compliant)

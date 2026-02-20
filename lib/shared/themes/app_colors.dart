@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Minimal color palette for Greenhive app (15 unique colors).
+/// Minimal color palette for Security Experts app (15 unique colors).
 ///
 /// USAGE GUIDELINES:
 /// - Use `.withValues(alpha: ...)` for transparency variants instead of separate constants

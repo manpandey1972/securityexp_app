@@ -234,7 +234,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: HomePageConstants.appLogoSpacing,
                           ),
                           Text(
-                            'Greenhive',
+                            'Security Experts',
                             style: AppTypography.headingMedium.copyWith(
                               color: AppColors.textPrimary,
                             ),

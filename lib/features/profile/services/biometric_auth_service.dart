@@ -78,7 +78,7 @@ class BiometricAuthService {
   /// Throws [PlatformException] if biometric couldn't be shown (e.g., CallKit active).
   /// Returns true if authenticated, false if user cancelled or failed.
   Future<bool> authenticate({
-    String localizedReason = 'Please authenticate to access Greenhive',
+    String localizedReason = 'Please authenticate to access Security Experts',
     bool biometricOnly = false,
   }) async {
     if (kIsWeb) return false;

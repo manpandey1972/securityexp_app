@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Modern page transition animations for GreenHive app
+/// Modern page transition animations for Security Experts app
 /// Provides smooth, visually appealing navigation transitions
 class PageTransitions {
   PageTransitions._();

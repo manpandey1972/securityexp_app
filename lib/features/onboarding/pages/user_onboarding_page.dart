@@ -374,7 +374,7 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to GreenHive'),
+        title: const Text('Welcome to Security Experts'),
         automaticallyImplyLeading: false,
       ),
       body: Consumer<OnboardingViewModel>(

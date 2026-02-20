@@ -263,7 +263,7 @@ async function notifySupportTeam(
   // TODO: Implement notification to support team
   // Options:
   // - Send to Slack webhook
-  // - Send email to support@greenhive.app
+  // - Send email to support@securityexperts.app
   // - Update a support dashboard collection
 }
 

@@ -1,4 +1,4 @@
-/// GreenHive UI Standards Enforcement
+/// Security Experts UI Standards Enforcement
 ///
 /// This file documents the UI design system standards and provides
 /// utilities to help maintain consistency across the codebase.

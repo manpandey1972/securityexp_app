@@ -258,11 +258,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         navigatorKey: PendingNotificationHandler.navigatorKey,
         navigatorObservers: [AnalyticsRouteObserver()],
         debugShowCheckedModeBanner: false,
-        title: 'GreenHive',
+        title: 'Security Experts',
         scaffoldMessengerKey: SnackbarService.messengerKey,
         theme: AppTheme.getLightTheme(),
         darkTheme: AppThemeDarkConfig.darkTheme,
-        themeMode: ThemeMode.dark, // Always use dark theme (GreenHive design)
+        themeMode: ThemeMode.dark, // Always use dark theme
         home: const SplashPage(),
         onGenerateRoute: (settings) {
           // Handle named routes for notification navigation

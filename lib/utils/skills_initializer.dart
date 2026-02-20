@@ -5,7 +5,7 @@ import 'package:securityexperts_app/data/services/firestore_instance.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
-/// Manages agricultural skills data for the GreenHive application.
+/// Manages cybersecurity skills data for the Security Experts application.
 /// 
 /// Skills are loaded from a JSON file (assets/data/skills.json) rather than
 /// being hardcoded, making it easier to update and maintain the skills database.
