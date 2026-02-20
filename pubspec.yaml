@@ -57,6 +57,7 @@ dependencies:
   flutter_radio_group: ^2.1.0
   syncfusion_flutter_pdfviewer: ^32.1.25
   shake_detector: ^0.0.1
+  google_sign_in: ^7.2.0
 
 
 dependency_overrides:

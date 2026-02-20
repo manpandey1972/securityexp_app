@@ -109,6 +109,25 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    final viewModel = context.read<PhoneAuthViewModel>();
+    final success = await viewModel.signInWithGoogle();
+
+    if (!mounted || !success) return;
+
+    // Successfully signed in - check if profile exists
+    final profile = UserProfileService().userProfile;
+    if (profile != null) {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const UserOnboardingPage()),
+      );
+    }
+  }
+
   String _getPhoneNumberHint(String countryCode) {
     switch (countryCode) {
       case 'US':
@@ -222,6 +241,71 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
                             label: 'Send OTP',
                             isLoading: state.isLoading,
                             isEnabled: state.isPhoneValid,
+                          ),
+
+                          SizedBox(height: AppSpacing.spacing24),
+
+                          // Divider with "OR"
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: AppColors.divider,
+                                  thickness: 1,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  'OR',
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: AppColors.divider,
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: AppSpacing.spacing24),
+
+                          // Google Sign-In Button
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: OutlinedButton.icon(
+                              onPressed:
+                                  state.isLoading ? null : _handleGoogleSignIn,
+                              icon: Image.network(
+                                'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                                height: 24,
+                                width: 24,
+                                errorBuilder: (context, error, stackTrace) => const Icon(
+                                  Icons.g_mobiledata,
+                                  size: 28,
+                                ),
+                              ),
+                              label: Text(
+                                'Continue with Google',
+                                style: AppTypography.bodyRegular.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: AppColors.divider),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                backgroundColor: AppColors.surface,
+                              ),
+                            ),
                           ),
                         ] else ...[
                           // OTP Verification Section

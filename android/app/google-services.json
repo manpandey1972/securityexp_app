@@ -13,7 +13,20 @@
           "package_name": "com.example.securityexperts_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1015827376061-6h8mnieq46h43ctkcukd5i9dhcvvknjp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.securityexperts_app",
+            "certificate_hash": "4804505e328546555ee295f94811bc7ef0bb3091"
+          }
+        },
+        {
+          "client_id": "1015827376061-pq974q830ni388rcvsu1s99rdivgm09a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBe9D55nX2YJq1aIMf6uPW4gFNokaffbVo"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015827376061-pq974q830ni388rcvsu1s99rdivgm09a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1015827376061-d6r9q5nqfck81u8chkrpob91t10bhjgu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.securityexpertsApp"
+              }
+            }
+          ]
         }
       }
     }

@@ -9,6 +9,7 @@ import 'package:securityexperts_app/features/photo_backup/services/photo_backup_
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/features/phone_auth/services/google_auth_service.dart';
 
 /// Auth Provider for managing authentication state using Provider pattern
 
@@ -188,6 +189,11 @@ class AuthState extends ChangeNotifier {
 
       if (userId != null) {
         await sl<AccountCleanupService>().performCleanup(userId);
+      }
+
+      // Sign out from Google if it was a Google session
+      if (sl.isRegistered<GoogleAuthService>()) {
+        await sl<GoogleAuthService>().signOut();
       }
 
       await _firebaseAuth.signOut();

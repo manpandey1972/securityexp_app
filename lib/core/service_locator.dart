@@ -62,6 +62,7 @@ import 'package:securityexperts_app/features/chat_list/presentation/view_models/
 
 // Phone Auth Feature Services
 import 'package:securityexperts_app/features/phone_auth/presentation/view_models/phone_auth_view_model.dart';
+import 'package:securityexperts_app/features/phone_auth/services/google_auth_service.dart';
 
 // Onboarding Feature Services
 import 'package:securityexperts_app/features/onboarding/presentation/view_models/onboarding_view_model.dart';
@@ -373,6 +374,9 @@ Future<void> setupServiceLocator() async {
   // ========================================
   // PHONE AUTH FEATURE SERVICES
   // ========================================
+
+  // Google Auth Service - Singleton (shared across the app)
+  sl.registerLazySingleton<GoogleAuthService>(() => GoogleAuthService());
 
   // Phone Auth ViewModel - Factory pattern (new instance per navigation)
   sl.registerFactory<PhoneAuthViewModel>(
