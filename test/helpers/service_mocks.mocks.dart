@@ -1750,17 +1750,6 @@ class MockRemoteConfigService extends _i1.Mock
           as String);
 
   @override
-  String get liveKitTokenGenerationUrl =>
-      (super.noSuchMethod(
-            Invocation.getter(#liveKitTokenGenerationUrl),
-            returnValue: _i24.dummyValue<String>(
-              this,
-              Invocation.getter(#liveKitTokenGenerationUrl),
-            ),
-          )
-          as String);
-
-  @override
   String get logLevel =>
       (super.noSuchMethod(
             Invocation.getter(#logLevel),

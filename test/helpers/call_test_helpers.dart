@@ -39,8 +39,6 @@ class MockRemoteConfigService implements RemoteConfigService {
   @override
   String get logLevel => _logLevel;
   @override
-  String get liveKitTokenGenerationUrl => 'https://example.com';
-  @override
   String get liveKitUrl => 'ws://example.com';
   @override
   Map<String, dynamic> getAllValues() => {};

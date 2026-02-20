@@ -49,9 +49,7 @@ class RemoteConfigService {
       // SECURITY: Production must use wss:// with a valid TLS certificate.
       // Configure the actual URL in Firebase Remote Config.
       // This fallback uses wss:// to prevent unencrypted signaling.
-      'livekit_url': 'wss://livekit.gogreenhive.com',
-      'livekit_tokengeneration_url':
-          'https://generatelivekittokenfunction-cnpzidasqa-uc.a.run.app',
+      'livekit_url': 'wss://livekit.gogreenhive.app',
 
       // ==================== ANALYTICS & LOGGING ====================
       'log_level': 'info', // debug, info, warning, error
@@ -69,11 +67,7 @@ class RemoteConfigService {
   /// LiveKit WebSocket server URL
   String get liveKitUrl => _getString('livekit_url');
 
-  /// LiveKit token generation Cloud Function URL
-  String get liveKitTokenGenerationUrl =>
-      _getString('livekit_tokengeneration_url');
-
-  // ==================== ANALYTICS & LOGGING ====================
+  // ==================== ANALYTICS & LOGGING ====================  
   String get logLevel => _getString('log_level');
 
   // ==================== PRIVATE HELPERS ====================
@@ -120,7 +114,6 @@ class RemoteConfigService {
       'connectionTimeoutSeconds': connectionTimeoutSeconds,
       'maxSetupRetries': maxSetupRetries,
       'liveKitUrl': liveKitUrl,
-      'liveKitTokenGenerationUrl': liveKitTokenGenerationUrl,
       'logLevel': logLevel,
     };
   }

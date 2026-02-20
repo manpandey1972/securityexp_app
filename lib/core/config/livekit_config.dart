@@ -8,11 +8,6 @@ class LiveKitConfig {
   /// Production must use wss:// with TLS. Configure in Firebase Remote Config.
   static String get liveKitServerUrl => _remoteConfig.liveKitUrl;
 
-  /// Get Cloud Function URL for token generation from Remote Config
-  /// Defaults to: https://generatelivekittokenfunction-cnpzidasqa-uc.a.run.app
-  static String get tokenGeneratorUrl =>
-      _remoteConfig.liveKitTokenGenerationUrl;
-
   // =========================================================================
   // CONNECTION OPTIONS
   // =========================================================================
