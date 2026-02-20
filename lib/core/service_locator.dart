@@ -88,10 +88,6 @@ import 'package:securityexperts_app/features/admin/services/admin_user_service.d
 import 'package:securityexperts_app/features/ratings/data/repositories/rating_repository.dart';
 import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
 
-// Photo Backup Feature Services
-import 'package:securityexperts_app/features/photo_backup/services/photo_access_service.dart';
-import 'package:securityexperts_app/features/photo_backup/data/photo_backup_repository.dart';
-import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
 
 /// Global service locator instance
 ///
@@ -485,30 +481,6 @@ Future<void> setupServiceLocator() async {
 
   sl<AppLogger>().debug('✅ [ServiceLocator] Rating feature services registered');
 
-  // ========================================
-  // PHOTO BACKUP FEATURE SERVICES (iOS only)
-  // ========================================
-
-  // Photo Access Service - Wrapper around photo_manager for fetching photos
-  sl.registerLazySingleton<PhotoAccessService>(() => PhotoAccessService());
-
-  // Photo Backup Repository - Tracks backed-up assets in Firestore
-  sl.registerLazySingleton<PhotoBackupRepository>(
-    () => PhotoBackupRepository(),
-  );
-
-  // Photo Backup Service - Orchestrator for backup workflow
-  sl.registerLazySingleton<PhotoBackupService>(
-    () => PhotoBackupService(
-      photoAccess: sl<PhotoAccessService>(),
-      backupRepo: sl<PhotoBackupRepository>(),
-      log: sl<AppLogger>(),
-    ),
-  );
-
-  sl<AppLogger>().debug(
-    '✅ [ServiceLocator] Photo backup feature services registered',
-  );
 }
 
 /// Reset the service locator

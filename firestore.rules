@@ -98,18 +98,6 @@ service cloud.firestore {
         // No update - call history records are immutable
         allow update: if false;
       }
-      
-      // Photo backups - tracks backed-up assets, private to owner
-      match /photo_backups/{assetId} {
-        // Only the owner can read their backup records
-        allow read: if isAuthenticated() && getUserId() == userId;
-        
-        // Only the owner can create/update backup records
-        allow write: if isAuthenticated() && getUserId() == userId;
-        
-        // Only the owner can delete backup records
-        allow delete: if isAuthenticated() && getUserId() == userId;
-      }
     }
     
     // ========================================

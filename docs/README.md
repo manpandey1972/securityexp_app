@@ -22,7 +22,6 @@ Feature design documents and technical specifications.
 | [EXPERT_RATING_SYSTEM_DESIGN.md](design/EXPERT_RATING_SYSTEM_DESIGN.md) | Expert rating system design |
 | [OBSERVABILITY_MONITORING_DESIGN.md](design/OBSERVABILITY_MONITORING_DESIGN.md) | Observability & monitoring design |
 | [PAYMENT_INTEGRATION_DESIGN.md](design/PAYMENT_INTEGRATION_DESIGN.md) | Payment integration design |
-| [PHOTO_BACKUP_DESIGN.md](design/PHOTO_BACKUP_DESIGN.md) | Photo backup feature design |
 | [SUPPORT_FEEDBACK_SYSTEM_DESIGN.md](design/SUPPORT_FEEDBACK_SYSTEM_DESIGN.md) | Support & feedback system design |
 
 ## Implementation

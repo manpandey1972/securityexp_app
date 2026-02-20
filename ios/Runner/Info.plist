@@ -76,7 +76,7 @@
 	<key>NSPhotoLibraryAddOnlyUsageDescription</key>
 	<string>This app needs permission to save photos from calls to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to share photos in messages, set profile pictures, and back up your recent photos</string>
+	<string>This app needs access to your photo library to share photos in messages and set your profile picture</string>
 	<key>NSVoIPAppUsageDescription</key>
 	<string>This app uses VoIP to provide incoming call notifications even when the app is closed</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

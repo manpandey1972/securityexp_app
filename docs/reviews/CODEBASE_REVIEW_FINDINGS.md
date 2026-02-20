@@ -203,7 +203,6 @@ Emulators configured for functions, firestore, database, storage — but **no au
 94 test files covering 378 source files. Key features with **zero** tests:
 - `authentication` — auth flow completely untested
 - `phone_auth` — phone verification untested
-- `photo_backup` — backup service untested
 
 `lib/shared/` (19 services, 23 widgets, 18 theme files) has **no dedicated test directory**.
 
@@ -364,10 +363,9 @@ All features use `Navigator.of(context).push(MaterialPageRoute(...))`. No named 
 | 2.12 | Fix `ErrorHandler._parseError` to use Firebase error codes | Q-8 | 2h |
 | 2.13 | Add tests for `authentication` feature (splash flow) | Q-1 | 4h |
 | 2.14 | Add tests for `phone_auth` feature | Q-1 | 4h |
-| 2.15 | Add tests for `photo_backup` service | Q-1 | 3h |
-| 2.16 | Add tests for shared services (error_handler, event_bus, snackbar) | Q-1 | 4h |
-| 2.17 | Expand CI service-tests to auto-discover test files | Q-2 | 2h |
-| 2.18 | Add Cloud Functions tests to CI pipeline | Q-2 | 2h |
+| 2.15 | Add tests for shared services (error_handler, event_bus, snackbar) | Q-1 | 4h |
+| 2.16 | Expand CI service-tests to auto-discover test files | Q-2 | 2h |
+| 2.17 | Add Cloud Functions tests to CI pipeline | Q-2 | 2h |
 
 **Deliverables:** Cleaner dependency tree, ~10+ new test files, reduced dead code, CI improvements.
 

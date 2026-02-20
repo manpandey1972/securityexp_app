@@ -2,7 +2,6 @@ import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
-import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 import 'package:securityexperts_app/shared/services/user_cache_service.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
@@ -70,13 +69,7 @@ class AccountCleanupService {
         'VoIP dispose',
       );
 
-      // 5. Stop photo-backup listener
-      await _safeRunAsync(
-        () => sl<PhotoBackupService>().dispose(),
-        'PhotoBackup dispose',
-      );
-
-      // 6. Clear in-memory profile cache
+      // 5. Clear in-memory profile cache
       await _safeRun(
         () => UserProfileService().clearUserProfile(),
         'clearUserProfile',

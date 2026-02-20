@@ -8,7 +8,6 @@ import 'package:securityexperts_app/shared/services/user_cache_service.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
-import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 
 @GenerateMocks([
@@ -17,7 +16,6 @@ import 'package:securityexperts_app/shared/services/user_profile_service.dart';
   UserPresenceService,
   FirebaseMessagingService,
   VoIPTokenRepository,
-  PhotoBackupService,
   UserProfileService,
 ])
 import 'account_cleanup_service_test.mocks.dart';
@@ -29,7 +27,6 @@ void main() {
   late MockUserPresenceService mockPresence;
   late MockFirebaseMessagingService mockFCM;
   late MockVoIPTokenRepository mockVoIP;
-  late MockPhotoBackupService mockPhotoBackup;
 
   setUp(() {
     mockLogger = MockAppLogger();
@@ -37,7 +34,6 @@ void main() {
     mockPresence = MockUserPresenceService();
     mockFCM = MockFirebaseMessagingService();
     mockVoIP = MockVoIPTokenRepository();
-    mockPhotoBackup = MockPhotoBackupService();
 
     // Register mocks in service locator
     if (sl.isRegistered<UserCacheService>()) sl.unregister<UserCacheService>();
@@ -50,15 +46,10 @@ void main() {
     if (sl.isRegistered<VoIPTokenRepository>()) {
       sl.unregister<VoIPTokenRepository>();
     }
-    if (sl.isRegistered<PhotoBackupService>()) {
-      sl.unregister<PhotoBackupService>();
-    }
-
     sl.registerSingleton<UserCacheService>(mockCache);
     sl.registerSingleton<UserPresenceService>(mockPresence);
     sl.registerSingleton<FirebaseMessagingService>(mockFCM);
     sl.registerSingleton<VoIPTokenRepository>(mockVoIP);
-    sl.registerSingleton<PhotoBackupService>(mockPhotoBackup);
 
     // Stub default behavior
     when(mockPresence.clearPresence()).thenAnswer((_) async {});
@@ -66,8 +57,6 @@ void main() {
     when(mockFCM.removeTokenOnLogout()).thenAnswer((_) async {});
     when(mockVoIP.clearToken(userId: anyNamed('userId')))
         .thenAnswer((_) async {});
-    when(mockPhotoBackup.dispose()).thenAnswer((_) async {});
-
     service = AccountCleanupService(mockLogger);
   });
 
@@ -85,7 +74,6 @@ void main() {
       verify(mockFCM.removeTokenOnLogout()).called(1);
       verify(mockVoIP.clearToken(userId: 'user-123')).called(1);
       verify(mockVoIP.dispose()).called(1);
-      verify(mockPhotoBackup.dispose()).called(1);
     });
 
     test('performCleanup logs completion', () async {
@@ -131,7 +119,6 @@ void main() {
 
       // Steps after FCM should still execute
       verify(mockVoIP.clearToken(userId: 'user-123')).called(1);
-      verify(mockPhotoBackup.dispose()).called(1);
 
       // Warning should be logged for the failure
       verify(

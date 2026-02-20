@@ -5,7 +5,6 @@ import 'package:securityexperts_app/shared/services/account_cleanup_service.dart
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
 import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
-import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
@@ -128,13 +127,6 @@ class AuthState extends ChangeNotifier {
       _log.error('Failed to initialize VoIP token sync', tag: _tag);
     }
 
-    // Initialize photo backup service (iOS only)
-    try {
-      await sl<PhotoBackupService>().initialize(userId);
-      _log.info('Photo backup service initialized', tag: _tag);
-    } catch (e) {
-      _log.error('Failed to initialize photo backup: $e', tag: _tag);
-    }
   }
 
   /// Sign up with email and password

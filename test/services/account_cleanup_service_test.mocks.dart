@@ -4,7 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:ui' as _i12;
+import 'dart:ui' as _i11;
 
 import 'package:firebase_messaging/firebase_messaging.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
@@ -14,14 +14,12 @@ import 'package:securityexperts_app/features/calling/infrastructure/repositories
     as _i9;
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart'
     as _i6;
-import 'package:securityexperts_app/features/photo_backup/services/photo_backup_service.dart'
-    as _i10;
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart'
     as _i7;
 import 'package:securityexperts_app/shared/services/user_cache_service.dart'
     as _i4;
 import 'package:securityexperts_app/shared/services/user_profile_service.dart'
-    as _i11;
+    as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -400,39 +398,11 @@ class MockVoIPTokenRepository extends _i1.Mock
   );
 }
 
-/// A class which mocks [PhotoBackupService].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockPhotoBackupService extends _i1.Mock
-    implements _i10.PhotoBackupService {
-  MockPhotoBackupService() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i5.Future<void> initialize(String? userId) =>
-      (super.noSuchMethod(
-            Invocation.method(#initialize, [userId]),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
-          )
-          as _i5.Future<void>);
-
-  @override
-  _i5.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
-          )
-          as _i5.Future<void>);
-}
-
 /// A class which mocks [UserProfileService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockUserProfileService extends _i1.Mock
-    implements _i11.UserProfileService {
+    implements _i10.UserProfileService {
   MockUserProfileService() {
     _i1.throwOnMissingStub(this);
   }
@@ -503,13 +473,13 @@ class MockUserProfileService extends _i1.Mock
   );
 
   @override
-  void addListener(_i12.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i11.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#addListener, [listener]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void removeListener(_i12.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i11.VoidCallback? listener) => super.noSuchMethod(
     Invocation.method(#removeListener, [listener]),
     returnValueForMissingStub: null,
   );
