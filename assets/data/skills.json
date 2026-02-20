@@ -1,4277 +1,1389 @@
 [
   {
-    "name": "Crop Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Penetration Testing",
+    "category": "Offensive Security",
     "tags": [
-      "crops",
-      "consulting",
-      "farming"
+      "pentest",
+      "ethical hacking",
+      "red team",
+      "vulnerability assessment"
     ]
   },
   {
-    "name": "Rice Cultivation Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Web Application Penetration Testing",
+    "category": "Offensive Security",
     "tags": [
-      "rice",
-      "cereal crops",
-      "cultivation"
+      "web app",
+      "OWASP",
+      "pentest",
+      "burp suite",
+      "sql injection",
+      "xss"
     ]
   },
   {
-    "name": "Wheat Farming Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Mobile Application Penetration Testing",
+    "category": "Offensive Security",
     "tags": [
-      "wheat",
-      "cereal crops",
-      "farming"
+      "android",
+      "ios",
+      "mobile pentest",
+      "apk analysis",
+      "frida"
     ]
   },
   {
-    "name": "Maize Farming Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Network Penetration Testing",
+    "category": "Offensive Security",
     "tags": [
-      "maize",
-      "corn",
-      "cereal crops"
+      "network pentest",
+      "nmap",
+      "metasploit",
+      "lateral movement"
     ]
   },
   {
-    "name": "Vegetable Crop Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Red Team Operations",
+    "category": "Offensive Security",
     "tags": [
-      "vegetables",
-      "horticulture",
-      "cultivation"
+      "red team",
+      "adversary simulation",
+      "attack simulation",
+      "C2"
     ]
   },
   {
-    "name": "Fruit Cultivation Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Social Engineering",
+    "category": "Offensive Security",
     "tags": [
-      "fruits",
-      "orchards",
-      "cultivation"
+      "phishing",
+      "vishing",
+      "pretexting",
+      "physical security",
+      "human hacking"
     ]
   },
   {
-    "name": "Spice Farming Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Exploit Development",
+    "category": "Offensive Security",
     "tags": [
-      "spices",
-      "specialty crops",
-      "farming"
+      "exploit",
+      "buffer overflow",
+      "ROP chains",
+      "shellcode",
+      "CVE"
     ]
   },
   {
-    "name": "Oilseed Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "WiFi & Wireless Security Testing",
+    "category": "Offensive Security",
     "tags": [
-      "oilseeds",
-      "crops",
-      "production"
+      "wireless",
+      "wifi",
+      "WPA2",
+      "evil twin",
+      "aircrack-ng",
+      "rogue AP"
     ]
   },
   {
-    "name": "Legume Farming Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Physical Security Assessment",
+    "category": "Offensive Security",
     "tags": [
-      "legumes",
-      "pulses",
-      "nitrogen-fixing"
+      "physical pentest",
+      "lock picking",
+      "badge cloning",
+      "tailgating"
     ]
   },
   {
-    "name": "Medicinal Plant Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "API Security Testing",
+    "category": "Offensive Security",
     "tags": [
-      "medicinal plants",
-      "herbs",
-      "specialty crops"
+      "api pentest",
+      "REST",
+      "GraphQL",
+      "OWASP API",
+      "broken authentication"
     ]
   },
   {
-    "name": "Floriculture Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Active Directory Attacks",
+    "category": "Offensive Security",
     "tags": [
-      "flowers",
-      "floriculture",
-      "horticulture"
+      "active directory",
+      "kerberoasting",
+      "pass the hash",
+      "BloodHound",
+      "domain admin"
     ]
   },
   {
-    "name": "Tea Farming Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Cloud Penetration Testing",
+    "category": "Offensive Security",
     "tags": [
-      "tea",
-      "plantation crops",
-      "specialty"
+      "cloud pentest",
+      "AWS",
+      "Azure",
+      "GCP",
+      "misconfiguration",
+      "IAM abuse"
     ]
   },
   {
-    "name": "Coffee Farming Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "OSINT (Open Source Intelligence)",
+    "category": "Offensive Security",
     "tags": [
-      "coffee",
-      "plantation crops",
-      "specialty"
+      "OSINT",
+      "reconnaissance",
+      "threat intel",
+      "Shodan",
+      "Maltego"
     ]
   },
   {
-    "name": "Cotton Farming Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Vulnerability Research",
+    "category": "Offensive Security",
     "tags": [
-      "cotton",
-      "fiber crops",
-      "farming"
+      "vulnerability research",
+      "CVE",
+      "0-day",
+      "fuzzing",
+      "bug bounty"
     ]
   },
   {
-    "name": "Potato Cultivation Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Password Cracking & Attack",
+    "category": "Offensive Security",
     "tags": [
-      "potatoes",
-      "tuber crops",
-      "cultivation"
+      "password cracking",
+      "hashcat",
+      "John the Ripper",
+      "credential stuffing",
+      "brute force"
     ]
   },
   {
-    "name": "Sugarcane Farming Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Security Information and Event Management (SIEM)",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "sugarcane",
-      "industrial crops",
-      "farming"
+      "SIEM",
+      "Splunk",
+      "QRadar",
+      "Microsoft Sentinel",
+      "log analysis"
     ]
   },
   {
-    "name": "Tobacco Farming Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Threat Hunting",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "tobacco",
-      "cash crops",
-      "farming"
+      "threat hunting",
+      "IOC",
+      "TTPs",
+      "MITRE ATT&CK",
+      "anomaly detection"
     ]
   },
   {
-    "name": "High-Value Crop Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Security Operations Center (SOC) Analysis",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "high-value crops",
-      "specialty crops",
-      "farming"
+      "SOC",
+      "tier 1 analyst",
+      "alert triage",
+      "incident escalation"
     ]
   },
   {
-    "name": "Specialty Crop Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Endpoint Detection and Response (EDR)",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "specialty crops",
-      "niche farming",
-      "consulting"
+      "EDR",
+      "CrowdStrike",
+      "SentinelOne",
+      "Carbon Black",
+      "endpoint security"
     ]
   },
   {
-    "name": "Greenhouse Technician",
-    "category": "Crop Production & Cultivation",
+    "name": "Intrusion Detection & Prevention Systems (IDS/IPS)",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "greenhouse",
-      "controlled environment",
-      "cultivation"
+      "IDS",
+      "IPS",
+      "Snort",
+      "Suricata",
+      "network monitoring"
     ]
   },
   {
-    "name": "Vertical Farming Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Security Orchestration Automation and Response (SOAR)",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "vertical farming",
-      "urban agriculture",
-      "modern"
-    ]
-  },
-  {
-    "name": "Hydroponics Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "hydroponics",
-      "soilless cultivation",
-      "modern"
-    ]
-  },
-  {
-    "name": "Aquaponics Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "aquaponics",
-      "integrated systems",
-      "modern"
-    ]
-  },
-  {
-    "name": "Drip Irrigation Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "drip irrigation",
-      "irrigation technology",
-      "water-saving"
-    ]
-  },
-  {
-    "name": "Intercropping Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "intercropping",
-      "mixed cropping",
-      "farming systems"
-    ]
-  },
-  {
-    "name": "Crop Rotation Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "crop rotation",
-      "soil health",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Seed Technology Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "seeds",
-      "technology",
-      "genetics"
-    ]
-  },
-  {
-    "name": "Plant Breeding Expert",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "plant breeding",
-      "genetics",
-      "improvement"
-    ]
-  },
-  {
-    "name": "Nursery Management Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "nursery",
-      "plant propagation",
-      "management"
-    ]
-  },
-  {
-    "name": "Urban Farming Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "urban farming",
-      "city farming",
-      "modern agriculture"
-    ]
-  },
-  {
-    "name": "Livestock Nutritionist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "livestock",
-      "nutrition",
-      "animal health"
-    ]
-  },
-  {
-    "name": "Dairy Farming Expert",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy",
-      "cattle",
-      "milk production"
-    ]
-  },
-  {
-    "name": "Poultry Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "poultry",
-      "chicken",
-      "eggs"
-    ]
-  },
-  {
-    "name": "Goat Farming Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "goats",
-      "small ruminants",
-      "farming"
-    ]
-  },
-  {
-    "name": "Sheep Farming Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "sheep",
-      "small ruminants",
-      "farming"
-    ]
-  },
-  {
-    "name": "Fish Farming Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "aquaculture",
-      "fish",
-      "water-based"
-    ]
-  },
-  {
-    "name": "Shrimp Farming Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "aquaculture",
-      "shrimp",
-      "water-based"
-    ]
-  },
-  {
-    "name": "Beekeeping Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "beekeeping",
-      "honey",
-      "pollination"
-    ]
-  },
-  {
-    "name": "Livestock Breeding Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "breeding",
-      "genetics",
-      "animal improvement"
-    ]
-  },
-  {
-    "name": "Livestock Health Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "animal health",
-      "veterinary",
-      "disease management"
-    ]
-  },
-  {
-    "name": "Veterinary Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "veterinary",
-      "animal health",
-      "disease"
-    ]
-  },
-  {
-    "name": "Cattle Nutritionist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "cattle",
-      "nutrition",
-      "feed management"
-    ]
-  },
-  {
-    "name": "Dairy Nutritionist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy",
-      "nutrition",
-      "milk production"
-    ]
-  },
-  {
-    "name": "Duck Farming Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "ducks",
-      "poultry",
-      "water birds"
-    ]
-  },
-  {
-    "name": "Livestock Marketing Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "marketing",
-      "sales",
-      "livestock trade"
-    ]
-  },
-  {
-    "name": "Livestock Waste Management Expert",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "waste management",
-      "manure",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Milk Processing Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "milk processing",
-      "dairy",
-      "value addition"
-    ]
-  },
-  {
-    "name": "Meat Production Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "meat",
-      "production",
-      "processing"
-    ]
-  },
-  {
-    "name": "Egg Production Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "eggs",
-      "poultry",
-      "production"
-    ]
-  },
-  {
-    "name": "Honey Production Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "honey",
-      "beekeeping",
-      "value addition"
-    ]
-  },
-  {
-    "name": "Livestock Cooperative Organizer",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "cooperatives",
-      "organization",
-      "collective farming"
-    ]
-  },
-  {
-    "name": "Livestock Finance Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "finance",
-      "credit",
-      "livestock"
-    ]
-  },
-  {
-    "name": "Livestock Insurance Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "insurance",
-      "risk management",
-      "livestock"
-    ]
-  },
-  {
-    "name": "Livestock Extension Officer",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "extension",
-      "farmer training",
-      "knowledge transfer"
-    ]
-  },
-  {
-    "name": "Livestock Sustainability Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "sustainability",
-      "environment",
-      "livestock"
-    ]
-  },
-  {
-    "name": "Soil Scientist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "soil",
-      "science",
-      "soil health"
-    ]
-  },
-  {
-    "name": "Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation",
-      "water management",
-      "planning"
-    ]
-  },
-  {
-    "name": "Water Management Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water management",
-      "irrigation",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Water Harvesting Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water harvesting",
-      "water conservation",
-      "rainwater"
-    ]
-  },
-  {
-    "name": "Nutrient Management Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "nutrients",
-      "fertilizer",
-      "soil health"
-    ]
-  },
-  {
-    "name": "Fertilizer Management Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "fertilizer",
-      "nutrient management",
-      "efficiency"
-    ]
-  },
-  {
-    "name": "Composting Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "composting",
-      "waste management",
-      "organic matter"
-    ]
-  },
-  {
-    "name": "Vermicomposting Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "vermicomposting",
-      "organic matter",
-      "worms"
-    ]
-  },
-  {
-    "name": "Biofertilizer Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "biofertilizer",
-      "microorganisms",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Mulching Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "mulching",
-      "soil conservation",
-      "water retention"
-    ]
-  },
-  {
-    "name": "Erosion Control Advisor",
-    "category": "Soil & Water Management",
-    "tags": [
-      "erosion",
-      "soil conservation",
-      "water management"
-    ]
-  },
-  {
-    "name": "Nitrogen Management Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "nitrogen",
-      "nutrient management",
-      "fertilizer"
-    ]
-  },
-  {
-    "name": "Water Quality Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water quality",
-      "testing",
-      "irrigation"
-    ]
-  },
-  {
-    "name": "Micro-irrigation Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "micro-irrigation",
-      "drip",
-      "sprinkler"
-    ]
-  },
-  {
-    "name": "Soil Health Consultant",
-    "category": "Soil & Water Management",
-    "tags": [
-      "soil health",
-      "fertility",
-      "productivity"
-    ]
-  },
-  {
-    "name": "Groundwater Advisor",
-    "category": "Soil & Water Management",
-    "tags": [
-      "groundwater",
-      "water",
-      "management"
-    ]
-  },
-  {
-    "name": "Soil Testing Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "soil testing",
-      "analysis",
-      "diagnostics"
-    ]
-  },
-  {
-    "name": "Green Manure Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "green manure",
-      "cover crops",
-      "soil improvement"
-    ]
-  },
-  {
-    "name": "Manure Management Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "manure",
-      "organic matter",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Drought Management Advisor",
-    "category": "Soil & Water Management",
-    "tags": [
-      "drought",
-      "water scarcity",
-      "adaptation"
-    ]
-  },
-  {
-    "name": "Salinity Management Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "salinity",
-      "soil health",
-      "reclamation"
-    ]
-  },
-  {
-    "name": "Soil Mapping Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "soil mapping",
-      "GIS",
-      "technology"
-    ]
-  },
-  {
-    "name": "Xeriscaping Consultant",
-    "category": "Soil & Water Management",
-    "tags": [
-      "dry farming",
-      "water conservation",
-      "drought"
-    ]
-  },
-  {
-    "name": "Sustainable Water Management Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "sustainability",
-      "water management",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Rainwater Harvesting Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "rainwater",
-      "water harvesting",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Integrated Pest Management (IPM) Expert",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "IPM",
-      "pest control",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Plant Pathologist",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "plant diseases",
-      "pathology",
-      "disease management"
-    ]
-  },
-  {
-    "name": "Crop Disease Management Expert",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "crop disease",
-      "disease management",
-      "prevention"
-    ]
-  },
-  {
-    "name": "Entomologist (Insect Control)",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "insects",
-      "pest control",
-      "entomology"
-    ]
-  },
-  {
-    "name": "Biocontrol Specialist",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "biocontrol",
-      "biological control",
-      "natural enemies"
-    ]
-  },
-  {
-    "name": "Weed Control Advisor",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "weeds",
-      "weed management",
-      "herbicides"
-    ]
-  },
-  {
-    "name": "Organic Pest Control Advisor",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "organic",
-      "pest control",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Non-chemical Pest Control Expert",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "non-chemical",
-      "organic",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Nematology Specialist",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "nematodes",
-      "soil pests",
-      "disease"
-    ]
-  },
-  {
-    "name": "Biosecurity Advisor",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "biosecurity",
-      "disease prevention",
-      "quarantine"
-    ]
-  },
-  {
-    "name": "Crop Protection Advisor",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "crop protection",
-      "pest management",
-      "disease"
-    ]
-  },
-  {
-    "name": "Disease Diagnostics Specialist",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "disease diagnostics",
-      "testing",
-      "identification"
-    ]
-  },
-  {
-    "name": "Insect Control Consultant",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "insects",
-      "pest control",
-      "damage management"
-    ]
-  },
-  {
-    "name": "Biological Pest Control Expert",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "biological control",
-      "natural enemies",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Pest Monitoring Specialist",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "pest monitoring",
-      "surveillance",
-      "early detection"
-    ]
-  },
-  {
-    "name": "Organic Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic",
-      "sustainable",
-      "chemical-free"
-    ]
-  },
-  {
-    "name": "Regenerative Agriculture Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "regenerative",
-      "sustainability",
-      "soil health"
-    ]
-  },
-  {
-    "name": "Natural Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "natural farming",
-      "organic",
-      "sustainable"
-    ]
-  },
-  {
-    "name": "Climate Smart Agriculture Expert",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "climate change",
-      "adaptation",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Carbon Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "carbon",
-      "climate change",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Agroforestry Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "agroforestry",
-      "trees",
-      "integrated farming"
-    ]
-  },
-  {
-    "name": "Permaculture Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "permaculture",
-      "sustainable design",
-      "organic"
-    ]
-  },
-  {
-    "name": "Zero Budget Natural Farming (ZBNF) Coach",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "ZBNF",
-      "zero budget",
-      "natural farming"
-    ]
-  },
-  {
-    "name": "Biodiversity Conservation Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "biodiversity",
-      "conservation",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Forest Farming Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "forest farming",
-      "agroforestry",
-      "trees"
-    ]
-  },
-  {
-    "name": "Indigenous Farming Practices Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "indigenous",
-      "traditional",
-      "local knowledge"
-    ]
-  },
-  {
-    "name": "Organic Certification Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic certification",
-      "compliance",
-      "standards"
-    ]
-  },
-  {
-    "name": "Non-GMO Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "non-GMO",
-      "organic",
-      "natural"
-    ]
-  },
-  {
-    "name": "Eco-Farming Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "eco-farming",
-      "sustainable",
-      "environmental"
-    ]
-  },
-  {
-    "name": "Sustainable Farming Strategist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "sustainable",
-      "strategy",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Wildlife Conservation in Agriculture Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "wildlife",
-      "conservation",
-      "biodiversity"
-    ]
-  },
-  {
-    "name": "Environmental Farming Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "environment",
-      "sustainability",
-      "farming"
-    ]
-  },
-  {
-    "name": "Mixed Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "mixed farming",
-      "integrated systems",
-      "diversification"
-    ]
-  },
-  {
-    "name": "Transition Farming Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "transition",
-      "organic conversion",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Farm Sustainability Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "sustainability",
-      "farm management",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Precision Agriculture Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "precision agriculture",
-      "technology",
-      "data"
-    ]
-  },
-  {
-    "name": "Smart Farming Technology Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "smart farming",
-      "IoT",
-      "technology"
-    ]
-  },
-  {
-    "name": "Digital Farming Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "digital",
-      "technology",
-      "data"
-    ]
-  },
-  {
-    "name": "Agricultural Drone Technician",
-    "category": "Technology & Innovation",
-    "tags": [
-      "drones",
-      "UAV",
-      "technology"
-    ]
-  },
-  {
-    "name": "Agricultural Data Analyst",
-    "category": "Technology & Innovation",
-    "tags": [
-      "data analysis",
-      "analytics",
-      "technology"
-    ]
-  },
-  {
-    "name": "Geographic Information Systems (GIS) in Agriculture Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "GIS",
-      "mapping",
-      "technology"
-    ]
-  },
-  {
-    "name": "Mobile Agri-Tech Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "mobile",
-      "technology",
-      "app-based"
-    ]
-  },
-  {
-    "name": "Farm Technology Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "technology",
-      "farm management",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Biotechnology in Agriculture Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "biotechnology",
-      "genetic engineering",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Plant Tissue Culture Expert",
-    "category": "Technology & Innovation",
-    "tags": [
-      "tissue culture",
-      "biotechnology",
-      "propagation"
-    ]
-  },
-  {
-    "name": "Bioinformatics in Agriculture Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "bioinformatics",
-      "data",
-      "genetics"
-    ]
-  },
-  {
-    "name": "Crop Biotechnology Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "biotechnology",
-      "crop improvement",
-      "genetics"
-    ]
-  },
-  {
-    "name": "X-ray Technology in Agriculture Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "X-ray",
-      "quality",
-      "inspection"
-    ]
-  },
-  {
-    "name": "Automation in Agriculture Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
+      "SOAR",
       "automation",
-      "technology",
-      "efficiency"
+      "playbooks",
+      "Palo Alto XSOAR",
+      "incident automation"
     ]
   },
   {
-    "name": "Agricultural Equipment Advisor",
-    "category": "Technology & Innovation",
+    "name": "Vulnerability Management",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "equipment",
-      "machinery",
-      "technology"
+      "vulnerability management",
+      "Tenable",
+      "Qualys",
+      "patch management",
+      "risk prioritization"
     ]
   },
   {
-    "name": "Tractor & Equipment Advisor",
-    "category": "Technology & Innovation",
+    "name": "Threat Intelligence Analysis",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "tractor",
-      "equipment",
-      "mechanization"
+      "threat intelligence",
+      "CTI",
+      "IOC",
+      "STIX",
+      "TAXII",
+      "threat feeds"
     ]
   },
   {
-    "name": "Farm Machinery Consultant",
-    "category": "Technology & Innovation",
+    "name": "Log Analysis & Correlation",
+    "category": "Security Operations (SecOps)",
     "tags": [
-      "machinery",
-      "equipment",
-      "mechanization"
+      "log analysis",
+      "SIEM",
+      "correlation rules",
+      "event logs",
+      "syslog"
     ]
   },
   {
-    "name": "Mechanization Advisor",
-    "category": "Technology & Innovation",
+    "name": "Digital Forensics",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "mechanization",
-      "equipment",
-      "technology"
+      "digital forensics",
+      "disk imaging",
+      "memory forensics",
+      "chain of custody",
+      "FTK"
     ]
   },
   {
-    "name": "Agricultural Economist",
-    "category": "Business & Economics",
+    "name": "Incident Response",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "economics",
-      "market analysis",
-      "policy"
+      "incident response",
+      "IR plan",
+      "containment",
+      "eradication",
+      "recovery"
     ]
   },
   {
-    "name": "Agricultural Finance Advisor",
-    "category": "Business & Economics",
+    "name": "Malware Analysis",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "finance",
-      "credit",
-      "farm management"
+      "malware analysis",
+      "static analysis",
+      "dynamic analysis",
+      "sandbox",
+      "reverse engineering"
     ]
   },
   {
-    "name": "Farm Finance Advisor",
-    "category": "Business & Economics",
+    "name": "Memory Forensics",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "finance",
-      "farm planning",
-      "credit"
+      "memory forensics",
+      "Volatility",
+      "RAM analysis",
+      "process injection",
+      "rootkit detection"
     ]
   },
   {
-    "name": "Agricultural Marketing Specialist",
-    "category": "Business & Economics",
+    "name": "Network Forensics",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "marketing",
-      "sales",
-      "market linkage"
+      "network forensics",
+      "PCAP analysis",
+      "Wireshark",
+      "traffic analysis",
+      "C2 detection"
     ]
   },
   {
-    "name": "Market Linkage Specialist",
-    "category": "Business & Economics",
+    "name": "Ransomware Response",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "market linkage",
-      "supply chain",
-      "trade"
+      "ransomware",
+      "incident response",
+      "decryption",
+      "backup recovery",
+      "BEC"
     ]
   },
   {
-    "name": "Value Chain Development Advisor",
-    "category": "Business & Economics",
+    "name": "Threat Actor Attribution",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "value chain",
-      "supply chain",
-      "development"
+      "attribution",
+      "APT",
+      "threat intelligence",
+      "TTPs",
+      "geopolitical threat"
     ]
   },
   {
-    "name": "Agricultural Logistics Planner",
-    "category": "Business & Economics",
+    "name": "Mobile Device Forensics",
+    "category": "Digital Forensics & Incident Response",
     "tags": [
-      "logistics",
-      "supply chain",
-      "distribution"
+      "mobile forensics",
+      "iOS forensics",
+      "Android forensics",
+      "Cellebrite",
+      "GrayKey"
     ]
   },
   {
-    "name": "Agricultural Export Consultant",
-    "category": "Business & Economics",
+    "name": "Firewall Configuration & Management",
+    "category": "Network Security",
     "tags": [
-      "export",
-      "international trade",
-      "business"
+      "firewall",
+      "Palo Alto",
+      "Cisco ASA",
+      "Fortinet",
+      "network security",
+      "ACL"
     ]
   },
   {
-    "name": "International Agri-Trade Consultant",
-    "category": "Business & Economics",
+    "name": "Network Architecture Security",
+    "category": "Network Security",
     "tags": [
-      "trade",
-      "export",
-      "international"
+      "network architecture",
+      "segmentation",
+      "DMZ",
+      "zero trust",
+      "micro-segmentation"
     ]
   },
   {
-    "name": "Agricultural Insurance Advisor",
-    "category": "Business & Economics",
+    "name": "VPN & Remote Access Security",
+    "category": "Network Security",
     "tags": [
-      "insurance",
-      "risk management",
-      "finance"
+      "VPN",
+      "remote access",
+      "SSL VPN",
+      "zero trust network access",
+      "ZTNA"
     ]
   },
   {
-    "name": "Crop Insurance Advisor",
-    "category": "Business & Economics",
+    "name": "DNS Security",
+    "category": "Network Security",
     "tags": [
-      "insurance",
-      "risk management",
-      "crops"
+      "DNS",
+      "DNSSEC",
+      "DNS filtering",
+      "DNS over HTTPS",
+      "sinkholes"
     ]
   },
   {
-    "name": "Farm Management Specialist",
-    "category": "Business & Economics",
+    "name": "DDoS Protection & Mitigation",
+    "category": "Network Security",
     "tags": [
-      "farm management",
-      "planning",
-      "operations"
+      "DDoS",
+      "traffic scrubbing",
+      "rate limiting",
+      "Cloudflare",
+      "Akamai",
+      "CDN security"
     ]
   },
   {
-    "name": "Supply Chain Specialist",
-    "category": "Business & Economics",
+    "name": "Network Traffic Analysis",
+    "category": "Network Security",
     "tags": [
-      "supply chain",
-      "logistics",
-      "distribution"
+      "traffic analysis",
+      "Wireshark",
+      "NetFlow",
+      "packet capture",
+      "anomaly detection"
     ]
   },
   {
-    "name": "Food Processing Consultant",
-    "category": "Business & Economics",
+    "name": "Zero Trust Network Access (ZTNA)",
+    "category": "Network Security",
     "tags": [
-      "food processing",
-      "value addition",
-      "business"
+      "zero trust",
+      "ZTNA",
+      "BeyondCorp",
+      "never trust verify",
+      "microsegmentation"
     ]
   },
   {
-    "name": "Cooperative Organizer",
-    "category": "Business & Economics",
+    "name": "SD-WAN Security",
+    "category": "Network Security",
     "tags": [
-      "cooperatives",
-      "organization",
-      "collective farming"
+      "SD-WAN",
+      "WAN security",
+      "branch office security",
+      "Velocloud",
+      "Meraki"
     ]
   },
   {
-    "name": "Rural Development Consultant",
-    "category": "Business & Economics",
+    "name": "AWS Security",
+    "category": "Cloud Security",
     "tags": [
-      "rural development",
-      "community",
-      "economic growth"
+      "AWS",
+      "IAM",
+      "CloudTrail",
+      "Security Hub",
+      "GuardDuty",
+      "S3 security"
     ]
   },
   {
-    "name": "Agricultural Startup Mentor",
-    "category": "Business & Economics",
+    "name": "Azure Security",
+    "category": "Cloud Security",
     "tags": [
-      "startup",
-      "entrepreneurship",
-      "mentoring"
+      "Azure",
+      "Microsoft Defender",
+      "Azure AD",
+      "Sentinel",
+      "cloud security"
     ]
   },
   {
-    "name": "Agri-Business Consultant",
-    "category": "Business & Economics",
+    "name": "Google Cloud Platform (GCP) Security",
+    "category": "Cloud Security",
     "tags": [
-      "agri-business",
-      "entrepreneurship",
-      "business"
+      "GCP",
+      "Google Cloud",
+      "CloudSCC",
+      "IAM",
+      "cloud security"
     ]
   },
   {
-    "name": "Trade & Export Consultant",
-    "category": "Business & Economics",
+    "name": "Cloud Security Architecture",
+    "category": "Cloud Security",
     "tags": [
-      "export",
-      "trade",
-      "international business"
+      "cloud architecture",
+      "CSPM",
+      "shared responsibility",
+      "cloud design",
+      "multi-cloud"
     ]
   },
   {
-    "name": "Cost Optimization Specialist",
-    "category": "Business & Economics",
+    "name": "Cloud Security Posture Management (CSPM)",
+    "category": "Cloud Security",
     "tags": [
-      "cost management",
-      "efficiency",
-      "profitability"
-    ]
-  },
-  {
-    "name": "Food Safety Advisor",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "food safety",
-      "hygiene",
-      "quality"
-    ]
-  },
-  {
-    "name": "Quality Control Advisor",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "quality control",
-      "standards",
-      "inspection"
-    ]
-  },
-  {
-    "name": "Quality Assurance Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "quality assurance",
-      "standards",
+      "CSPM",
+      "misconfiguration",
+      "Prisma Cloud",
+      "Dome9",
       "compliance"
     ]
   },
   {
-    "name": "Organic Certification Consultant",
-    "category": "Food Safety & Quality",
+    "name": "Container Security (Docker/Kubernetes)",
+    "category": "Cloud Security",
     "tags": [
+      "container security",
+      "Docker",
+      "Kubernetes",
+      "K8s",
+      "image scanning",
+      "CNAPP"
+    ]
+  },
+  {
+    "name": "Serverless Security",
+    "category": "Cloud Security",
+    "tags": [
+      "serverless",
+      "Lambda",
+      "Azure Functions",
+      "function security",
+      "event injection"
+    ]
+  },
+  {
+    "name": "Cloud Identity & Access Management",
+    "category": "Cloud Security",
+    "tags": [
+      "cloud IAM",
+      "privilege management",
+      "AWS IAM",
+      "Azure AD",
+      "service accounts"
+    ]
+  },
+  {
+    "name": "Infrastructure as Code (IaC) Security",
+    "category": "Cloud Security",
+    "tags": [
+      "IaC",
+      "Terraform",
+      "CloudFormation",
+      "security scanning",
+      "Checkov",
+      "tfsec"
+    ]
+  },
+  {
+    "name": "Secure Software Development Lifecycle (SSDLC)",
+    "category": "Application Security",
+    "tags": [
+      "SSDLC",
+      "secure SDLC",
+      "threat modeling",
+      "security requirements",
+      "shift left"
+    ]
+  },
+  {
+    "name": "Static Application Security Testing (SAST)",
+    "category": "Application Security",
+    "tags": [
+      "SAST",
+      "source code analysis",
+      "Checkmarx",
+      "SonarQube",
+      "Fortify"
+    ]
+  },
+  {
+    "name": "Dynamic Application Security Testing (DAST)",
+    "category": "Application Security",
+    "tags": [
+      "DAST",
+      "OWASP ZAP",
+      "dynamic analysis",
+      "runtime testing",
+      "Burp Suite"
+    ]
+  },
+  {
+    "name": "Software Composition Analysis (SCA)",
+    "category": "Application Security",
+    "tags": [
+      "SCA",
+      "open source",
+      "dependency scanning",
+      "Snyk",
+      "license compliance"
+    ]
+  },
+  {
+    "name": "Threat Modeling",
+    "category": "Application Security",
+    "tags": [
+      "threat modeling",
+      "STRIDE",
+      "PASTA",
+      "attack trees",
+      "data flow diagrams"
+    ]
+  },
+  {
+    "name": "Secure Code Review",
+    "category": "Application Security",
+    "tags": [
+      "code review",
+      "secure coding",
+      "manual review",
+      "vulnerability identification"
+    ]
+  },
+  {
+    "name": "OWASP Top 10",
+    "category": "Application Security",
+    "tags": [
+      "OWASP",
+      "injection",
+      "XSS",
+      "broken auth",
+      "web vulnerabilities",
+      "top 10"
+    ]
+  },
+  {
+    "name": "OAuth & OpenID Connect Security",
+    "category": "Application Security",
+    "tags": [
+      "OAuth",
+      "OIDC",
+      "token security",
+      "authorization flows",
+      "JWT attacks"
+    ]
+  },
+  {
+    "name": "API Gateway Security",
+    "category": "Application Security",
+    "tags": [
+      "API gateway",
+      "rate limiting",
+      "authentication",
+      "authorization",
+      "API management"
+    ]
+  },
+  {
+    "name": "Identity & Access Management (IAM)",
+    "category": "Identity & Access Management",
+    "tags": [
+      "IAM",
+      "identity management",
+      "provisioning",
+      "RBAC",
+      "ABAC"
+    ]
+  },
+  {
+    "name": "Privileged Access Management (PAM)",
+    "category": "Identity & Access Management",
+    "tags": [
+      "PAM",
+      "privileged accounts",
+      "CyberArk",
+      "BeyondTrust",
+      "vault",
+      "just-in-time access"
+    ]
+  },
+  {
+    "name": "Single Sign-On (SSO)",
+    "category": "Identity & Access Management",
+    "tags": [
+      "SSO",
+      "SAML",
+      "Okta",
+      "Azure AD",
+      "federation",
+      "enterprise authentication"
+    ]
+  },
+  {
+    "name": "Multi-Factor Authentication (MFA)",
+    "category": "Identity & Access Management",
+    "tags": [
+      "MFA",
+      "2FA",
+      "TOTP",
+      "FIDO2",
+      "authenticator apps",
+      "passwordless"
+    ]
+  },
+  {
+    "name": "Directory Services Security",
+    "category": "Identity & Access Management",
+    "tags": [
+      "Active Directory",
+      "LDAP",
+      "domain controller",
+      "group policy",
+      "AD security"
+    ]
+  },
+  {
+    "name": "Zero Trust Identity",
+    "category": "Identity & Access Management",
+    "tags": [
+      "zero trust",
+      "identity-centric security",
+      "continuous verification",
+      "BeyondCorp"
+    ]
+  },
+  {
+    "name": "Identity Governance & Administration (IGA)",
+    "category": "Identity & Access Management",
+    "tags": [
+      "IGA",
+      "access reviews",
+      "role mining",
+      "SailPoint",
+      "Saviynt"
+    ]
+  },
+  {
+    "name": "Risk Management",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "risk management",
+      "risk assessment",
+      "risk register",
+      "qualitative risk",
+      "quantitative risk"
+    ]
+  },
+  {
+    "name": "ISO 27001 / ISMS",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "ISO 27001",
+      "ISMS",
+      "information security management",
       "certification",
+      "audit"
+    ]
+  },
+  {
+    "name": "NIST Cybersecurity Framework",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "NIST",
+      "CSF",
+      "identify protect detect respond recover",
+      "framework"
+    ]
+  },
+  {
+    "name": "GDPR Compliance",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "GDPR",
+      "data privacy",
+      "data protection",
+      "EU compliance",
+      "DPA",
+      "DPIA"
+    ]
+  },
+  {
+    "name": "PCI DSS Compliance",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "PCI DSS",
+      "payment card",
+      "cardholder data",
+      "QSA",
+      "SAQ"
+    ]
+  },
+  {
+    "name": "SOC 2 Compliance",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "SOC 2",
+      "AICPA",
+      "trust service criteria",
+      "audit readiness",
+      "Type II"
+    ]
+  },
+  {
+    "name": "HIPAA Compliance",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "HIPAA",
+      "healthcare security",
+      "PHI",
+      "BAA",
+      "health data privacy"
+    ]
+  },
+  {
+    "name": "Security Policy Development",
+    "category": "Governance, Risk & Compliance (GRC)",
+    "tags": [
+      "security policy",
+      "procedures",
       "standards",
-      "compliance"
-    ]
-  },
-  {
-    "name": "Traceability Consultant",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "traceability",
-      "supply chain",
-      "transparency"
-    ]
-  },
-  {
-    "name": "Hazard Analysis and Critical Control Points (HACCP) Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "HACCP",
-      "food safety",
-      "quality"
-    ]
-  },
-  {
-    "name": "Post-Harvest Management Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "post-harvest",
-      "storage",
-      "preservation"
-    ]
-  },
-  {
-    "name": "Food Standards Advisor",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "standards",
-      "compliance",
-      "regulation"
-    ]
-  },
-  {
-    "name": "Packaging Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "packaging",
-      "preservation",
-      "presentation"
-    ]
-  },
-  {
-    "name": "Testing & Certification Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "testing",
-      "certification",
-      "quality"
-    ]
-  },
-  {
-    "name": "Chemical Analysis Specialist",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "chemical analysis",
-      "testing",
-      "quality"
-    ]
-  },
-  {
-    "name": "Microbiology in Agriculture Consultant",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "microbiology",
-      "testing",
-      "quality"
-    ]
-  },
-  {
-    "name": "Agricultural Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "training",
-      "farmer education",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Agricultural Extension Officer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "extension",
-      "knowledge transfer",
-      "farmer support"
-    ]
-  },
-  {
-    "name": "Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "training",
-      "facilitation",
-      "education"
-    ]
-  },
-  {
-    "name": "Knowledge Transfer Specialist",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "knowledge transfer",
-      "education",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Youth in Agriculture Mentor",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "youth",
-      "mentoring",
-      "farm entry"
-    ]
-  },
-  {
-    "name": "Agricultural Content Creator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "content creation",
-      "education",
-      "communication"
-    ]
-  },
-  {
-    "name": "Community Farming Organizer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "community",
-      "organization",
-      "social"
-    ]
-  },
-  {
-    "name": "Kitchen Garden Coach",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "kitchen garden",
-      "home gardening",
-      "household"
-    ]
-  },
-  {
-    "name": "Farmer Group Leader Training",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "group leadership",
-      "organization",
-      "training"
-    ]
-  },
-  {
-    "name": "Technology Demonstration Specialist",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "technology",
-      "demonstration",
-      "farmer education"
-    ]
-  },
-  {
-    "name": "Farmer-to-Farmer Learning Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "farmer training",
-      "peer learning",
-      "extension"
-    ]
-  },
-  {
-    "name": "Gender Mainstreaming in Agriculture Specialist",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "gender",
-      "women empowerment",
-      "social"
-    ]
-  },
-  {
-    "name": "Digital Literacy Trainer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "digital literacy",
-      "technology",
-      "education"
-    ]
-  },
-  {
-    "name": "Agricultural Leadership Coach",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "leadership",
-      "mentoring",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Monitoring & Evaluation Expert",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "M&E",
-      "impact assessment",
-      "evaluation"
-    ]
-  },
-  {
-    "name": "Agricultural Policy Analyst",
-    "category": "Policy & Governance",
-    "tags": [
-      "policy",
-      "analysis",
+      "acceptable use",
       "governance"
     ]
   },
   {
-    "name": "Farm Policy Advisor",
-    "category": "Policy & Governance",
+    "name": "Security Auditing",
+    "category": "Governance, Risk & Compliance (GRC)",
     "tags": [
-      "policy",
-      "farm management",
-      "governance"
+      "security audit",
+      "gap analysis",
+      "compliance audit",
+      "controls assessment"
     ]
   },
   {
-    "name": "Agricultural Legal Advisor",
-    "category": "Policy & Governance",
+    "name": "Vendor Risk Management",
+    "category": "Governance, Risk & Compliance (GRC)",
     "tags": [
-      "legal",
-      "compliance",
-      "governance"
+      "vendor risk",
+      "third party risk",
+      "supply chain security",
+      "vendor questionnaire"
     ]
   },
   {
-    "name": "Agricultural Compliance Officer",
-    "category": "Policy & Governance",
+    "name": "Business Continuity Planning (BCP)",
+    "category": "Governance, Risk & Compliance (GRC)",
     "tags": [
-      "compliance",
-      "standards",
-      "governance"
+      "BCP",
+      "business continuity",
+      "disaster recovery",
+      "RTO",
+      "RPO"
     ]
   },
   {
-    "name": "Land Use Planner",
-    "category": "Policy & Governance",
+    "name": "CMMC Compliance",
+    "category": "Governance, Risk & Compliance (GRC)",
     "tags": [
-      "land use",
-      "planning",
-      "policy"
+      "CMMC",
+      "defense contractors",
+      "DoD",
+      "NIST 800-171",
+      "CUI"
     ]
   },
   {
-    "name": "Water Policy Analyst",
-    "category": "Policy & Governance",
+    "name": "Cryptography Fundamentals",
+    "category": "Cryptography & PKI",
     "tags": [
-      "water policy",
-      "governance",
-      "management"
+      "cryptography",
+      "encryption",
+      "symmetric",
+      "asymmetric",
+      "hashing",
+      "AES",
+      "RSA"
     ]
   },
   {
-    "name": "Environmental Policy Advisor",
-    "category": "Policy & Governance",
+    "name": "Public Key Infrastructure (PKI)",
+    "category": "Cryptography & PKI",
     "tags": [
-      "environment",
-      "policy",
-      "sustainability"
+      "PKI",
+      "certificates",
+      "CA",
+      "TLS",
+      "X.509",
+      "certificate management"
     ]
   },
   {
-    "name": "Crop Insurance Policy Specialist",
-    "category": "Policy & Governance",
+    "name": "TLS/SSL Security",
+    "category": "Cryptography & PKI",
     "tags": [
-      "insurance policy",
-      "risk management",
-      "governance"
+      "TLS",
+      "SSL",
+      "HTTPS",
+      "certificate pinning",
+      "cipher suites",
+      "mTLS"
     ]
   },
   {
-    "name": "Rural Policy Analyst",
-    "category": "Policy & Governance",
+    "name": "Hardware Security Modules (HSM)",
+    "category": "Cryptography & PKI",
     "tags": [
-      "rural policy",
-      "development",
-      "governance"
+      "HSM",
+      "key management",
+      "hardware security",
+      "Luna HSM",
+      "AWS CloudHSM"
     ]
   },
   {
-    "name": "Trade Policy Analyst",
-    "category": "Policy & Governance",
+    "name": "Secrets Management",
+    "category": "Cryptography & PKI",
     "tags": [
-      "trade policy",
-      "international",
-      "governance"
+      "secrets management",
+      "HashiCorp Vault",
+      "AWS Secrets Manager",
+      "key rotation",
+      "credentials"
     ]
   },
   {
-    "name": "Renewable Energy in Agriculture Specialist",
-    "category": "Energy & Environment",
+    "name": "Post-Quantum Cryptography",
+    "category": "Cryptography & PKI",
     "tags": [
-      "renewable energy",
-      "solar",
-      "sustainability"
+      "post-quantum",
+      "quantum-safe",
+      "NIST PQC",
+      "lattice cryptography",
+      "future-proofing"
     ]
   },
   {
-    "name": "Solar Energy in Agriculture Advisor",
-    "category": "Energy & Environment",
+    "name": "DevSecOps Implementation",
+    "category": "DevSecOps",
     "tags": [
-      "solar",
-      "energy",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Biogas Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "biogas",
-      "bioenergy",
-      "waste management"
-    ]
-  },
-  {
-    "name": "Bioenergy Crop Consultant",
-    "category": "Energy & Environment",
-    "tags": [
-      "bioenergy",
-      "energy crops",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Energy Crops Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "energy crops",
-      "bioenergy",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Waste Recycling Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "waste recycling",
-      "circular economy",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Waste-to-Energy Consultant",
-    "category": "Energy & Environment",
-    "tags": [
-      "waste to energy",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Agricultural Waste Management Expert",
-    "category": "Energy & Environment",
-    "tags": [
-      "waste management",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Biochar Expert",
-    "category": "Energy & Environment",
-    "tags": [
-      "biochar",
-      "soil health",
-      "carbon"
-    ]
-  },
-  {
-    "name": "Ecological Farming Consultant",
-    "category": "Energy & Environment",
-    "tags": [
-      "ecological",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Wind Energy in Agriculture Advisor",
-    "category": "Energy & Environment",
-    "tags": [
-      "wind energy",
-      "renewable",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Green Energy Farming Advisor",
-    "category": "Energy & Environment",
-    "tags": [
-      "green energy",
-      "renewable",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Horticulture Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticulture",
-      "fruits",
-      "vegetables"
-    ]
-  },
-  {
-    "name": "Herb Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "herbs",
-      "medicinal plants",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Herbal Medicine Crop Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "herbal medicine",
-      "medicinal plants",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Spice Cultivation Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "spices",
-      "specialty crops",
-      "cultivation"
-    ]
-  },
-  {
-    "name": "Orchid Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "orchids",
-      "floriculture",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Mushroom Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "mushrooms",
-      "cultivation",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Bamboo Cultivation Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "bamboo",
-      "forestry",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Beekeeping & Apiculture Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "beekeeping",
-      "honey",
-      "pollination"
-    ]
-  },
-  {
-    "name": "Silkworm Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "sericulture",
-      "silk",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Lac Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "lac",
-      "specialty crops",
-      "forestry"
-    ]
-  },
-  {
-    "name": "Coconut Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "coconut",
-      "plantation crops",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Vanilla Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "vanilla",
-      "spices",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Saffron Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "saffron",
-      "spices",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Viticulture Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "grapes",
-      "viticulture",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Turmeric Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "turmeric",
-      "spices",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Agricultural Climate Resilience Expert",
-    "category": "Climate & Resilience",
-    "tags": [
-      "climate resilience",
-      "adaptation",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Climate Change Adaptation Specialist",
-    "category": "Climate & Resilience",
-    "tags": [
-      "climate change",
-      "adaptation",
-      "resilience"
-    ]
-  },
-  {
-    "name": "Crop Yield Optimization Consultant",
-    "category": "Climate & Resilience",
-    "tags": [
-      "yield optimization",
-      "efficiency",
-      "productivity"
-    ]
-  },
-  {
-    "name": "Flood Management Advisor",
-    "category": "Climate & Resilience",
-    "tags": [
-      "flood",
-      "water management",
-      "climate"
-    ]
-  },
-  {
-    "name": "Heat Stress Management Expert",
-    "category": "Climate & Resilience",
-    "tags": [
-      "heat stress",
-      "climate adaptation",
-      "resilience"
-    ]
-  },
-  {
-    "name": "Weather Forecasting Specialist",
-    "category": "Climate & Resilience",
-    "tags": [
-      "weather",
-      "forecasting",
-      "data"
-    ]
-  },
-  {
-    "name": "Disaster Risk Reduction Specialist",
-    "category": "Climate & Resilience",
-    "tags": [
-      "disaster risk",
-      "risk management",
-      "resilience"
-    ]
-  },
-  {
-    "name": "Agricultural Meteorologist",
-    "category": "Climate & Resilience",
-    "tags": [
-      "meteorology",
-      "weather",
-      "climate"
-    ]
-  },
-  {
-    "name": "Varietal Improvement for Climate Adaptation",
-    "category": "Climate & Resilience",
-    "tags": [
-      "crop variety",
-      "climate adaptation",
-      "breeding"
-    ]
-  },
-  {
-    "name": "Water Stress Management Expert",
-    "category": "Climate & Resilience",
-    "tags": [
-      "water stress",
-      "drought",
-      "adaptation"
-    ]
-  },
-  {
-    "name": "Agricultural Research Scientist",
-    "category": "Research & Science",
-    "tags": [
-      "research",
-      "science",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Crop Genetics Specialist",
-    "category": "Research & Science",
-    "tags": [
-      "genetics",
-      "crop improvement",
-      "breeding"
-    ]
-  },
-  {
-    "name": "Plant Genetics Specialist",
-    "category": "Research & Science",
-    "tags": [
-      "plant genetics",
-      "improvement",
-      "breeding"
-    ]
-  },
-  {
-    "name": "Agronomist",
-    "category": "Research & Science",
-    "tags": [
-      "agronomy",
-      "crop science",
-      "farming"
-    ]
-  },
-  {
-    "name": "Horticulturist",
-    "category": "Research & Science",
-    "tags": [
-      "horticulture",
-      "fruits",
-      "vegetables"
-    ]
-  },
-  {
-    "name": "Silviculturist",
-    "category": "Research & Science",
-    "tags": [
-      "silviculture",
-      "forestry",
-      "trees"
-    ]
-  },
-  {
-    "name": "Forestry Specialist",
-    "category": "Research & Science",
-    "tags": [
-      "forestry",
-      "trees",
-      "woodland"
-    ]
-  },
-  {
-    "name": "Soil Microbiology Specialist",
-    "category": "Research & Science",
-    "tags": [
-      "microbiology",
-      "soil",
-      "microorganisms"
-    ]
-  },
-  {
-    "name": "Germplasm Conservation Expert",
-    "category": "Research & Science",
-    "tags": [
-      "germplasm",
-      "genetic resources",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Indigenous Crop Scientist",
-    "category": "Research & Science",
-    "tags": [
-      "indigenous crops",
-      "local varieties",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Mango Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "mango",
-      "fruits",
-      "plantation"
-    ]
-  },
-  {
-    "name": "Citrus Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "citrus",
-      "fruits",
-      "cultivation"
-    ]
-  },
-  {
-    "name": "Grape Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "grapes",
-      "fruits",
-      "viticulture"
-    ]
-  },
-  {
-    "name": "Apple Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "apples",
-      "fruits",
-      "temperate"
-    ]
-  },
-  {
-    "name": "Papaya Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "papaya",
-      "fruits",
-      "tropical"
-    ]
-  },
-  {
-    "name": "Pineapple Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "pineapple",
-      "fruits",
-      "tropical"
-    ]
-  },
-  {
-    "name": "Kiwi Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "kiwi",
-      "fruits",
-      "temperate"
-    ]
-  },
-  {
-    "name": "Jackfruit Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jackfruit",
-      "fruits",
-      "tropical"
-    ]
-  },
-  {
-    "name": "Date Palm Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "date palm",
-      "fruits",
-      "arid"
-    ]
-  },
-  {
-    "name": "Kinnow Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "kinnow",
-      "citrus",
-      "fruits"
-    ]
-  },
-  {
-    "name": "Groundnut Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "groundnut",
-      "legumes",
-      "oilseeds"
-    ]
-  },
-  {
-    "name": "Onion Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "onion",
-      "vegetables",
-      "bulb crops"
-    ]
-  },
-  {
-    "name": "Okra Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "okra",
-      "vegetables",
-      "cultivation"
-    ]
-  },
-  {
-    "name": "Mustard Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "mustard",
-      "oilseeds",
-      "crops"
-    ]
-  },
-  {
-    "name": "Barley Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "barley",
-      "cereal crops",
-      "farming"
-    ]
-  },
-  {
-    "name": "Oats Farming Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "oats",
-      "cereal crops",
-      "farming"
-    ]
-  },
-  {
-    "name": "Millet Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "millet",
-      "cereal crops",
-      "nutrition"
-    ]
-  },
-  {
-    "name": "Kodo Millet Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "kodo millet",
-      "millets",
-      "cereals"
-    ]
-  },
-  {
-    "name": "Jute Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jute",
-      "fiber crops",
-      "plantation"
-    ]
-  },
-  {
-    "name": "Hemp Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "hemp",
-      "fiber crops",
-      "industrial"
-    ]
-  },
-  {
-    "name": "Rubber Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "rubber",
-      "plantation crops",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Jatropha Cultivation Advisor",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jatropha",
-      "biofuel",
-      "specialty crops"
-    ]
-  },
-  {
-    "name": "Jasmine Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jasmine",
-      "flowers",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Yam Cultivation Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "yam",
-      "tuber crops",
-      "cultivation"
-    ]
-  },
-  {
-    "name": "Yardlong Bean Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "yardlong bean",
-      "vegetables",
-      "legumes"
-    ]
-  },
-  {
-    "name": "Zucchini Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "zucchini",
-      "vegetables",
-      "cucurbits"
-    ]
-  },
-  {
-    "name": "Jalapeno Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jalapeno",
-      "peppers",
-      "vegetables"
-    ]
-  },
-  {
-    "name": "Kale & Leafy Greens Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "leafy greens",
-      "vegetables",
-      "nutrition"
-    ]
-  },
-  {
-    "name": "Kelp Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "kelp",
-      "seaweed",
-      "aquatic"
-    ]
-  },
-  {
-    "name": "Yarrow Farming Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "yarrow",
-      "medicinal plants",
-      "herbs"
-    ]
-  },
-  {
-    "name": "Zebu Cattle Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "zebu cattle",
-      "livestock",
-      "breeding"
-    ]
-  },
-  {
-    "name": "Dairy Genetics Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy genetics",
-      "breeding",
-      "improvement"
-    ]
-  },
-  {
-    "name": "Dairy Processing Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy processing",
-      "value addition",
-      "business"
-    ]
-  },
-  {
-    "name": "Dairy Marketing Expert",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy marketing",
-      "sales",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Dairy Waste Management Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy waste",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Dairy Equipment Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy equipment",
-      "technology",
-      "machinery"
-    ]
-  },
-  {
-    "name": "Dairy Cooperative Organizer",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy cooperative",
-      "organization",
-      "collective"
-    ]
-  },
-  {
-    "name": "Dairy Extension Officer",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Dairy Sustainability Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy sustainability",
-      "environment",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Dairy Product Development Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "dairy products",
-      "value addition",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Yoghurt Production Consultant",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "yoghurt",
-      "dairy products",
-      "value addition"
-    ]
-  },
-  {
-    "name": "Yoghurt Marketing Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "yoghurt marketing",
-      "sales",
-      "business"
-    ]
-  },
-  {
-    "name": "Livestock Logistics Planner",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "logistics",
-      "supply chain",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Livestock Export Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "livestock export",
-      "international trade",
-      "business"
-    ]
-  },
-  {
-    "name": "Juvenile Livestock Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "juvenile livestock",
-      "young animals",
-      "breeding"
-    ]
-  },
-  {
-    "name": "Zeolite Soil Amendment Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "zeolite",
-      "soil amendment",
-      "minerals"
-    ]
-  },
-  {
-    "name": "Zinc Fertilizer Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "zinc",
-      "micronutrients",
-      "fertilizer"
-    ]
-  },
-  {
-    "name": "Inorganic Fertilizer Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "inorganic fertilizer",
-      "chemicals",
-      "nutrients"
-    ]
-  },
-  {
-    "name": "Organic Fertilizer Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "organic fertilizer",
-      "sustainable",
-      "natural"
-    ]
-  },
-  {
-    "name": "Plant Nutrition Advisor",
-    "category": "Soil & Water Management",
-    "tags": [
-      "plant nutrition",
-      "nutrients",
-      "fertilizer"
-    ]
-  },
-  {
-    "name": "Irrigation Water Quality Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water quality",
-      "irrigation",
-      "testing"
-    ]
-  },
-  {
-    "name": "Irrigation Economics Consultant",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation economics",
-      "cost analysis",
-      "efficiency"
-    ]
-  },
-  {
-    "name": "Irrigation Policy Analyst",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation policy",
-      "governance",
-      "management"
-    ]
-  },
-  {
-    "name": "Irrigation Extension Officer",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation extension",
-      "farmer training",
-      "support"
-    ]
-  },
-  {
-    "name": "Irrigation Sustainability Consultant",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation sustainability",
-      "conservation",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Irrigation Soil Mapping Expert",
-    "category": "Soil & Water Management",
-    "tags": [
-      "soil mapping",
-      "GIS",
-      "irrigation"
-    ]
-  },
-  {
-    "name": "Irrigation Crop Yield Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "crop yield",
-      "irrigation",
-      "optimization"
-    ]
-  },
-  {
-    "name": "Irrigation Technology Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation technology",
-      "systems",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Organic Soil Health Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic",
-      "soil health",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Organic Irrigation Planner",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic",
-      "irrigation",
-      "planning"
-    ]
-  },
-  {
-    "name": "Organic Crop Yield Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic",
-      "crop yield",
-      "optimization"
-    ]
-  },
-  {
-    "name": "Organic Marketing Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic marketing",
-      "sales",
-      "organic products"
-    ]
-  },
-  {
-    "name": "Organic Policy Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic policy",
-      "governance",
-      "standards"
-    ]
-  },
-  {
-    "name": "Organic Extension Officer",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Organic Training Facilitator",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic training",
-      "education",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Organic Waste Management Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic waste",
-      "management",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Organic Cooperative Organizer",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic cooperative",
-      "organization",
-      "collective"
-    ]
-  },
-  {
-    "name": "Organic Finance Advisor",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic finance",
-      "credit",
-      "funding"
-    ]
-  },
-  {
-    "name": "Organic Insurance Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "organic insurance",
-      "risk management",
-      "protection"
-    ]
-  },
-  {
-    "name": "Green Manure Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "green manure",
-      "cover crops",
-      "soil improvement"
-    ]
-  },
-  {
-    "name": "Green Supply Chain Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "supply chain",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Green Packaging Specialist",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "eco-packaging",
-      "sustainability",
-      "environment"
-    ]
-  },
-  {
-    "name": "Green Policy Analyst",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "green policy",
-      "environment",
-      "governance"
-    ]
-  },
-  {
-    "name": "Green Certification Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "green certification",
-      "standards",
-      "compliance"
-    ]
-  },
-  {
-    "name": "Green Farming Extension Officer",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "green farming",
-      "extension",
-      "farmer support"
-    ]
-  },
-  {
-    "name": "Horticultural Genetics Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural genetics",
-      "breeding",
-      "improvement"
-    ]
-  },
-  {
-    "name": "Horticultural Waste Management Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural waste",
-      "sustainability",
-      "management"
-    ]
-  },
-  {
-    "name": "Horticultural Extension Officer",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Horticultural Policy Advisor",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural policy",
-      "governance",
-      "standards"
-    ]
-  },
-  {
-    "name": "Horticultural Training Facilitator",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural training",
-      "education",
-      "capacity"
-    ]
-  },
-  {
-    "name": "Horticultural Soil Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural soil",
-      "fertility",
-      "management"
-    ]
-  },
-  {
-    "name": "Horticultural Irrigation Planner",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural irrigation",
-      "water management",
-      "planning"
-    ]
-  },
-  {
-    "name": "Horticultural Marketing Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural marketing",
-      "sales",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Horticultural Therapy Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "horticultural therapy",
-      "wellness",
-      "health"
-    ]
-  },
-  {
-    "name": "Plant Protection Consultant",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "plant protection",
-      "pest management",
-      "disease"
-    ]
-  },
-  {
-    "name": "Plant Biotechnology Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "plant biotechnology",
-      "genetic engineering",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Plant Disease Management Consultant",
-    "category": "Pest & Disease Management",
-    "tags": [
-      "plant disease",
-      "management",
-      "prevention"
-    ]
-  },
-  {
-    "name": "Plant Extension Officer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "plant extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Plant Policy Advisor",
-    "category": "Policy & Governance",
-    "tags": [
-      "plant policy",
-      "governance",
-      "standards"
-    ]
-  },
-  {
-    "name": "Plant Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "plant training",
-      "education",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Plant Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "plant soil",
-      "fertility",
-      "management"
-    ]
-  },
-  {
-    "name": "Plant Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "plant irrigation",
-      "water management",
-      "planning"
-    ]
-  },
-  {
-    "name": "Plant Crop Yield Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "plant crop yield",
-      "optimization",
-      "productivity"
-    ]
-  },
-  {
-    "name": "Plant Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "plant marketing",
-      "sales",
-      "distribution"
-    ]
-  },
-  {
-    "name": "In-vitro Plant Propagation Expert",
-    "category": "Technology & Innovation",
-    "tags": [
-      "in-vitro propagation",
-      "biotechnology",
-      "plant improvement"
-    ]
-  },
-  {
-    "name": "Vegetable Seed Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "vegetable seeds",
-      "seedling",
-      "technology"
-    ]
-  },
-  {
-    "name": "Vegetable Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "vegetable marketing",
-      "sales",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Vegetable Policy Advisor",
-    "category": "Policy & Governance",
-    "tags": [
-      "vegetable policy",
-      "governance",
-      "standards"
-    ]
-  },
-  {
-    "name": "Vegetable Extension Officer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "vegetable extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Vegetable Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "vegetable training",
-      "education",
-      "capacity"
-    ]
-  },
-  {
-    "name": "Vegetable Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "vegetable soil",
-      "fertility",
-      "management"
-    ]
-  },
-  {
-    "name": "Vegetable Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "vegetable irrigation",
-      "water management",
-      "planning"
-    ]
-  },
-  {
-    "name": "Vegetable Crop Yield Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "vegetable yield",
-      "optimization",
-      "productivity"
-    ]
-  },
-  {
-    "name": "Vegetable Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "vegetable waste",
-      "management",
-      "recycling"
-    ]
-  },
-  {
-    "name": "Vegetable Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "vegetable sustainability",
-      "environment",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Vegetable Finance Advisor",
-    "category": "Business & Economics",
-    "tags": [
-      "vegetable finance",
-      "credit",
-      "funding"
-    ]
-  },
-  {
-    "name": "Vegetable Insurance Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "vegetable insurance",
-      "risk management",
-      "protection"
-    ]
-  },
-  {
-    "name": "Vegetable Cooperative Organizer",
-    "category": "Business & Economics",
-    "tags": [
-      "vegetable cooperative",
-      "organization",
-      "collective"
-    ]
-  },
-  {
-    "name": "Water Extension Officer",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Water Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "water training",
-      "education",
-      "capacity building"
-    ]
-  },
-  {
-    "name": "Water Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water soil",
-      "management",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Water Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "water irrigation",
-      "planning",
-      "management"
-    ]
-  },
-  {
-    "name": "Water Crop Yield Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "water crop yield",
-      "optimization",
-      "efficiency"
-    ]
-  },
-  {
-    "name": "Water Livestock Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "water livestock",
-      "animal health",
-      "hydration"
-    ]
-  },
-  {
-    "name": "Water Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "water waste management",
-      "recycling",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Water Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "water sustainability",
-      "conservation",
-      "environment"
-    ]
-  },
-  {
-    "name": "Water Finance Advisor",
-    "category": "Business & Economics",
-    "tags": [
-      "water finance",
-      "credit",
-      "infrastructure"
-    ]
-  },
-  {
-    "name": "Water Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "water marketing",
-      "resource allocation",
-      "trade"
-    ]
-  },
-  {
-    "name": "Urban Soil Health Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "urban soil",
-      "city farming",
-      "quality"
-    ]
-  },
-  {
-    "name": "Urban Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "urban irrigation",
-      "city farming",
-      "water"
-    ]
-  },
-  {
-    "name": "Urban Crop Yield Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "urban crop yield",
-      "city farming",
-      "productivity"
-    ]
-  },
-  {
-    "name": "Urban Livestock Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "urban livestock",
-      "city farming",
-      "small animals"
-    ]
-  },
-  {
-    "name": "Urban Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "urban waste management",
-      "recycling",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Urban Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "urban sustainability",
-      "city farming",
-      "environment"
-    ]
-  },
-  {
-    "name": "Urban Finance Advisor",
-    "category": "Business & Economics",
-    "tags": [
-      "urban finance",
-      "credit",
-      "city farming"
-    ]
-  },
-  {
-    "name": "Urban Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "urban marketing",
-      "sales",
-      "city markets"
-    ]
-  },
-  {
-    "name": "Urban Extension Officer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "urban extension",
-      "farmer support",
-      "city farming"
-    ]
-  },
-  {
-    "name": "Urban Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "urban training",
-      "education",
-      "city farming"
-    ]
-  },
-  {
-    "name": "Urban Cooperative Organizer",
-    "category": "Business & Economics",
-    "tags": [
-      "urban cooperative",
-      "organization",
-      "city"
-    ]
-  },
-  {
-    "name": "Urban Logistics Planner",
-    "category": "Business & Economics",
-    "tags": [
-      "urban logistics",
-      "supply chain",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Urban Export Specialist",
-    "category": "Business & Economics",
-    "tags": [
-      "urban export",
-      "trade",
-      "business"
-    ]
-  },
-  {
-    "name": "Urban Certification Consultant",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "urban certification",
-      "standards",
-      "compliance"
-    ]
-  },
-  {
-    "name": "Urban Quality Control Advisor",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "urban quality",
-      "testing",
-      "standards"
-    ]
-  },
-  {
-    "name": "Urban Technology Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "urban technology",
-      "city farming",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Rural Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "rural soil",
-      "fertility",
-      "management"
-    ]
-  },
-  {
-    "name": "Rural Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "rural irrigation",
-      "planning",
-      "management"
-    ]
-  },
-  {
-    "name": "Rural Crop Yield Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "rural crop yield",
-      "productivity",
-      "optimization"
-    ]
-  },
-  {
-    "name": "Rural Livestock Advisor",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "rural livestock",
-      "farming",
-      "development"
-    ]
-  },
-  {
-    "name": "Rural Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "rural waste management",
-      "sustainability",
-      "recycling"
-    ]
-  },
-  {
-    "name": "Rural Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "rural sustainability",
-      "environment",
-      "long-term"
-    ]
-  },
-  {
-    "name": "Rural Logistics Planner",
-    "category": "Business & Economics",
-    "tags": [
-      "rural logistics",
-      "supply chain",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Quality Standards Advisor",
-    "category": "Food Safety & Quality",
-    "tags": [
-      "quality standards",
-      "compliance",
-      "regulation"
-    ]
-  },
-  {
-    "name": "Quality Policy Analyst",
-    "category": "Policy & Governance",
-    "tags": [
-      "quality policy",
-      "standards",
-      "governance"
-    ]
-  },
-  {
-    "name": "Quality Extension Officer",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "quality extension",
-      "farmer support",
-      "training"
-    ]
-  },
-  {
-    "name": "Quality Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "quality training",
-      "education",
-      "capacity"
-    ]
-  },
-  {
-    "name": "Quality Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "quality soil",
-      "testing",
-      "management"
-    ]
-  },
-  {
-    "name": "Quality Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "quality irrigation",
-      "water management",
-      "planning"
-    ]
-  },
-  {
-    "name": "Quality Crop Yield Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "quality crop yield",
-      "optimization",
-      "standards"
-    ]
-  },
-  {
-    "name": "Quality Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "quality marketing",
-      "sales",
-      "premium"
-    ]
-  },
-  {
-    "name": "Quality Finance Advisor",
-    "category": "Business & Economics",
-    "tags": [
-      "quality finance",
-      "credit",
-      "premium pricing"
-    ]
-  },
-  {
-    "name": "Quality Insurance Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "quality insurance",
-      "risk management",
-      "protection"
-    ]
-  },
-  {
-    "name": "Quality Logistics Planner",
-    "category": "Business & Economics",
-    "tags": [
-      "quality logistics",
-      "supply chain",
-      "preservation"
-    ]
-  },
-  {
-    "name": "Quality Export Specialist",
-    "category": "Business & Economics",
-    "tags": [
-      "quality export",
-      "international trade",
-      "standards"
-    ]
-  },
-  {
-    "name": "Quality Cooperative Organizer",
-    "category": "Business & Economics",
-    "tags": [
-      "quality cooperative",
-      "organization",
-      "collective"
-    ]
-  },
-  {
-    "name": "Quality Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "quality waste management",
-      "sustainability",
-      "byproducts"
-    ]
-  },
-  {
-    "name": "Quality Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "quality sustainability",
-      "long-term",
-      "environment"
-    ]
-  },
-  {
-    "name": "Zoning Extension Officer",
-    "category": "Policy & Governance",
-    "tags": [
-      "zoning extension",
-      "land use",
-      "planning"
-    ]
-  },
-  {
-    "name": "Zoning Training Facilitator",
-    "category": "Capacity Building & Training",
-    "tags": [
-      "zoning training",
-      "education",
-      "planning"
-    ]
-  },
-  {
-    "name": "Zoning Soil Specialist",
-    "category": "Soil & Water Management",
-    "tags": [
-      "zoning soil",
-      "mapping",
-      "regional"
-    ]
-  },
-  {
-    "name": "Zoning Irrigation Planner",
-    "category": "Soil & Water Management",
-    "tags": [
-      "zoning irrigation",
-      "regional planning",
-      "water"
-    ]
-  },
-  {
-    "name": "Zoning Crop Yield Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "zoning crop yield",
-      "regional optimization",
-      "planning"
-    ]
-  },
-  {
-    "name": "Zoning Waste Management Specialist",
-    "category": "Energy & Environment",
-    "tags": [
-      "zoning waste management",
-      "regional",
-      "sustainability"
-    ]
-  },
-  {
-    "name": "Zoning Sustainability Consultant",
-    "category": "Sustainable & Organic Farming",
-    "tags": [
-      "zoning sustainability",
-      "regional",
-      "environment"
-    ]
-  },
-  {
-    "name": "Zoning Finance Advisor",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning finance",
-      "regional credit",
-      "infrastructure"
-    ]
-  },
-  {
-    "name": "Zoning Marketing Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning marketing",
-      "regional trade",
-      "logistics"
-    ]
-  },
-  {
-    "name": "Zoning Insurance Consultant",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning insurance",
-      "regional risk management",
-      "protection"
-    ]
-  },
-  {
-    "name": "Zoning Cooperative Organizer",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning cooperative",
-      "regional organization",
-      "collective"
-    ]
-  },
-  {
-    "name": "Zoning Logistics Planner",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning logistics",
-      "regional supply chain",
-      "distribution"
-    ]
-  },
-  {
-    "name": "Zoning Export Specialist",
-    "category": "Business & Economics",
-    "tags": [
-      "zoning export",
-      "regional trade",
-      "international"
-    ]
-  },
-  {
-    "name": "Zoning Policy Advisor",
-    "category": "Policy & Governance",
-    "tags": [
-      "zoning policy",
-      "governance",
-      "regional"
-    ]
-  },
-  {
-    "name": "Agricultural Engineer",
-    "category": "Technology & Innovation",
-    "tags": [
-      "agricultural engineering",
-      "infrastructure",
-      "design"
-    ]
-  },
-  {
-    "name": "Farm Irrigation Engineer",
-    "category": "Soil & Water Management",
-    "tags": [
-      "irrigation engineering",
-      "design",
-      "infrastructure"
-    ]
-  },
-  {
-    "name": "Bio-systems Engineer",
-    "category": "Technology & Innovation",
-    "tags": [
-      "biosystems",
-      "engineering",
-      "integrated"
-    ]
-  },
-  {
-    "name": "Eco-Engineering Consultant",
-    "category": "Energy & Environment",
-    "tags": [
-      "eco-engineering",
-      "sustainability",
-      "design"
-    ]
-  },
-  {
-    "name": "Garden Farming Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "garden farming",
-      "small scale",
-      "household"
-    ]
-  },
-  {
-    "name": "Backyard Farming Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "backyard farming",
-      "small scale",
-      "home"
-    ]
-  },
-  {
-    "name": "Household Farming Advisor",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "household farming",
-      "home",
-      "small scale"
-    ]
-  },
-  {
-    "name": "Edible Landscaping Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "edible landscaping",
-      "design",
-      "food"
-    ]
-  },
-  {
-    "name": "Ethnobotany Advisor",
-    "category": "Research & Science",
-    "tags": [
-      "ethnobotany",
-      "traditional knowledge",
-      "plants"
-    ]
-  },
-  {
-    "name": "Botanical Farming Expert",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "botanical farming",
-      "plants",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Diversified Farming Advisor",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "diversified farming",
-      "variety",
-      "resilience"
-    ]
-  },
-  {
-    "name": "Smallholder Farming Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "smallholder",
-      "small farms",
-      "development"
-    ]
-  },
-  {
-    "name": "Intensive Farming Advisor",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "intensive farming",
-      "productivity",
-      "efficiency"
-    ]
-  },
-  {
-    "name": "Non-traditional Crop Specialist",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "non-traditional",
-      "specialty crops",
-      "innovation"
-    ]
-  },
-  {
-    "name": "Forage Crop Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "forage crops",
-      "livestock feed",
-      "farming"
-    ]
-  },
-  {
-    "name": "Fodder Crop Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "fodder crops",
-      "livestock feed",
-      "cultivation"
-    ]
-  },
-  {
-    "name": "Root Crop Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "root crops",
-      "tubers",
-      "underground"
-    ]
-  },
-  {
-    "name": "Underutilized Crop Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "underutilized crops",
-      "traditional",
-      "conservation"
-    ]
-  },
-  {
-    "name": "Native Crop Specialist",
-    "category": "Research & Science",
-    "tags": [
-      "native crops",
-      "local varieties",
-      "traditional"
-    ]
-  },
-  {
-    "name": "Tropical Crop Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "tropical crops",
-      "climate",
-      "region"
-    ]
-  },
-  {
-    "name": "Desert Farming Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "desert farming",
-      "arid climate",
-      "adaptation"
-    ]
-  },
-  {
-    "name": "Non-irrigated Farming Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "rainfed farming",
-      "dry farming",
-      "climate"
-    ]
-  },
-  {
-    "name": "Industrial Crop Specialist",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "industrial crops",
-      "manufacturing",
-      "processing"
-    ]
-  },
-  {
-    "name": "Non-traditional Livestock Specialist",
-    "category": "Livestock & Animal Husbandry",
-    "tags": [
-      "non-traditional livestock",
-      "new animals",
-      "specialty"
-    ]
-  },
-  {
-    "name": "Jungle Farming Consultant",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "jungle farming",
-      "forest farming",
-      "agroforestry"
-    ]
-  },
-  {
-    "name": "Grassland Management Consultant",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "grassland",
-      "rangelands",
-      "pasture"
-    ]
-  },
-  {
-    "name": "Rangeland Management Advisor",
-    "category": "Crop Production & Cultivation",
-    "tags": [
-      "rangeland",
-      "pasture",
-      "grazing"
-    ]
-  },
-  {
-    "name": "Turf Management Expert",
-    "category": "Specialized Crops & Niche",
-    "tags": [
-      "turf",
-      "lawn care",
-      "sports fields"
-    ]
-  },
-  {
-    "name": "Modern Farming Techniques Specialist",
-    "category": "Technology & Innovation",
-    "tags": [
-      "modern techniques",
-      "innovation",
-      "technology"
-    ]
-  },
-  {
-    "name": "Equipment Optimization Consultant",
-    "category": "Technology & Innovation",
-    "tags": [
-      "equipment optimization",
-      "efficiency",
-      "machinery"
-    ]
-  },
-  {
-    "name": "Crop Mechanization Expert",
-    "category": "Technology & Innovation",
-    "tags": [
-      "mechanization",
-      "machinery",
+      "DevSecOps",
+      "shift left",
+      "CI/CD security",
+      "security pipeline",
       "automation"
     ]
   },
   {
-    "name": "Harvesting Technology Advisor",
-    "category": "Technology & Innovation",
+    "name": "CI/CD Pipeline Security",
+    "category": "DevSecOps",
     "tags": [
-      "harvesting technology",
-      "machinery",
-      "efficiency"
+      "CI/CD",
+      "GitHub Actions",
+      "Jenkins",
+      "pipeline security",
+      "build security"
     ]
   },
   {
-    "name": "Post-Harvest Management Specialist",
-    "category": "Food Safety & Quality",
+    "name": "Container Image Security Scanning",
+    "category": "DevSecOps",
     "tags": [
-      "post-harvest",
-      "storage",
-      "preservation"
+      "container scanning",
+      "Trivy",
+      "Anchore",
+      "Docker security",
+      "image vulnerabilities"
     ]
   },
   {
-    "name": "Food Processing Specialist",
-    "category": "Business & Economics",
+    "name": "Git Secrets & Source Code Security",
+    "category": "DevSecOps",
     "tags": [
-      "food processing",
-      "value addition",
-      "business"
+      "git secrets",
+      "secret scanning",
+      "GitGuardian",
+      "pre-commit hooks",
+      "credential leaks"
     ]
   },
   {
-    "name": "Juice Processing Specialist",
-    "category": "Business & Economics",
+    "name": "Security Champions Program",
+    "category": "DevSecOps",
     "tags": [
-      "juice processing",
-      "value addition",
-      "food"
+      "security champions",
+      "developer security",
+      "secure culture",
+      "empowerment"
     ]
   },
   {
-    "name": "Jaggery Production Specialist",
-    "category": "Business & Economics",
+    "name": "Malware Reverse Engineering",
+    "category": "Malware Analysis & Reverse Engineering",
     "tags": [
-      "jaggery",
-      "food processing",
-      "value addition"
+      "reverse engineering",
+      "malware RE",
+      "IDA Pro",
+      "Ghidra",
+      "disassembly"
     ]
   },
   {
-    "name": "Jerky Production Consultant",
-    "category": "Business & Economics",
+    "name": "Static Malware Analysis",
+    "category": "Malware Analysis & Reverse Engineering",
     "tags": [
-      "jerky",
-      "meat processing",
-      "value addition"
+      "static analysis",
+      "strings",
+      "PE analysis",
+      "YARA rules",
+      "file analysis"
     ]
   },
   {
-    "name": "Hay Production Expert",
-    "category": "Crop Production & Cultivation",
+    "name": "Dynamic Malware Analysis",
+    "category": "Malware Analysis & Reverse Engineering",
     "tags": [
-      "hay",
-      "animal feed",
-      "cultivation"
+      "dynamic analysis",
+      "sandbox",
+      "Cuckoo",
+      "ANY.RUN",
+      "behavioral analysis"
     ]
   },
   {
-    "name": "Grain Production Advisor",
-    "category": "Crop Production & Cultivation",
+    "name": "Ransomware Analysis",
+    "category": "Malware Analysis & Reverse Engineering",
     "tags": [
-      "grain",
-      "cereal crops",
-      "production"
+      "ransomware analysis",
+      "encryption analysis",
+      "decryption keys",
+      "Conti",
+      "LockBit"
     ]
   },
   {
-    "name": "Crop Post-Harvest Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Rootkit Analysis",
+    "category": "Malware Analysis & Reverse Engineering",
     "tags": [
-      "post-harvest",
-      "storage",
-      "crop management"
+      "rootkit",
+      "kernel rootkit",
+      "bootkit",
+      "stealth malware",
+      "persistence"
     ]
   },
   {
-    "name": "Mulch Production Specialist",
-    "category": "Soil & Water Management",
+    "name": "IoT Security Assessment",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "mulch",
-      "soil cover",
-      "conservation"
+      "IoT security",
+      "embedded systems",
+      "firmware analysis",
+      "MQTT",
+      "hardware hacking"
     ]
   },
   {
-    "name": "Hybrid Seed Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Firmware Analysis & Reverse Engineering",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "hybrid seeds",
-      "genetics",
-      "breeding"
+      "firmware",
+      "binwalk",
+      "firmware extraction",
+      "embedded linux",
+      "RTOS"
     ]
   },
   {
-    "name": "Transgenic Crop Specialist",
-    "category": "Technology & Innovation",
+    "name": "Industrial Control Systems (ICS/SCADA) Security",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "transgenic",
-      "genetic engineering",
-      "GMO"
+      "ICS",
+      "SCADA",
+      "OT security",
+      "Modbus",
+      "critical infrastructure",
+      "PLC"
     ]
   },
   {
-    "name": "Genetic Crop Improvement Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Hardware Security Testing",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "genetic improvement",
-      "breeding",
-      "quality"
+      "hardware hacking",
+      "JTAG",
+      "UART",
+      "SPI",
+      "I2C",
+      "side-channel attacks"
     ]
   },
   {
-    "name": "Crop Yield Optimization Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "Automotive Cybersecurity",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "yield optimization",
-      "productivity",
-      "efficiency"
+      "automotive security",
+      "CAN bus",
+      "V2X",
+      "ISO 21434",
+      "ECU security"
     ]
   },
   {
-    "name": "Temperature Management Specialist",
-    "category": "Greenhouse Technician",
+    "name": "Bluetooth & BLE Security",
+    "category": "IoT & Embedded Security",
     "tags": [
-      "climate control",
-      "temperature",
-      "environment"
+      "Bluetooth",
+      "BLE",
+      "wireless protocols",
+      "BTLE attacks",
+      "pairing vulnerabilities"
     ]
   },
   {
-    "name": "Greenhouse Climate Control Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Phishing Simulation & Awareness",
+    "category": "Security Awareness & Training",
     "tags": [
-      "greenhouse climate",
-      "environment control",
-      "technology"
+      "phishing simulation",
+      "GoPhish",
+      "security awareness",
+      "employee training",
+      "click rates"
     ]
   },
   {
-    "name": "Controlled Environment Agriculture Specialist",
-    "category": "Crop Production & Cultivation",
+    "name": "Security Awareness Training",
+    "category": "Security Awareness & Training",
     "tags": [
-      "CEA",
-      "controlled environment",
-      "modern"
+      "security awareness",
+      "training programs",
+      "human risk",
+      "behavior change"
     ]
   },
   {
-    "name": "Innovation in Agriculture Advisor",
-    "category": "Technology & Innovation",
+    "name": "Cybersecurity Leadership & Strategy",
+    "category": "Security Leadership & Management",
     "tags": [
-      "innovation",
-      "new technology",
-      "research"
+      "CISO",
+      "security strategy",
+      "board reporting",
+      "security program",
+      "executive"
     ]
   },
   {
-    "name": "Input Supply Chain Specialist",
-    "category": "Business & Economics",
+    "name": "Security Budget & Resource Planning",
+    "category": "Security Leadership & Management",
     "tags": [
-      "input supply",
-      "logistics",
-      "distribution"
+      "budget",
+      "security investment",
+      "ROI",
+      "resource allocation",
+      "business case"
     ]
   },
   {
-    "name": "Global Agri-Trade Consultant",
-    "category": "Business & Economics",
+    "name": "Cybersecurity Incident Communication",
+    "category": "Security Leadership & Management",
     "tags": [
-      "global trade",
-      "export",
-      "international"
+      "incident communication",
+      "breach notification",
+      "PR",
+      "crisis management",
+      "disclosure"
     ]
   },
   {
-    "name": "Transport & Logistics Planner",
-    "category": "Business & Economics",
+    "name": "Security Metrics & KPIs",
+    "category": "Security Leadership & Management",
     "tags": [
-      "transport",
-      "logistics",
-      "supply chain"
+      "security metrics",
+      "KPIs",
+      "MTTD",
+      "MTTR",
+      "dashboard",
+      "reporting"
     ]
   },
   {
-    "name": "Resource Planner",
-    "category": "Business & Economics",
+    "name": "Cyber Insurance Advisory",
+    "category": "Security Leadership & Management",
     "tags": [
-      "resource planning",
-      "farm management",
-      "efficiency"
+      "cyber insurance",
+      "risk transfer",
+      "policy review",
+      "breach cost",
+      "underwriting"
     ]
   },
   {
-    "name": "Japanese Farming Techniques Specialist",
-    "category": "Technology & Innovation",
+    "name": "Data Loss Prevention (DLP)",
+    "category": "Data Security & Privacy",
     "tags": [
-      "Japanese techniques",
-      "innovation",
-      "farming"
+      "DLP",
+      "data exfiltration",
+      "Symantec DLP",
+      "Microsoft Purview",
+      "content inspection"
     ]
   },
   {
-    "name": "Traditional Farming Practices Expert",
-    "category": "Research & Science",
+    "name": "Data Classification & Labeling",
+    "category": "Data Security & Privacy",
     "tags": [
-      "traditional practices",
-      "local knowledge",
-      "heritage"
+      "data classification",
+      "labeling",
+      "sensitivity labels",
+      "Microsoft Purview",
+      "information types"
     ]
   },
   {
-    "name": "Green Revolution Historian/Advisor",
-    "category": "Research & Science",
+    "name": "Database Security",
+    "category": "Data Security & Privacy",
     "tags": [
-      "green revolution",
-      "history",
-      "policy"
+      "database security",
+      "SQL injection",
+      "database audit",
+      "DAM",
+      "encryption at rest"
     ]
   },
   {
-    "name": "Agricultural Content Creator",
-    "category": "Capacity Building & Training",
+    "name": "Privacy Engineering",
+    "category": "Data Security & Privacy",
     "tags": [
-      "content creation",
-      "communication",
-      "education"
+      "privacy engineering",
+      "PII",
+      "data minimization",
+      "privacy by design",
+      "anonymization"
     ]
   },
   {
-    "name": "Knowledge Management in Agriculture Consultant",
-    "category": "Technology & Innovation",
+    "name": "Dark Web Monitoring",
+    "category": "Data Security & Privacy",
     "tags": [
-      "knowledge management",
-      "data",
-      "information"
+      "dark web",
+      "credential monitoring",
+      "data breach detection",
+      "leaked data",
+      "threat intelligence"
     ]
   },
   {
-    "name": "Farmer-to-Farmer Learning Facilitator",
-    "category": "Capacity Building & Training",
+    "name": "Email Security",
+    "category": "Endpoint & Email Security",
     "tags": [
-      "farmer learning",
-      "peer education",
-      "extension"
+      "email security",
+      "phishing",
+      "DMARC",
+      "SPF",
+      "DKIM",
+      "Proofpoint",
+      "Mimecast"
     ]
   },
   {
-    "name": "Technology Demonstration Specialist",
-    "category": "Capacity Building & Training",
+    "name": "Endpoint Security Architecture",
+    "category": "Endpoint & Email Security",
     "tags": [
-      "technology demo",
-      "training",
-      "education"
+      "endpoint security",
+      "AV",
+      "EDR",
+      "XDR",
+      "device management",
+      "MDM"
     ]
   },
   {
-    "name": "Xylophone Bamboo Farming Consultant",
-    "category": "Specialized Crops & Niche",
+    "name": "Mobile Device Management (MDM) Security",
+    "category": "Endpoint & Email Security",
     "tags": [
-      "bamboo",
-      "specialty crops",
-      "forestry"
+      "MDM",
+      "Intune",
+      "Jamf",
+      "BYOD",
+      "mobile security",
+      "container apps"
     ]
   },
   {
-    "name": "Xylocarp Farming Expert",
-    "category": "Specialized Crops & Niche",
+    "name": "Patch Management",
+    "category": "Endpoint & Email Security",
     "tags": [
-      "coconut",
-      "specialty crops",
-      "plantation"
+      "patch management",
+      "vulnerability remediation",
+      "WSUS",
+      "SCCM",
+      "patch cycle"
     ]
   },
   {
-    "name": "Non-renewable Resource Management Specialist",
-    "category": "Policy & Governance",
+    "name": "Cyber Threat Intelligence (CTI)",
+    "category": "Threat Intelligence",
     "tags": [
-      "resource management",
-      "sustainability",
-      "governance"
+      "CTI",
+      "threat intelligence",
+      "MITRE ATT&CK",
+      "threat actors",
+      "APT groups"
     ]
   },
   {
-    "name": "Non-seasonal Crop Consultant",
-    "category": "Crop Production & Cultivation",
+    "name": "MITRE ATT&CK Framework",
+    "category": "Threat Intelligence",
     "tags": [
-      "year-round crops",
-      "greenhouse",
-      "perennial"
+      "MITRE ATT&CK",
+      "TTPs",
+      "tactics techniques procedures",
+      "threat mapping"
     ]
   },
   {
-    "name": "Non-profit Agri-Advisor",
-    "category": "Business & Economics",
+    "name": "Indicator of Compromise (IOC) Analysis",
+    "category": "Threat Intelligence",
     "tags": [
-      "non-profit",
-      "social enterprise",
-      "development"
+      "IOC",
+      "indicator of compromise",
+      "hashes",
+      "IP addresses",
+      "domains",
+      "STIX TAXII"
     ]
   },
   {
-    "name": "Job Creation in Agriculture Consultant",
-    "category": "Business & Economics",
+    "name": "APT Tracking & Analysis",
+    "category": "Threat Intelligence",
     "tags": [
-      "job creation",
-      "rural development",
-      "employment"
+      "APT",
+      "advanced persistent threat",
+      "nation-state",
+      "threat actor profiling"
     ]
   },
   {
-    "name": "Joint Farming Cooperative Advisor",
-    "category": "Business & Economics",
+    "name": "Bug Bounty Programs",
+    "category": "Bug Bounty & VDP",
     "tags": [
-      "cooperative farming",
-      "collective",
-      "organization"
+      "bug bounty",
+      "HackerOne",
+      "Bugcrowd",
+      "responsible disclosure",
+      "CVE reporting"
     ]
   },
   {
-    "name": "Joint Venture Agri-Business Advisor",
-    "category": "Business & Economics",
+    "name": "Vulnerability Disclosure Program (VDP) Management",
+    "category": "Bug Bounty & VDP",
     "tags": [
-      "joint venture",
-      "business partnership",
-      "development"
+      "VDP",
+      "coordinated disclosure",
+      "security policy",
+      "researcher management"
+    ]
+  },
+  {
+    "name": "Blockchain & Smart Contract Security",
+    "category": "Emerging Technology Security",
+    "tags": [
+      "blockchain",
+      "smart contract",
+      "Solidity",
+      "DeFi security",
+      "Web3 security",
+      "audit"
+    ]
+  },
+  {
+    "name": "AI/ML Security",
+    "category": "Emerging Technology Security",
+    "tags": [
+      "AI security",
+      "ML security",
+      "adversarial ML",
+      "model poisoning",
+      "AI red team",
+      "LLM security"
+    ]
+  },
+  {
+    "name": "5G Security",
+    "category": "Emerging Technology Security",
+    "tags": [
+      "5G",
+      "network slicing",
+      "telecom security",
+      "O-RAN",
+      "mobile network security"
+    ]
+  },
+  {
+    "name": "Quantum Computing Security Readiness",
+    "category": "Emerging Technology Security",
+    "tags": [
+      "quantum computing",
+      "post-quantum",
+      "crypto-agility",
+      "harvest now decrypt later"
     ]
   }
 ]

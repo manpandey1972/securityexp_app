@@ -107,6 +107,68 @@ class _AdminSkillsViewState extends State<_AdminSkillsView>
     );
   }
 
+  Future<void> _bulkImport(AdminSkillsViewModel viewModel) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Import Skills from JSON'),
+        content: const Text(
+          'This will import all skills from assets/data/skills.json into Firestore.\n\n'
+          'Skills with a matching name already in Firestore will be skipped.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true || !mounted) return;
+
+    // Show blocking progress dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Importing skills, please wait...'),
+          ],
+        ),
+      ),
+    );
+
+    final result = await viewModel.bulkImportFromAssets();
+
+    if (mounted) Navigator.of(context).pop(); // dismiss progress dialog
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor:
+            result.hasErrors ? AppColors.error : AppColors.primaryLight,
+        duration: const Duration(seconds: 6),
+        content: Text(
+          result.hasErrors
+              ? 'Import finished: ${result.imported} imported, '
+                  '${result.skipped} skipped, '
+                  '${result.errors.length} errors'
+              : 'Import finished: ${result.imported} new skills added, '
+                  '${result.skipped} already existed',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<AdminSkillsViewModel>();
@@ -128,6 +190,11 @@ class _AdminSkillsViewState extends State<_AdminSkillsView>
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.upload_file, color: AppColors.textPrimary),
+            tooltip: 'Import skills from JSON',
+            onPressed: () => _bulkImport(viewModel),
+          ),
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
             onPressed: () => viewModel.initialize(),

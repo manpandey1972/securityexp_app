@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:securityexperts_app/core/auth/role_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/permissions/permission_types.dart';
@@ -274,4 +277,90 @@ class AdminSkillsService {
           _log.error('Error getting skill stats: $error', tag: _tag),
     );
   }
+
+  /// Bulk import skills from assets/data/skills.json.
+  ///
+  /// Skips any skill whose name already exists in Firestore (case-insensitive).
+  /// Returns a [BulkImportResult] with counts of imported and skipped skills.
+  Future<BulkImportResult> bulkImportFromAssets({
+    void Function(int imported, int total)? onProgress,
+  }) async {
+    await _ensurePermission(AdminPermission.manageSkills);
+
+    final jsonString =
+        await rootBundle.loadString('assets/data/skills.json');
+    final List<dynamic> jsonList = json.decode(jsonString) as List<dynamic>;
+
+    // Fetch existing skill names for deduplication
+    final existing = await _repository.getAllSkillsForStats();
+    final existingNames =
+        existing.map((s) => s.name.toLowerCase().trim()).toSet();
+
+    int imported = 0;
+    int skipped = 0;
+    final errors = <String>[];
+
+    for (int i = 0; i < jsonList.length; i++) {
+      final entry = jsonList[i] as Map<String, dynamic>;
+      final name = (entry['name'] as String? ?? '').trim();
+      if (name.isEmpty) {
+        skipped++;
+        continue;
+      }
+
+      if (existingNames.contains(name.toLowerCase())) {
+        skipped++;
+        onProgress?.call(imported, jsonList.length);
+        continue;
+      }
+
+      try {
+        final tags = (entry['tags'] as List<dynamic>? ?? [])
+            .map((t) => t.toString())
+            .toList();
+        await _repository.createSkill(
+          name: name,
+          category: (entry['category'] as String? ?? 'Uncategorised').trim(),
+          description: entry['description'] as String?,
+          tags: tags,
+          isActive: true,
+          createdBy: _currentUserId,
+        );
+        imported++;
+        existingNames.add(name.toLowerCase()); // prevent duplicates in batch
+      } catch (e) {
+        errors.add(name);
+        _log.error('bulkImport: failed to create "$name": $e', tag: _tag);
+      }
+
+      onProgress?.call(imported, jsonList.length);
+    }
+
+    _log.info(
+      'bulkImportFromAssets: imported=$imported skipped=$skipped errors=${errors.length}',
+      tag: _tag,
+    );
+
+    return BulkImportResult(
+      imported: imported,
+      skipped: skipped,
+      errors: errors,
+    );
+  }
+}
+
+/// Result of a bulk skill import operation.
+class BulkImportResult {
+  final int imported;
+  final int skipped;
+  final List<String> errors;
+
+  const BulkImportResult({
+    required this.imported,
+    required this.skipped,
+    required this.errors,
+  });
+
+  int get total => imported + skipped + errors.length;
+  bool get hasErrors => errors.isNotEmpty;
 }

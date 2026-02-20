@@ -222,4 +222,18 @@ class AdminSkillsViewModel extends ChangeNotifier {
       return [];
     }
   }
+
+  /// Bulk import skills from assets/data/skills.json.
+  /// Calls [onProgress] with (imported, total) as each skill is processed.
+  Future<BulkImportResult> bulkImportFromAssets({
+    void Function(int imported, int total)? onProgress,
+  }) async {
+    final result = await _skillsService.bulkImportFromAssets(
+      onProgress: onProgress,
+    );
+    if (result.imported > 0) {
+      await Future.wait([loadSkills(), loadCategories(), loadStats()]);
+    }
+    return result;
+  }
 }

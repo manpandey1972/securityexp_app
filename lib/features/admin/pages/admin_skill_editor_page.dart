@@ -34,6 +34,11 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
   bool _isSaving = false;
   AdminSkill? _existingSkill;
 
+  // New category creation
+  bool _isCreatingNewCategory = false;
+  final _newCategoryController = TextEditingController();
+  static const _newCategoryOption = '__new__';
+
   bool get _isEditing => widget.skillId != null;
 
   @override
@@ -48,6 +53,7 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
     _nameController.dispose();
     _descriptionController.dispose();
     _tagsController.dispose();
+    _newCategoryController.dispose();
     super.dispose();
   }
 
@@ -92,11 +98,26 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
 
   Future<void> _saveSkill() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedCategoryId.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
-      return;
+    // Resolve the category name to use
+    final String categoryName;
+    if (_isCreatingNewCategory) {
+      final newName = _newCategoryController.text.trim();
+      if (newName.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a new category name')),
+        );
+        return;
+      }
+      categoryName = newName;
+    } else {
+      if (_selectedCategoryId.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a category')),
+        );
+        return;
+      }
+      // id == name in this service
+      categoryName = _selectedCategoryId;
     }
 
     setState(() => _isSaving = true);
@@ -111,16 +132,11 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
       String? skillId;
 
       if (_isEditing) {
-        // Find category name from ID
-        final selectedCat = _categories.firstWhere(
-          (c) => c.id == _selectedCategoryId,
-          orElse: () => _categories.first,
-        );
         final success = await _skillsService.updateSkill(
           widget.skillId!,
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
-          category: selectedCat.name,
+          category: categoryName,
           tags: tags,
           isActive: _isActive,
         );
@@ -128,15 +144,10 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
           skillId = widget.skillId;
         }
       } else {
-        // Find category name from ID
-        final selectedCat = _categories.firstWhere(
-          (c) => c.id == _selectedCategoryId,
-          orElse: () => _categories.first,
-        );
         skillId = await _skillsService.createSkill(
           name: _nameController.text.trim(),
           description: _descriptionController.text.trim(),
-          category: selectedCat.name,
+          category: categoryName,
           tags: tags,
           isActive: _isActive,
         );
@@ -247,9 +258,10 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
                               ),
                               const SizedBox(height: 8),
                               DropdownButtonFormField<String>(
-                                initialValue: _selectedCategoryId.isEmpty
-                                    ? null
-                                    : _selectedCategoryId,
+                                key: ValueKey('$_isCreatingNewCategory-$_selectedCategoryId'),
+                                initialValue: _isCreatingNewCategory
+                                    ? _newCategoryOption
+                                    : (_selectedCategoryId.isEmpty ? null : _selectedCategoryId),
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -260,22 +272,97 @@ class _AdminSkillEditorPageState extends State<AdminSkillEditorPage> {
                                   ),
                                 ),
                                 hint: const Text('Select category'),
-                                items: _categories.map((c) {
-                                  return DropdownMenuItem(
-                                    value: c.id,
+                                items: [
+                                  ..._categories.map((c) {
+                                    return DropdownMenuItem(
+                                      value: c.id,
+                                      child: Row(
+                                        children: [
+                                          Text(c.icon ?? '🛠️'),
+                                          const SizedBox(width: 8),
+                                          Text(c.name),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                  const DropdownMenuItem(
+                                    value: _newCategoryOption,
                                     child: Row(
                                       children: [
-                                        Text(c.icon ?? '🛠️'),
-                                        const SizedBox(width: 8),
-                                        Text(c.name),
+                                        Icon(Icons.add_circle_outline, size: 18),
+                                        SizedBox(width: 8),
+                                        Text('Create new category...'),
                                       ],
                                     ),
-                                  );
-                                }).toList(),
+                                  ),
+                                ],
                                 onChanged: (value) {
-                                  setState(() => _selectedCategoryId = value ?? '');
+                                  if (value == _newCategoryOption) {
+                                    setState(() {
+                                      _isCreatingNewCategory = true;
+                                      _selectedCategoryId = '';
+                                      _newCategoryController.clear();
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _selectedCategoryId = value ?? '';
+                                      _isCreatingNewCategory = false;
+                                    });
+                                  }
                                 },
                               ),
+                              if (_isCreatingNewCategory) ...
+                              [
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: _newCategoryController,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                          hintText: 'New category name',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 12,
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (_isCreatingNewCategory &&
+                                              (value == null || value.trim().isEmpty)) {
+                                            return 'Category name is required';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      tooltip: 'Cancel new category',
+                                      onPressed: () {
+                                        setState(() {
+                                          _isCreatingNewCategory = false;
+                                          _newCategoryController.clear();
+                                          _selectedCategoryId = _categories.isNotEmpty
+                                              ? _categories.first.id
+                                              : '';
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'A new category will be created when the skill is saved.',
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),
