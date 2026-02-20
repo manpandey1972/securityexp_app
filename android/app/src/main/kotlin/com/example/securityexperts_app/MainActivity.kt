@@ -17,9 +17,9 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.EventChannel
 
 class MainActivity : FlutterActivity() {
-    private val TAG = "GreenHiveAudio"
-    private val AUDIO_CHANNEL = "com.greenhive.call/audio"
-    private val EVENT_CHANNEL = "com.greenhive.call/audioDeviceEvents"
+    private val TAG = "SecurityExpertsAudio"
+    private val AUDIO_CHANNEL = "com.example.securityexpertsApp.call/audio"
+    private val EVENT_CHANNEL = "com.example.securityexpertsApp.call/audioDeviceEvents"
     
     private lateinit var audioManager: AudioManager
     private var audioDeviceChangeListener: AudioDeviceChangeListener? = null

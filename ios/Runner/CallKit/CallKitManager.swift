@@ -23,7 +23,7 @@ class CallKitManager: NSObject {
     
     private override init() {
         // Configure CallKit provider
-        let config = CXProviderConfiguration(localizedName: "GreenHive")
+        let config = CXProviderConfiguration(localizedName: "Security Experts")
         config.supportsVideo = true
         config.maximumCallsPerCallGroup = 1
         config.maximumCallGroups = 1

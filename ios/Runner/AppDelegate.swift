@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import AVFoundation
 import MediaPlayer
+import FirebaseAuth
 
 // Audio device stream handler for Flutter event channel
 class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
@@ -165,7 +166,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     let controller = self.window?.rootViewController as! FlutterViewController
     
     // Notification channel
-    let notificationChannel = FlutterMethodChannel(name: "com.greenhive.app/notifications",
+    let notificationChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp/notifications",
                                                     binaryMessenger: controller.binaryMessenger)
     notificationChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
       switch call.method {
@@ -192,7 +193,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
 
     // Ringtone channel
-    let ringtoneChannel = FlutterMethodChannel(name: "com.greenhive.call/ringtone",
+    let ringtoneChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/ringtone",
                                               binaryMessenger: controller.binaryMessenger)
     ringtoneChannel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
       guard let self = self else { return }
@@ -246,7 +247,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
     
     // Audio device channel
-    let audioChannel = FlutterMethodChannel(name: "com.greenhive.call/audio",
+    let audioChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/audio",
                                            binaryMessenger: controller.binaryMessenger)
     audioChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
       switch call.method {
@@ -284,7 +285,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
     
     // Setup event channel for audio device changes
-    let eventChannel = FlutterEventChannel(name: "com.greenhive.call/audioDeviceEvents",
+    let eventChannel = FlutterEventChannel(name: "com.example.securityexpertsApp.call/audioDeviceEvents",
                                           binaryMessenger: controller.binaryMessenger)
     eventChannel.setStreamHandler(AudioDeviceStreamHandler())
     
@@ -304,6 +305,37 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     initializeHFPCallControl()
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+  
+  // MARK: - Firebase Phone Auth Support
+  // Required because FirebaseAppDelegateProxyEnabled is false
+  
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    // Forward APNs token to Firebase Auth for phone number verification
+    Auth.auth().setAPNSToken(deviceToken, type: .unknown)
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+  
+  override func application(_ application: UIApplication,
+                            didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                            fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    // Let Firebase Auth handle silent push for phone verification
+    if Auth.auth().canHandleNotification(userInfo) {
+      completionHandler(UIBackgroundFetchResult.noData)
+      return
+    }
+    super.application(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler)
+  }
+  
+  override func application(_ app: UIApplication,
+                            open url: URL,
+                            options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+    // Let Firebase Auth handle reCAPTCHA redirect
+    if Auth.auth().canHandle(url) {
+      return true
+    }
+    return super.application(app, open: url, options: options)
   }
   
   private func configureAudioSessionForWebRTC() {
@@ -530,7 +562,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
       return
     }
     
-    let hfpChannel = FlutterMethodChannel(name: "com.greenhive.call/hfp",
+    let hfpChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/hfp",
                                           binaryMessenger: controller.binaryMessenger)
     
     debugPrint("flutter: 📞 [HFP] Sending call control action to Flutter: \(action)")

@@ -28,10 +28,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.example.securityexperts_app</string>
+			<string>com.example.securityexpertsApp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>app-1-1054913877112-ios-076f7d8ba3ca91f912898d</string>
+				<string>app-1-1015827376061-ios-23864d39adb5e70cca54d4</string>
 			</array>
 		</dict>
 	</array>
