@@ -49,7 +49,7 @@ class RemoteConfigService {
       // SECURITY: Production must use wss:// with a valid TLS certificate.
       // Configure the actual URL in Firebase Remote Config.
       // This fallback uses wss:// to prevent unencrypted signaling.
-      'livekit_url': 'wss://livekit.gogreenhive.app',
+      'livekit_url': 'wss://livekit.gogreenhive.com',
 
       // ==================== ANALYTICS & LOGGING ====================
       'log_level': 'info', // debug, info, warning, error
