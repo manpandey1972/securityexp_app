@@ -435,7 +435,6 @@ class PlatformConstants {
 // ============================================================================
 
 class APIConstants {
-  static const String baseUrl = 'https://api.securityexperts.local';
   static const int connectTimeout = 30000; // milliseconds
   static const int receiveTimeout = 30000; // milliseconds
 }

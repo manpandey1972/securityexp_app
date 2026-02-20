@@ -5,6 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
+import 'package:mockito/mockito.dart' as _i1;
 import 'package:securityexperts_app/core/logging/app_logger.dart' as _i7;
 import 'package:securityexperts_app/data/models/models.dart' as _i6;
 import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart'
@@ -12,7 +13,6 @@ import 'package:securityexperts_app/features/chat/services/unread_messages_servi
 import 'package:securityexperts_app/features/home/services/home_data_loader.dart'
     as _i4;
 import 'package:securityexperts_app/utils/expert_search_utils.dart' as _i2;
-import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

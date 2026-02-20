@@ -38,94 +38,10 @@ class MockRemoteConfigService implements RemoteConfigService {
   int get maxSetupRetries => _maxSetupRetries ?? 2;
   @override
   String get logLevel => _logLevel;
-
-  // Implement other required getters with defaults
-  @override
-  int get cleanupIntervalMinutes => 5;
-  @override
-  bool get enableAnalytics => true;
-  @override
-  bool get enableAudioDeviceSelection => true;
-  @override
-  bool get enableCameraSwitching => true;
-  @override
-  bool get enableCallRecording => false;
-  @override
-  bool get enableCrashReporting => true;
-  @override
-  bool get enableErrorLogging => true;
-  @override
-  bool get enableScreenSharing => false;
-  @override
-  bool get enableVideoCalling => true;
-  @override
-  bool get enableWakelock => true;
   @override
   String get liveKitTokenGenerationUrl => 'https://example.com';
   @override
   String get liveKitUrl => 'ws://example.com';
-  @override
-  List<String> getAudioDevicePriorityList() => ['speaker'];
-  @override
-  String get audioDefaultFallback => 'speaker';
-  @override
-  String get audioDevicePriority => 'speaker';
-  @override
-  String get cloudFunctionBaseUrl => 'https://example.com';
-  @override
-  String get cloudRunBaseUrl => 'https://example.com';
-  @override
-  String get turnCredential => 'pass';
-  @override
-  String get turnServerUrls => 'example.com:3478';
-  @override
-  String get turnUsername => 'user';
-  @override
-  String get messageCallSetupFailed => 'Setup failed';
-  @override
-  String get messageConnectionTimeout => 'Connection timeout';
-  @override
-  String get messagePermissionDenied => 'Permission denied';
-  @override
-  String get messageCameraTimeout => 'Camera timeout';
-  @override
-  double get localPreviewHeight => 160.0;
-  @override
-  double get localPreviewWidth => 120.0;
-  @override
-  int get videoMinFrameRate => 30;
-  @override
-  int get videoMinHeight => 720;
-  @override
-  int get videoMinWidth => 1280;
-  @override
-  int get animationQuickMs => 200;
-  @override
-  int get animationSlowMs => 500;
-  @override
-  int get animationStandardMs => 300;
-  @override
-  int get callDurationTimerIntervalSeconds => 1;
-  @override
-  int get controlsAutoHideSeconds => 5;
-  @override
-  int get rendererMonitorIntervalSeconds => 5;
-  @override
-  int get incomingCallDebounceMs => 500;
-  @override
-  int get offerExpirationSeconds => 60;
-  @override
-  int get iosRebuildDelayMs => 150;
-  @override
-  int get postConnectionDelayMs => 100;
-  @override
-  int get rendererMaxRetryAttempts => 3;
-  @override
-  int get rendererPrewarmDelayMs => 200;
-  @override
-  int get rendererRetryDelayMs => 100;
-  @override
-  int get streamRecreationDelayMs => 500;
   @override
   Map<String, dynamic> getAllValues() => {};
 }

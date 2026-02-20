@@ -5,14 +5,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
+import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:securityexperts_app/core/logging/app_logger.dart' as _i7;
 import 'package:securityexperts_app/data/models/models.dart' as _i4;
 import 'package:securityexperts_app/data/repositories/chat/chat_room_repository.dart'
     as _i2;
 import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart'
     as _i6;
-import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
