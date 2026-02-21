@@ -6,6 +6,7 @@ import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
 import '_message_content_widget.dart';
 import '_reply_preview_widget.dart';
 import '_message_bubble_menu.dart';
+import 'encryption_status_indicator.dart';
 
 /// Reusable message bubble widget
 /// Displays messages in a chat conversation with support for:
@@ -195,11 +196,20 @@ class _MessageBubbleState extends State<MessageBubble> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 4),
-      child: Text(
-        timeStr,
-        style: AppTypography.captionTiny.copyWith(
-          color: AppColors.textSecondary,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MessageEncryptionBadge(
+            isEncrypted: widget.message.isEncrypted,
+            decryptionFailed: widget.message.decryptionFailed,
+          ),
+          Text(
+            timeStr,
+            style: AppTypography.captionTiny.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

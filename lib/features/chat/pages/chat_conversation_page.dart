@@ -148,6 +148,7 @@ class _ChatConversationPageContentState
     return ChatAppBar(
       title: title,
       profilePictureUrl: state.peerProfilePictureUrl,
+      isE2eeEnabled: state.isE2eeEnabled,
       onAudioCall: () => _startCall(context, false),
       onVideoCall: () => _startCall(context, true),
       onMediaManager: () {

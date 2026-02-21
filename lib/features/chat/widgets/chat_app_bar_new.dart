@@ -5,6 +5,7 @@ import 'package:securityexperts_app/shared/themes/app_colors.dart';
 import 'package:securityexperts_app/shared/themes/app_typography.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat/widgets/encryption_status_indicator.dart';
 
 class ChatHeaderConstants {
   static const double profileAvatarRadius = 18.0;
@@ -22,6 +23,7 @@ class ChatAppBar extends PreferredSize {
     VoidCallback? onMediaManager,
     VoidCallback? onClearChat,
     VoidCallback? onDeleteChat,
+    bool isE2eeEnabled = false,
   }) : super(
          preferredSize: const Size.fromHeight(kToolbarHeight),
          child: _ChatAppBarContent(
@@ -32,6 +34,7 @@ class ChatAppBar extends PreferredSize {
            onMediaManager: onMediaManager,
            onClearChat: onClearChat,
            onDeleteChat: onDeleteChat,
+           isE2eeEnabled: isE2eeEnabled,
          ),
        );
 }
@@ -45,6 +48,7 @@ class _ChatAppBarContent extends StatelessWidget {
   final VoidCallback? onMediaManager;
   final VoidCallback? onClearChat;
   final VoidCallback? onDeleteChat;
+  final bool isE2eeEnabled;
 
   static const String _tag = 'ChatAppBar';
   final AppLogger _log = sl<AppLogger>();
@@ -57,6 +61,7 @@ class _ChatAppBarContent extends StatelessWidget {
     this.onMediaManager,
     this.onClearChat,
     this.onDeleteChat,
+    this.isE2eeEnabled = false,
   });
 
   @override
@@ -115,7 +120,20 @@ class _ChatAppBarContent extends StatelessWidget {
                 ),
               ),
             ),
-          Expanded(child: Text(title, style: AppTypography.headingSmall)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title, style: AppTypography.headingSmall),
+                if (isE2eeEnabled)
+                  const EncryptionStatusIndicator(
+                    isEnabled: true,
+                    iconSize: 10,
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
       actions: [

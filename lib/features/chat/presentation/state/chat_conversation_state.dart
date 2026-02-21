@@ -32,6 +32,10 @@ class ChatConversationState {
   final String? recordingPath;
   final Message? replyToMessage;
 
+  // E2EE state
+  final bool isE2eeEnabled;
+  final String? e2eeError;
+
   const ChatConversationState({
     this.messages = const [],
     this.uploadingMessages = const {},
@@ -50,6 +54,8 @@ class ChatConversationState {
     this.isRecordingStopped = false,
     this.recordingPath,
     this.replyToMessage,
+    this.isE2eeEnabled = false,
+    this.e2eeError,
   });
 
   /// Create a copy with modified fields
@@ -75,6 +81,9 @@ class ChatConversationState {
     bool clearRecordingPath = false,
     Message? replyToMessage,
     bool clearReplyToMessage = false,
+    bool? isE2eeEnabled,
+    String? e2eeError,
+    bool clearE2eeError = false,
   }) {
     return ChatConversationState(
       messages: messages ?? this.messages,
@@ -100,6 +109,8 @@ class ChatConversationState {
       replyToMessage: clearReplyToMessage
           ? null
           : (replyToMessage ?? this.replyToMessage),
+      isE2eeEnabled: isE2eeEnabled ?? this.isE2eeEnabled,
+      e2eeError: clearE2eeError ? null : (e2eeError ?? this.e2eeError),
     );
   }
 }

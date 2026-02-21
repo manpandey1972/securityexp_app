@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/crypto/crypto_models.dart';
 import 'package:securityexperts_app/data/services/firestore_instance.dart';
 import 'package:securityexperts_app/core/constants.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
@@ -9,12 +10,14 @@ import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_room_repository.dart';
 import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart';
 import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/features/chat/services/encryption_service.dart';
 
 /// Repository for chat message operations.
 /// Handles message CRUD, pagination, and real-time streams.
 class ChatMessageRepository implements IChatMessageRepository {
   final FirebaseFirestore _firestore;
   final ChatRoomRepository _roomRepository;
+  final EncryptionService? _encryptionService;
   final AppLogger _log = sl<AppLogger>();
   final AnalyticsService _analytics = sl<AnalyticsService>();
 
@@ -26,8 +29,10 @@ class ChatMessageRepository implements IChatMessageRepository {
   ChatMessageRepository({
     FirebaseFirestore? firestore,
     required ChatRoomRepository roomRepository,
+    EncryptionService? encryptionService,
   }) : _firestore = firestore ?? FirestoreInstance().db,
-       _roomRepository = roomRepository;
+       _roomRepository = roomRepository,
+       _encryptionService = encryptionService;
 
   // =========================================================================
   // REAL-TIME STREAMS
@@ -51,18 +56,18 @@ class ChatMessageRepository implements IChatMessageRepository {
         .orderBy(FirestoreConstants.timestampField, descending: false)
         .limitToLast(limit)
         .snapshots(includeMetadataChanges: true)
-        .map<List<Message>>((snapshot) {
+        .asyncMap<List<Message>>((snapshot) async {
           try {
-            final messages = snapshot.docs
-                .where((doc) {
-                  final data = doc.data();
-                  return data.containsKey(FirestoreConstants.senderIdField) &&
-                      data[FirestoreConstants.senderIdField]
-                          .toString()
-                          .isNotEmpty;
-                })
-                .map((doc) => Message.fromJson({...doc.data(), 'id': doc.id}))
-                .toList();
+            final docs = snapshot.docs.where((doc) {
+              final data = doc.data();
+              return data.containsKey(FirestoreConstants.senderIdField) &&
+                  data[FirestoreConstants.senderIdField]
+                      .toString()
+                      .isNotEmpty;
+            });
+            final messages = await Future.wait(
+              docs.map((doc) => _parseDocument(doc)),
+            );
             return messages;
           } catch (e, stackTrace) {
             _log.error('Error parsing messages: $e', tag: _tag, stackTrace: stackTrace);
@@ -157,9 +162,9 @@ class ChatMessageRepository implements IChatMessageRepository {
                 .limitToLast(limit)
                 .get(const GetOptions(source: Source.serverAndCache));
 
-            final messages = snapshot.docs
-                .map((doc) => Message.fromJson({...doc.data(), 'id': doc.id}))
-                .toList();
+            final messages = await Future.wait(
+              snapshot.docs.map((doc) => _parseDocument(doc)),
+            );
 
             final newCursor = snapshot.docs.isNotEmpty
                 ? PaginationCursor(snapshot.docs.first)
@@ -201,9 +206,9 @@ class ChatMessageRepository implements IChatMessageRepository {
         trace.putAttribute('doc_count', snapshot.docs.length.toString());
         await trace.stop();
 
-        final messages = snapshot.docs
-            .map((doc) => Message.fromJson({...doc.data(), 'id': doc.id}))
-            .toList();
+        final messages = await Future.wait(
+          snapshot.docs.map((doc) => _parseDocument(doc)),
+        );
 
         final cursor = snapshot.docs.isNotEmpty
             ? PaginationCursor(snapshot.docs.first)
@@ -239,20 +244,46 @@ class ChatMessageRepository implements IChatMessageRepository {
               // Start Firestore write trace
               final firestoreTrace = _analytics.newTrace('firestore_write_message');
               await firestoreTrace.start();
-              
-              final messageData = _buildMessageData(message);
+
+              Map<String, dynamic> messageData;
+              final bool encrypted;
+
+              if (_shouldEncrypt(message)) {
+                // E2EE: Encrypt the message before writing to Firestore
+                final recipientId = _deriveRecipientId(roomId, message.senderId);
+                final content = _messageToDecryptedContent(message);
+
+                final encryptedMessage = await _encryptionService!.encryptMessage(
+                  remoteUserId: recipientId,
+                  messageType: message.type.toJson(),
+                  content: content,
+                );
+
+                messageData = encryptedMessage.toJson();
+                messageData['sender_id'] = message.senderId;
+                encrypted = true;
+              } else {
+                messageData = _buildMessageData(message);
+                encrypted = false;
+              }
+
               await docRef.set(messageData);
               
               await firestoreTrace.stop();
 
               // Update room's last message
-              final lastMessageText = _getLastMessagePreview(message);
+              final lastMessageText = encrypted
+                  ? '\u{1F512} Encrypted message'
+                  : _getLastMessagePreview(message);
               await _roomRepository.updateLastMessage(
                 roomId: roomId,
                 lastMessage: lastMessageText,
               );
 
-              return message.copyWith(id: docRef.id);
+              return message.copyWith(
+                id: docRef.id,
+                isEncrypted: encrypted,
+              );
             },
             fallback: message,
             onError: (error) =>
@@ -295,6 +326,7 @@ class ChatMessageRepository implements IChatMessageRepository {
   }
 
   /// Update a message's text.
+  /// For encrypted messages, re-encrypts the new content.
   @override
   Future<void> updateMessage(
     String roomId,
@@ -303,15 +335,47 @@ class ChatMessageRepository implements IChatMessageRepository {
   ) async {
     await ErrorHandler.handle<void>(
       operation: () async {
-        await _firestore
+        final docRef = _firestore
             .collection(_roomsCollection)
             .doc(roomId)
             .collection(_messagesCollection)
-            .doc(messageId)
-            .update({
-              FirestoreConstants.textField: newText,
-              FirestoreConstants.editedAtField: Timestamp.now(),
+            .doc(messageId);
+
+        // Check if the message is encrypted
+        if (_encryptionService != null) {
+          final doc = await docRef.get();
+          if (doc.exists && doc.data()?.containsKey('ciphertext') == true) {
+            // Re-encrypt the edited message
+            final senderId = doc.data()!['sender_id'] as String;
+            final recipientId = _deriveRecipientId(roomId, senderId);
+            final content = DecryptedContent(text: newText);
+
+            final encryptedMessage = await _encryptionService.encryptMessage(
+              remoteUserId: recipientId,
+              messageType: doc.data()!['type'] as String? ?? 'text',
+              content: content,
+            );
+
+            await docRef.update({
+              'ciphertext': encryptedMessage.ciphertext,
+              'header': encryptedMessage.header.toJson(),
+              'edited_at': Timestamp.now(),
             });
+
+            await _updateRoomIfLastMessage(
+              roomId,
+              messageId,
+              '\u{1F512} Encrypted message',
+            );
+            return;
+          }
+        }
+
+        // Plaintext update (unencrypted or no encryption service)
+        await docRef.update({
+          FirestoreConstants.textField: newText,
+          FirestoreConstants.editedAtField: Timestamp.now(),
+        });
 
         // Update room if this is the last message
         await _updateRoomIfLastMessage(roomId, messageId, newText);
@@ -366,6 +430,85 @@ class ChatMessageRepository implements IChatMessageRepository {
           _log.error('Error deleting messages: $error', tag: _tag),
     );
   }
+
+  // =========================================================================
+  // E2EE HELPERS
+  // =========================================================================
+
+  /// Whether a message should be encrypted.
+  /// System messages are excluded from encryption.
+  bool _shouldEncrypt(Message message) {
+    if (message.type == MessageType.system) return false;
+    return _encryptionService != null;
+  }
+
+  /// Derive the recipient user ID from a room ID.
+  /// Room IDs are in format: "userA_userB".
+  String _deriveRecipientId(String roomId, String senderId) {
+    final parts = roomId.split('_');
+    return parts[0] == senderId ? parts[1] : parts[0];
+  }
+
+  /// Convert a [Message] to [DecryptedContent] for encryption.
+  DecryptedContent _messageToDecryptedContent(Message message) {
+    return DecryptedContent(
+      text: message.text.isNotEmpty ? message.text : null,
+      mediaUrl: message.mediaUrl,
+      replyToMessageId: message.replyToMessageId,
+      metadata: message.metadata,
+    );
+  }
+
+  /// Parse a Firestore document, decrypting if it's an encrypted message.
+  Future<Message> _parseDocument(
+    QueryDocumentSnapshot<Map<String, dynamic>> doc,
+  ) async {
+    final data = doc.data();
+    if (data.containsKey('ciphertext') && _encryptionService != null) {
+      return _decryptToMessage(data, doc.id);
+    }
+    return Message.fromJson({...data, 'id': doc.id});
+  }
+
+  /// Decrypt an encrypted Firestore document into a [Message].
+  /// Returns a fallback message on decryption failure.
+  Future<Message> _decryptToMessage(
+    Map<String, dynamic> data,
+    String docId,
+  ) async {
+    try {
+      final encryptedMessage = EncryptedMessage.fromJson({...data, 'id': docId});
+      final content = await _encryptionService!.decryptMessage(
+        message: encryptedMessage,
+      );
+
+      return Message(
+        id: docId,
+        senderId: encryptedMessage.senderId,
+        type: MessageTypeExtension.fromJson(encryptedMessage.type),
+        text: content.text ?? '',
+        mediaUrl: content.mediaUrl,
+        replyToMessageId: content.replyToMessageId,
+        timestamp: encryptedMessage.timestamp,
+        metadata: content.metadata,
+        isEncrypted: true,
+      );
+    } catch (e) {
+      _log.error('Failed to decrypt message $docId: $e', tag: _tag);
+      return Message(
+        id: docId,
+        senderId: data['sender_id'] as String? ?? '',
+        type: MessageTypeExtension.fromJson(data['type'] as String? ?? 'text'),
+        text: '\u{1F512} Unable to decrypt this message',
+        timestamp: (data['timestamp'] as Timestamp?) ?? Timestamp.now(),
+        isEncrypted: true,
+        decryptionFailed: true,
+      );
+    }
+  }
+
+  /// Whether E2EE is available for this repository instance.
+  bool get isE2eeEnabled => _encryptionService != null;
 
   // =========================================================================
   // HELPERS

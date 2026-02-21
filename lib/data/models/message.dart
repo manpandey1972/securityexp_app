@@ -16,6 +16,14 @@ class Message extends Equatable {
   final Timestamp timestamp;
   final Map<String, dynamic>? metadata;
 
+  /// Whether this message was end-to-end encrypted.
+  /// Used by the UI to show encryption status indicators.
+  final bool isEncrypted;
+
+  /// Whether decryption failed for this message.
+  /// When true, [text] contains a fallback error string.
+  final bool decryptionFailed;
+
   const Message({
     required this.id,
     required this.senderId,
@@ -26,6 +34,8 @@ class Message extends Equatable {
     this.replyToMessage,
     required this.timestamp,
     this.metadata,
+    this.isEncrypted = false,
+    this.decryptionFailed = false,
   });
 
   // Convenience getters for common conversions
@@ -72,6 +82,8 @@ class Message extends Equatable {
     Message? replyToMessage,
     Timestamp? timestamp,
     Map<String, dynamic>? metadata,
+    bool? isEncrypted,
+    bool? decryptionFailed,
   }) {
     return Message(
       id: id ?? this.id,
@@ -83,6 +95,8 @@ class Message extends Equatable {
       replyToMessage: replyToMessage ?? this.replyToMessage,
       timestamp: timestamp ?? this.timestamp,
       metadata: metadata ?? this.metadata,
+      isEncrypted: isEncrypted ?? this.isEncrypted,
+      decryptionFailed: decryptionFailed ?? this.decryptionFailed,
     );
   }
 
@@ -97,5 +111,7 @@ class Message extends Equatable {
     replyToMessage,
     timestamp,
     metadata,
+    isEncrypted,
+    decryptionFailed,
   ];
 }

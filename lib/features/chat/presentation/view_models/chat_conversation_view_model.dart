@@ -279,7 +279,10 @@ class ChatConversationViewModel extends ChangeNotifier {
     };
     itemPositionsListener.itemPositions.addListener(_scrollListenerCallback!);
 
-    _updateState(_state.copyWith(servicesInitialized: true));
+    _updateState(_state.copyWith(
+      servicesInitialized: true,
+      isE2eeEnabled: _messageRepository.isE2eeEnabled,
+    ));
   }
 
   void _subscribeToMessages() {

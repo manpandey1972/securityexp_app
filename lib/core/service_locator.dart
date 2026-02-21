@@ -32,6 +32,7 @@ import 'package:securityexperts_app/features/chat/services/chat_page_service.dar
 import 'package:securityexperts_app/shared/services/upload_manager.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
+import 'package:securityexperts_app/features/chat/services/encryption_service.dart';
 
 // Feature Services - Authentication & Profile
 import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
@@ -254,7 +255,10 @@ Future<void> setupServiceLocator() async {
     () => ChatRoomRepository(mediaCacheService: sl<MediaCacheService>()),
   );
   sl.registerLazySingleton<ChatMessageRepository>(
-    () => ChatMessageRepository(roomRepository: sl<ChatRoomRepository>()),
+    () => ChatMessageRepository(
+      roomRepository: sl<ChatRoomRepository>(),
+      encryptionService: sl<EncryptionService>(),
+    ),
   );
 
   // Chat Stream Service - Factory, requires roomId per instance

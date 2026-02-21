@@ -61,6 +61,7 @@ interface ChatMessageData {
   senderName?: string;
   text?: string;
   type?: string;
+  ciphertext?: string;
 }
 
 /**
@@ -177,7 +178,21 @@ async function handleNotification(
   }
 
   const senderName = senderData?.name ?? "Unknown sender";
-  const messageText = messageData.text ?? "You have a new message";
+
+  // For E2EE messages, never send plaintext in push notification
+  let messageText: string;
+  if (messageData.ciphertext) {
+    // Encrypted message — send a type-based hint instead of content
+    const typeHints: Record<string, string> = {
+      image: "\uD83D\uDCF7 Sent a photo",
+      video: "\uD83C\uDFA5 Sent a video",
+      audio: "\uD83C\uDFA4 Sent a voice message",
+      document: "\uD83D\uDCC4 Sent a document",
+    };
+    messageText = typeHints[messageData.type ?? ""] ?? "\uD83D\uDD12 New encrypted message";
+  } else {
+    messageText = messageData.text ?? "You have a new message";
+  }
 
   // Send FCM notification with automatic token cleanup
   const result = await sendFCMToUser(
