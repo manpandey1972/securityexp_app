@@ -174,7 +174,7 @@ service cloud.firestore {
     // ========================================
     
     // Encrypted key backups - users store their encrypted identity key backup
-    match /key_backup/{userId} {
+    match /key_backups/{userId} {
       // Only the key owner can read their backup
       allow read: if isAuthenticated() && getUserId() == userId;
       

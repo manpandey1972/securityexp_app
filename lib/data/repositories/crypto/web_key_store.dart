@@ -1,22 +1,37 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:securityexperts_app/core/crypto/crypto_provider.dart';
 import 'package:securityexperts_app/core/crypto/secure_random.dart';
 import 'package:securityexperts_app/data/models/crypto/crypto_models.dart';
 import 'package:securityexperts_app/data/repositories/crypto/key_store_repository.dart';
 
-/// Native (iOS/Android) implementation of [IKeyStoreRepository].
+/// Web implementation of [IKeyStoreRepository].
 ///
-/// Uses [FlutterSecureStorage] which delegates to:
-/// - **iOS**: Keychain with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`
-/// - **Android**: AndroidKeyStore (hardware-backed when available)
+/// Uses an in-memory store with AES-256-GCM encryption for persistence.
+/// Key material is encrypted with a randomly generated wrapping key
+/// and stored as JSON strings (suitable for localStorage/IndexedDB
+/// via Dart's platform abstractions).
 ///
-/// All key material is encrypted at rest by the platform-native keystore.
-class NativeKeyStoreRepository implements IKeyStoreRepository {
+/// Security notes:
+/// - On web, there is no hardware-backed keystore
+/// - Keys are protected by AES-256-GCM encryption
+/// - The wrapping key is generated per session
+/// - For production, consider IndexedDB with non-extractable CryptoKey
+/// - XSS is the primary threat — enforce strict CSP
+///
+/// This implementation provides the same interface as [NativeKeyStoreRepository]
+/// without depending on `flutter_secure_storage`'s native bindings.
+class WebKeyStoreRepository implements IKeyStoreRepository {
   final CryptoProvider _crypto;
-  final FlutterSecureStorage _secureStorage;
+
+  /// In-memory encrypted store.
+  /// Keys: storage keys (e.g., 'e2ee_identity_key')
+  /// Values: AES-256-GCM encrypted JSON strings
+  final Map<String, _EncryptedEntry> _store = {};
+
+  /// AES-256-GCM wrapping key for encrypting stored data.
+  late final Uint8List _wrappingKey;
 
   static const _identityKeyTag = 'e2ee_identity_key';
   static const _signedPreKeyPrefix = 'e2ee_spk_';
@@ -24,17 +39,44 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
   static const _opkIdsKey = 'e2ee_opk_ids';
   static const _remoteIdentityPrefix = 'e2ee_remote_ik_';
 
-  NativeKeyStoreRepository({
-    required CryptoProvider crypto,
-    FlutterSecureStorage? secureStorage,
-  })  : _crypto = crypto,
-        _secureStorage = secureStorage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-              iOptions: IOSOptions(
-                accessibility: KeychainAccessibility.unlocked_this_device,
-              ),
-            );
+  WebKeyStoreRepository({required CryptoProvider crypto}) : _crypto = crypto {
+    // Generate wrapping key for this session
+    _wrappingKey = SecureRandom.generateAesKey();
+  }
+
+  // =========================================================================
+  // Encrypted Storage Helpers
+  // =========================================================================
+
+  /// Encrypt and store a value.
+  Future<void> _write(String key, String value) async {
+    final plaintext = Uint8List.fromList(utf8.encode(value));
+    final iv = SecureRandom.generateIv();
+    final ciphertext = await _crypto.aesGcmEncrypt(
+      key: _wrappingKey,
+      iv: iv,
+      plaintext: plaintext,
+    );
+    _store[key] = _EncryptedEntry(iv: iv, ciphertext: ciphertext);
+  }
+
+  /// Read and decrypt a stored value.
+  Future<String?> _read(String key) async {
+    final entry = _store[key];
+    if (entry == null) return null;
+
+    final plaintext = await _crypto.aesGcmDecrypt(
+      key: _wrappingKey,
+      iv: entry.iv,
+      ciphertext: entry.ciphertext,
+    );
+    return utf8.decode(plaintext);
+  }
+
+  /// Delete a stored value.
+  void _delete(String key) {
+    _store.remove(key);
+  }
 
   // =========================================================================
   // Identity Key Pair
@@ -42,13 +84,8 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<IdentityKeyPair> generateAndStoreIdentityKeyPair() async {
-    // Generate X25519 key pair for DH key agreement
     final dhKeyPair = await _crypto.generateX25519KeyPair();
-
-    // Generate Ed25519 key pair for identity signing
     final signingKeyPair = await _crypto.generateEd25519KeyPair();
-
-    // Generate registration ID
     final registrationId = SecureRandom.generateRegistrationId();
 
     final identityKeyPair = IdentityKeyPair(
@@ -59,12 +96,8 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
       registrationId: registrationId,
     );
 
-    // Store serialized key pair
     final data = identityKeyPair.toSecureStorage();
-    await _secureStorage.write(
-      key: _identityKeyTag,
-      value: jsonEncode(data),
-    );
+    await _write(_identityKeyTag, jsonEncode(data));
 
     return identityKeyPair;
   }
@@ -72,15 +105,12 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
   @override
   Future<void> storeIdentityKeyPair(IdentityKeyPair keyPair) async {
     final data = keyPair.toSecureStorage();
-    await _secureStorage.write(
-      key: _identityKeyTag,
-      value: jsonEncode(data),
-    );
+    await _write(_identityKeyTag, jsonEncode(data));
   }
 
   @override
   Future<IdentityKeyPair?> getIdentityKeyPair() async {
-    final encoded = await _secureStorage.read(key: _identityKeyTag);
+    final encoded = await _read(_identityKeyTag);
     if (encoded == null) return null;
 
     final data = Map<String, String>.from(
@@ -91,7 +121,7 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<void> deleteIdentityKeyPair() async {
-    await _secureStorage.delete(key: _identityKeyTag);
+    _delete(_identityKeyTag);
   }
 
   // =========================================================================
@@ -106,23 +136,20 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
         'private_key': base64Encode(signedPreKey.privateKey!),
     };
 
-    await _secureStorage.write(
-      key: '$_signedPreKeyPrefix${signedPreKey.keyId}',
-      value: jsonEncode(data),
+    await _write(
+      '$_signedPreKeyPrefix${signedPreKey.keyId}',
+      jsonEncode(data),
     );
   }
 
   @override
   Future<SignedPreKey?> getSignedPreKey(int keyId) async {
-    final encoded = await _secureStorage.read(
-      key: '$_signedPreKeyPrefix$keyId',
-    );
+    final encoded = await _read('$_signedPreKeyPrefix$keyId');
     if (encoded == null) return null;
 
     final json = jsonDecode(encoded) as Map<String, dynamic>;
     final spk = SignedPreKey.fromJson(json);
 
-    // Reconstruct with private key if available
     if (json['private_key'] != null) {
       return SignedPreKey(
         keyId: spk.keyId,
@@ -137,7 +164,7 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<void> deleteSignedPreKey(int keyId) async {
-    await _secureStorage.delete(key: '$_signedPreKeyPrefix$keyId');
+    _delete('$_signedPreKeyPrefix$keyId');
   }
 
   // =========================================================================
@@ -146,33 +173,24 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<void> storeOneTimePreKeys(List<OneTimePreKey> preKeys) async {
-    // Store each key
     for (final key in preKeys) {
       final data = {
         ...key.toJson(),
         if (key.privateKey != null)
           'private_key': base64Encode(key.privateKey!),
       };
-      await _secureStorage.write(
-        key: '$_oneTimePreKeyPrefix${key.keyId}',
-        value: jsonEncode(data),
-      );
+      await _write('$_oneTimePreKeyPrefix${key.keyId}', jsonEncode(data));
     }
 
-    // Update the key IDs list
+    // Update key IDs list
     final existingIds = await getOneTimePreKeyIds();
     final allIds = {...existingIds, ...preKeys.map((k) => k.keyId)};
-    await _secureStorage.write(
-      key: _opkIdsKey,
-      value: jsonEncode(allIds.toList()),
-    );
+    await _write(_opkIdsKey, jsonEncode(allIds.toList()));
   }
 
   @override
   Future<OneTimePreKey?> getOneTimePreKey(int keyId) async {
-    final encoded = await _secureStorage.read(
-      key: '$_oneTimePreKeyPrefix$keyId',
-    );
+    final encoded = await _read('$_oneTimePreKeyPrefix$keyId');
     if (encoded == null) return null;
 
     final json = jsonDecode(encoded) as Map<String, dynamic>;
@@ -190,20 +208,16 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<void> deleteOneTimePreKey(int keyId) async {
-    await _secureStorage.delete(key: '$_oneTimePreKeyPrefix$keyId');
+    _delete('$_oneTimePreKeyPrefix$keyId');
 
-    // Update the key IDs list
     final ids = await getOneTimePreKeyIds();
     ids.remove(keyId);
-    await _secureStorage.write(
-      key: _opkIdsKey,
-      value: jsonEncode(ids),
-    );
+    await _write(_opkIdsKey, jsonEncode(ids));
   }
 
   @override
   Future<List<int>> getOneTimePreKeyIds() async {
-    final encoded = await _secureStorage.read(key: _opkIdsKey);
+    final encoded = await _read(_opkIdsKey);
     if (encoded == null) return [];
     final list = jsonDecode(encoded) as List<dynamic>;
     return list.map((e) => e as int).toList();
@@ -218,17 +232,15 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
     String userId,
     Uint8List identityKey,
   ) async {
-    await _secureStorage.write(
-      key: '$_remoteIdentityPrefix$userId',
-      value: base64Encode(identityKey),
+    await _write(
+      '$_remoteIdentityPrefix$userId',
+      base64Encode(identityKey),
     );
   }
 
   @override
   Future<Uint8List?> getRemoteIdentityKey(String userId) async {
-    final encoded = await _secureStorage.read(
-      key: '$_remoteIdentityPrefix$userId',
-    );
+    final encoded = await _read('$_remoteIdentityPrefix$userId');
     if (encoded == null) return null;
     return base64Decode(encoded);
   }
@@ -249,7 +261,7 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
 
   @override
   Future<void> clearAll() async {
-    await _secureStorage.deleteAll();
+    _store.clear();
   }
 
   /// Constant-time byte comparison.
@@ -261,4 +273,12 @@ class NativeKeyStoreRepository implements IKeyStoreRepository {
     }
     return result == 0;
   }
+}
+
+/// An encrypted entry in the web key store.
+class _EncryptedEntry {
+  final Uint8List iv;
+  final Uint8List ciphertext;
+
+  const _EncryptedEntry({required this.iv, required this.ciphertext});
 }

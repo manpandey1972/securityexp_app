@@ -11,3 +11,5 @@ export 'key_store_repository.dart';
 export 'native_key_store.dart';
 export 'prekey_repository.dart';
 export 'session_repository.dart';
+export 'web_key_store.dart';
+export 'web_session_repository.dart';

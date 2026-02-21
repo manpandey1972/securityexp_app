@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:securityexperts_app/shared/services/account_cleanup_service.dart';
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
+import 'package:securityexperts_app/features/chat/services/e2ee_initialization_service.dart';
 import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
@@ -128,6 +129,14 @@ class AuthState extends ChangeNotifier {
       _log.error('Failed to initialize VoIP token sync', tag: _tag);
     }
 
+    // Initialize E2EE (register device keys if first time)
+    try {
+      await sl<E2eeInitializationService>().initialize(userId: userId);
+      _log.info('E2EE initialized', tag: _tag);
+    } catch (e) {
+      _log.error('Failed to initialize E2EE: $e', tag: _tag);
+    }
+
   }
 
   /// Sign up with email and password
@@ -182,6 +191,13 @@ class AuthState extends ChangeNotifier {
 
       if (userId != null) {
         await sl<AccountCleanupService>().performCleanup(userId);
+      }
+
+      // Clean up E2EE state
+      try {
+        await sl<E2eeInitializationService>().cleanup(userId: userId);
+      } catch (e) {
+        _log.error('Failed to cleanup E2EE: $e', tag: _tag);
       }
 
       // Sign out from Google if it was a Google session

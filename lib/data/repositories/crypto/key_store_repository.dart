@@ -20,6 +20,13 @@ abstract class IKeyStoreRepository {
   /// Called once per device during E2EE registration.
   Future<IdentityKeyPair> generateAndStoreIdentityKeyPair();
 
+  /// Store an existing identity key pair (e.g. from backup restore).
+  ///
+  /// Unlike [generateAndStoreIdentityKeyPair], this accepts an already-created
+  /// key pair and persists it to the secure store. Used during key backup
+  /// restore to import previously exported key material.
+  Future<void> storeIdentityKeyPair(IdentityKeyPair keyPair);
+
   /// Retrieve the stored identity key pair for this device.
   /// Returns null if no identity key has been generated yet.
   Future<IdentityKeyPair?> getIdentityKeyPair();

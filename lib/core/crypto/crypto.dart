@@ -13,3 +13,4 @@ export 'native_crypto_provider.dart';
 export 'safety_number.dart';
 export 'secure_random.dart';
 export 'signal_protocol_engine.dart';
+export 'web_crypto_provider.dart';

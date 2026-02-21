@@ -32,4 +32,10 @@ class SecureRandom {
   static int generatePreKeyId() {
     return _random.nextInt(0xFFFFFF); // 24-bit range
   }
+
+  /// Generate a random device ID string (hex-encoded, 16 bytes).
+  static String generateDeviceId() {
+    final bytes = generateBytes(16);
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
 }
