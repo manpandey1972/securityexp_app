@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:securityexperts_app/core/di/call_dependencies.dart' as call_di;
+import 'package:securityexperts_app/core/di/crypto_dependencies.dart' as crypto_di;
 
 // Core Services
 import 'package:securityexperts_app/core/config/remote_config_service.dart';
@@ -193,6 +194,15 @@ Future<void> setupServiceLocator() async {
   );
 
   sl<AppLogger>().debug('✅ [ServiceLocator] Data layer registered');
+
+  // ========================================
+  // E2EE CRYPTO SERVICES
+  // ========================================
+
+  // Register all E2EE encryption services (Signal Protocol, key storage, etc.)
+  crypto_di.registerCryptoServices(sl);
+
+  sl<AppLogger>().debug('✅ [ServiceLocator] Crypto services registered');
 
   // ========================================
   // SHARED SERVICES - Used across features

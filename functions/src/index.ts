@@ -279,6 +279,18 @@ import {
   handleEndCall,
   handleCallTimeouts,
 } from "./callStateManagement";
+// E2EE functions
+import {
+  handleRegisterDevice,
+  handleDeregisterDevice,
+  handleAttestPrekeyBundle,
+  handleReplenishOPKs,
+  handleRotateSignedPreKey,
+  handleStoreKeyBackup,
+  handleRetrieveKeyBackup,
+  handleDeleteKeyBackup,
+  handleHasKeyBackup,
+} from "./e2ee";
 // Account deletion now uses Firestore-triggered background function
 export {onAccountDeletionRequested} from "./accountDeletion";
 
@@ -324,6 +336,29 @@ export const api = onCall(
       return handleRejectCall(request.auth, payload);
     case "endCall":
       return handleEndCall(request.auth, payload);
+
+    // E2EE: Device & Key Management
+    case "registerDevice":
+      return handleRegisterDevice(request.auth, payload);
+    case "deregisterDevice":
+      return handleDeregisterDevice(request.auth, payload);
+    case "attestPrekeyBundle":
+      return handleAttestPrekeyBundle(request.auth, payload);
+    case "replenishOPKs":
+      return handleReplenishOPKs(request.auth, payload);
+    case "rotateSignedPreKey":
+      return handleRotateSignedPreKey(request.auth, payload);
+
+    // E2EE: Key Backup
+    case "storeKeyBackup":
+      return handleStoreKeyBackup(request.auth, payload);
+    case "retrieveKeyBackup":
+      return handleRetrieveKeyBackup(request.auth);
+    case "deleteKeyBackup":
+      return handleDeleteKeyBackup(request.auth);
+    case "hasKeyBackup":
+      return handleHasKeyBackup(request.auth);
+
     default:
       throw new HttpsError("invalid-argument", `Unknown action: ${action}`);
     }
