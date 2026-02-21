@@ -11,6 +11,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/features/phone_auth/presentation/state/phone_auth_state.dart';
 import 'package:securityexperts_app/features/phone_auth/services/google_auth_service.dart';
+import 'package:securityexperts_app/features/phone_auth/services/apple_auth_service.dart';
 import 'package:securityexperts_app/constants/app_strings.dart';
 import 'package:securityexperts_app/core/analytics/auth_analytics.dart';
 import 'package:securityexperts_app/core/analytics/analytics_service.dart';
@@ -25,6 +26,7 @@ class PhoneAuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth;
   final UserRepository _userRepository;
   final GoogleAuthService _googleAuthService;
+  final AppleAuthService _appleAuthService;
 
   PhoneAuthState _state = const PhoneAuthState();
   PhoneAuthState get state => _state;
@@ -68,9 +70,11 @@ class PhoneAuthViewModel extends ChangeNotifier {
     required FirebaseAuth auth,
     required UserRepository userRepository,
     GoogleAuthService? googleAuthService,
+    AppleAuthService? appleAuthService,
   }) : _auth = auth,
        _userRepository = userRepository,
-       _googleAuthService = googleAuthService ?? sl<GoogleAuthService>();
+       _googleAuthService = googleAuthService ?? sl<GoogleAuthService>(),
+       _appleAuthService = appleAuthService ?? sl<AppleAuthService>();
 
   /// Initialize FCM and VoIP token services for existing users
   Future<void> _initializeTokenServices(String userId) async {
@@ -422,6 +426,90 @@ class PhoneAuthViewModel extends ChangeNotifier {
       await trace.stop();
 
       String errorMessage = 'Google sign-in failed. Please try again.';
+      if (e is FirebaseAuthException) {
+        errorMessage = e.message ?? errorMessage;
+      }
+
+      _state = _state.copyWith(isLoading: false, error: errorMessage);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Sign in with Apple identity
+  ///
+  /// Handles the full Apple Sign-In → Firebase Auth → profile check flow.
+  /// Returns `true` if sign-in was successful, `false` if cancelled/failed.
+  Future<bool> signInWithApple() async {
+    _state = _state.copyWith(isLoading: true, clearError: true);
+    notifyListeners();
+
+    final trace = sl<AnalyticsService>().newTrace('auth_apple_signin');
+    await trace.start();
+
+    try {
+      final userCredential = await _appleAuthService.signInWithApple();
+
+      if (userCredential == null) {
+        // User cancelled
+        _state = _state.copyWith(isLoading: false);
+        notifyListeners();
+        await trace.stop();
+        return false;
+      }
+
+      final user = userCredential.user;
+      if (user == null) {
+        _state = _state.copyWith(
+          isLoading: false,
+          error: 'Apple authentication failed.',
+        );
+        notifyListeners();
+        await trace.stop();
+        return false;
+      }
+
+      // Fetch user profile to check if exists
+      bool success = false;
+      await ErrorHandler.handle<void>(
+        operation: () async {
+          final userProfile = await _userRepository.getCurrentUserProfile();
+
+          if (userProfile != null) {
+            UserProfileService().setUserProfile(userProfile);
+
+            if (sl.isRegistered<AnalyticsService>()) {
+              sl<AnalyticsService>().setUserOnLogin(
+                userId: user.uid,
+                isExpert: userProfile.roles.contains('Expert'),
+                accountCreatedAt: userProfile.createdTime?.toDate(),
+              );
+            }
+
+            await _userRepository.updateLastLogin();
+
+            trace.putAttribute('user_type', 'existing');
+            AuthAnalytics.loginComplete(method: 'apple', isNewUser: false);
+
+            await _initializeTokenServices(user.uid);
+          } else {
+            trace.putAttribute('user_type', 'new');
+            AuthAnalytics.loginComplete(method: 'apple', isNewUser: true);
+          }
+
+          _state = _state.copyWith(isLoading: false, error: null);
+          notifyListeners();
+          success = true;
+        },
+      );
+
+      await trace.stop();
+      return success;
+    } catch (e) {
+      _log?.error('Apple Sign-In error: $e', tag: _tag);
+      await trace.stop();
+
+      String errorMessage = 'Apple sign-in failed. Please try again.';
       if (e is FirebaseAuthException) {
         errorMessage = e.message ?? errorMessage;
       }

@@ -55,6 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:1015827376061:android:30b282d2d31bcaadca54d4',
     messagingSenderId: '1015827376061',
     projectId: 'securityexp-app',
+    authDomain: 'securityexp-app.firebaseapp.com',
     databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
     storageBucket: 'securityexp-app.firebasestorage.app',
   );
