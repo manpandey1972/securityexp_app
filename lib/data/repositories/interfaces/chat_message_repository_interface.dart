@@ -1,4 +1,5 @@
 import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/data/models/crypto/crypto_models.dart';
 import 'package:securityexperts_app/data/repositories/interfaces/pagination_cursor.dart';
 
 /// Abstract interface for chat message repository operations.
@@ -43,6 +44,17 @@ abstract class IChatMessageRepository {
     required bool isVideo,
     required int durationSeconds,
     required String status,
+  });
+
+  /// Send an encrypted media message (already encrypted via Signal Protocol).
+  ///
+  /// This bypasses normal message construction and writes the pre-encrypted
+  /// [EncryptedMessage] directly to Firestore with the appropriate metadata.
+  Future<void> sendEncryptedMediaMessage({
+    required String roomId,
+    required EncryptedMessage encryptedMessage,
+    required String senderId,
+    required MessageType messageType,
   });
 
   /// Update an existing message's text

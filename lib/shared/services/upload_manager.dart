@@ -6,12 +6,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:securityexperts_app/data/models/models.dart';
 import 'package:securityexperts_app/data/models/upload_state.dart';
+import 'package:securityexperts_app/data/models/crypto/crypto_models.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/shared/services/media_type_helper.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
+import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
+import 'package:securityexperts_app/features/chat/services/encryption_service.dart';
 
 /// Global upload manager that handles all media uploads.
 ///
@@ -27,6 +30,8 @@ class UploadManager extends ChangeNotifier {
   static const String _tag = 'UploadManager';
 
   final ChatMessageRepository _messageRepository;
+  final MediaEncryptionService? _mediaEncryption;
+  final EncryptionService? _encryptionService;
   final AppLogger _log;
 
   /// Map of upload ID to active upload state
@@ -38,9 +43,19 @@ class UploadManager extends ChangeNotifier {
   /// Map of upload ID to stream subscription (for cleanup)
   final Map<String, StreamSubscription> _subscriptions = {};
 
-  UploadManager({ChatMessageRepository? messageRepository, AppLogger? logger})
-    : _messageRepository = messageRepository ?? sl<ChatMessageRepository>(),
-      _log = logger ?? sl<AppLogger>();
+  UploadManager({
+    ChatMessageRepository? messageRepository,
+    MediaEncryptionService? mediaEncryption,
+    EncryptionService? encryptionService,
+    AppLogger? logger,
+  })  : _messageRepository = messageRepository ?? sl<ChatMessageRepository>(),
+        _mediaEncryption = mediaEncryption,
+        _encryptionService = encryptionService,
+        _log = logger ?? sl<AppLogger>();
+
+  /// Whether E2EE media encryption is available.
+  bool get isE2eeEnabled =>
+      _mediaEncryption != null && _encryptionService != null;
 
   // =========================================================================
   // PUBLIC GETTERS
@@ -209,16 +224,16 @@ class UploadManager extends ChangeNotifier {
       bytes = convertedResult['bytes'] as Uint8List?;
       filename = convertedResult['filename'] as String;
 
-      // Calculate file size
-      int? fileSize;
-      if (bytes != null && bytes.isNotEmpty) {
-        fileSize = bytes.length;
-      } else if (filePath != null && filePath.isNotEmpty) {
-        final file = File(filePath);
-        if (await file.exists()) {
-          fileSize = await file.length();
+      // Ensure we have bytes in memory for E2EE or size calculation
+      if (bytes == null || bytes.isEmpty) {
+        if (filePath != null && filePath.isNotEmpty) {
+          bytes = await File(filePath).readAsBytes();
+        } else {
+          throw Exception('No file data available for upload');
         }
       }
+
+      final int fileSize = bytes.length;
 
       // Update filename in state if it changed
       final currentState = _uploads[uploadId];
@@ -227,23 +242,26 @@ class UploadManager extends ChangeNotifier {
         notifyListeners();
       }
 
-      // Upload to Firebase Storage
-      final downloadUrl = await _uploadToStorage(
-        uploadId: uploadId,
-        filePath: filePath,
-        bytes: bytes,
-        filename: filename,
-        roomId: roomId,
-      );
-
-      // Send chat message
-      await _sendChatMessage(
-        downloadUrl: downloadUrl,
-        filename: filename,
-        roomId: roomId,
-        fileSize: fileSize,
-        replyToMessage: replyToMessage,
-      );
+      if (isE2eeEnabled) {
+        await _performEncryptedUpload(
+          uploadId: uploadId,
+          roomId: roomId,
+          bytes: bytes,
+          filename: filename,
+          fileSize: fileSize,
+          replyToMessage: replyToMessage,
+        );
+      } else {
+        await _performPlaintextUpload(
+          uploadId: uploadId,
+          roomId: roomId,
+          filePath: filePath,
+          bytes: bytes,
+          filename: filename,
+          fileSize: fileSize,
+          replyToMessage: replyToMessage,
+        );
+      }
 
       // Update state to completed
       final current = _uploads[uploadId];
@@ -282,6 +300,165 @@ class UploadManager extends ChangeNotifier {
       await _subscriptions[uploadId]?.cancel();
       _subscriptions.remove(uploadId);
     }
+  }
+
+  /// Plaintext upload flow (no E2EE).
+  Future<void> _performPlaintextUpload({
+    required String uploadId,
+    required String roomId,
+    String? filePath,
+    required Uint8List bytes,
+    required String filename,
+    required int fileSize,
+    Message? replyToMessage,
+  }) async {
+    final downloadUrl = await _uploadToStorage(
+      uploadId: uploadId,
+      filePath: filePath,
+      bytes: bytes,
+      filename: filename,
+      roomId: roomId,
+    );
+
+    await _sendChatMessage(
+      downloadUrl: downloadUrl,
+      filename: filename,
+      roomId: roomId,
+      fileSize: fileSize,
+      replyToMessage: replyToMessage,
+    );
+  }
+
+  /// Encrypted upload flow (E2EE).
+  ///
+  /// 1. Encrypt file bytes with a random AES-256-GCM key
+  /// 2. Upload encrypted blob to `encrypted_media/` with a UUID filename
+  /// 3. Build [DecryptedContent] with media key, hash, URL
+  /// 4. Encrypt via Signal Protocol then store in Firestore
+  Future<void> _performEncryptedUpload({
+    required String uploadId,
+    required String roomId,
+    required Uint8List bytes,
+    required String filename,
+    required int fileSize,
+    Message? replyToMessage,
+  }) async {
+    _log.info('Starting encrypted upload: $uploadId', tag: _tag);
+
+    // 1. Encrypt the file
+    final result = await _mediaEncryption!.encryptFile(bytes);
+
+    // 2. Generate a random UUID-based storage path (no real filename)
+    final uuid = _generateUuid();
+    final storagePath = 'encrypted_media/$roomId/$uuid.enc';
+    final ref = FirebaseStorage.instance.ref().child(storagePath);
+
+    // Upload encrypted bytes
+    final uploadTask = ref.putData(
+      result.encryptedBytes,
+      SettableMetadata(contentType: 'application/octet-stream'),
+    );
+    _uploadTasks[uploadId] = uploadTask;
+
+    final subscription = uploadTask.snapshotEvents.listen(
+      (TaskSnapshot snapshot) {
+        final progress = snapshot.bytesTransferred / snapshot.totalBytes;
+        _updateProgress(uploadId, progress);
+      },
+      onError: (e, stackTrace) {
+        _log.error('Encrypted upload stream error: $uploadId - $e',
+            tag: _tag, stackTrace: stackTrace);
+      },
+    );
+    _subscriptions[uploadId] = subscription;
+
+    final snapshot = await uploadTask;
+    await subscription.cancel();
+    _subscriptions.remove(uploadId);
+
+    final encryptedUrl = await snapshot.ref.getDownloadURL();
+
+    // 3. Determine MIME type from filename
+    final ext = MediaTypeHelper.getExtension(filename);
+    final fileExt = ext.isNotEmpty ? '.$ext' : '';
+    final messageType = FileTypeHelper.getMessageTypeFromExtension(fileExt);
+    final mimeType = _getMimeType(filename);
+
+    // 4. Build DecryptedContent with all media metadata
+    final content = DecryptedContent(
+      text: filename,
+      mediaUrl: encryptedUrl,
+      mediaKey: result.mediaKey,
+      mediaHash: result.mediaHash,
+      mediaType: mimeType,
+      mediaSize: result.originalSize,
+      fileName: messageType == MessageType.doc ? filename : null,
+      replyToMessageId: replyToMessage?.id,
+      metadata: messageType == MessageType.doc
+          ? {'fileName': filename, 'fileSize': fileSize}
+          : null,
+    );
+
+    // 5. Encrypt via Signal Protocol and send
+    final user = sl<FirebaseAuth>().currentUser;
+    if (user == null) throw Exception('User not authenticated');
+
+    final recipientId = _deriveRecipientId(roomId, user.uid);
+
+    final encryptedMessage = await _encryptionService!.encryptMessage(
+      remoteUserId: recipientId,
+      messageType: messageType.toJson(),
+      content: content,
+    );
+
+    // 6. Write encrypted message to Firestore
+    await _messageRepository.sendEncryptedMediaMessage(
+      roomId: roomId,
+      encryptedMessage: encryptedMessage,
+      senderId: user.uid,
+      messageType: messageType,
+    );
+
+    _log.info('Encrypted upload sent: $uploadId', tag: _tag);
+  }
+
+  /// Derive the recipient user ID from a room ID.
+  String _deriveRecipientId(String roomId, String senderId) {
+    final parts = roomId.split('_');
+    return parts[0] == senderId ? parts[1] : parts[0];
+  }
+
+  /// Generate a UUID v4-like random string.
+  String _generateUuid() {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final random = now.hashCode ^ Object().hashCode;
+    return '${now.toRadixString(36)}_${random.abs().toRadixString(36)}';
+  }
+
+  /// Get MIME type from filename extension.
+  String _getMimeType(String filename) {
+    final ext = filename.split('.').last.toLowerCase();
+    return switch (ext) {
+      'jpg' || 'jpeg' => 'image/jpeg',
+      'png' => 'image/png',
+      'gif' => 'image/gif',
+      'webp' => 'image/webp',
+      'mp4' => 'video/mp4',
+      'mov' => 'video/quicktime',
+      'avi' => 'video/x-msvideo',
+      'mp3' => 'audio/mpeg',
+      'm4a' => 'audio/mp4',
+      'aac' => 'audio/aac',
+      'wav' => 'audio/wav',
+      'ogg' => 'audio/ogg',
+      'pdf' => 'application/pdf',
+      'doc' || 'docx' => 'application/msword',
+      'xls' || 'xlsx' => 'application/vnd.ms-excel',
+      'ppt' || 'pptx' => 'application/vnd.ms-powerpoint',
+      'txt' => 'text/plain',
+      'zip' => 'application/zip',
+      _ => 'application/octet-stream',
+    };
   }
 
   /// Upload file to Firebase Storage with progress tracking

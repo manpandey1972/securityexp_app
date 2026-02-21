@@ -6,6 +6,7 @@ import 'package:securityexperts_app/core/crypto/native_crypto_provider.dart';
 import 'package:securityexperts_app/core/crypto/signal_protocol_engine.dart';
 import 'package:securityexperts_app/data/repositories/crypto/crypto_repositories.dart';
 import 'package:securityexperts_app/features/chat/services/encryption_service.dart';
+import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
 
 /// Register all E2EE crypto services with the service locator.
 ///
@@ -82,6 +83,16 @@ void registerCryptoServices(GetIt sl) {
       keyStore: sl<IKeyStoreRepository>(),
       sessionRepo: sl<ISessionRepository>(),
       preKeyRepo: sl<PreKeyRepository>(),
+    ),
+  );
+
+  // ========================================
+  // MEDIA ENCRYPTION SERVICE — Per-file AES-256-GCM
+  // ========================================
+
+  sl.registerLazySingleton<MediaEncryptionService>(
+    () => MediaEncryptionService(
+      crypto: sl<CryptoProvider>(),
     ),
   );
 }

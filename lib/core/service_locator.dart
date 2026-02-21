@@ -33,6 +33,7 @@ import 'package:securityexperts_app/shared/services/upload_manager.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/features/chat/services/encryption_service.dart';
+import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
 
 // Feature Services - Authentication & Profile
 import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
@@ -243,12 +244,21 @@ Future<void> setupServiceLocator() async {
 
   // Media Services for chat (register early since repositories depend on them)
   sl.registerLazySingleton<MediaUploadService>(() => MediaUploadService());
-  sl.registerLazySingleton<MediaDownloadService>(() => MediaDownloadService());
+  sl.registerLazySingleton<MediaDownloadService>(
+    () => MediaDownloadService(
+      mediaEncryption: sl<MediaEncryptionService>(),
+    ),
+  );
   sl.registerLazySingleton<MediaCacheService>(() => MediaCacheService());
 
   // Upload Manager - Global upload manager for background uploads
   // Registered as singleton (not lazy) so it's always available
-  sl.registerLazySingleton<UploadManager>(() => UploadManager());
+  sl.registerLazySingleton<UploadManager>(
+    () => UploadManager(
+      mediaEncryption: sl<MediaEncryptionService>(),
+      encryptionService: sl<EncryptionService>(),
+    ),
+  );
 
   // Chat Repositories - Architecture for chat operations
   sl.registerLazySingleton<ChatRoomRepository>(

@@ -7,6 +7,7 @@ import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
 
 // ============================================================================
 // CUSTOM FILE SERVICE - Extracts proper file extensions from URLs
@@ -261,6 +262,112 @@ class MediaCacheService {
       return downloaded;
     } catch (e, stackTrace) {
       _log.error('Error getting media file: $e', tag: _tag);
+      _log.error('Stack trace: $stackTrace', tag: _tag);
+      return null;
+    }
+  }
+
+  /// Fetch an encrypted media file, decrypt it, and cache the decrypted result.
+  ///
+  /// If the decrypted file is already cached (keyed by the original [url]),
+  /// returns it immediately. Otherwise downloads the encrypted bytes from
+  /// [url], decrypts with [mediaKey], verifies [mediaHash], caches the
+  /// decrypted output, and returns its [FileInfo].
+  ///
+  /// Returns null if [mediaEncryption] is null or on any error.
+  Future<FileInfo?> getEncryptedMediaFile(
+    String chatRoomId,
+    String url, {
+    required String mediaKey,
+    String? mediaHash,
+    String? fileExtension,
+    MediaEncryptionService? mediaEncryption,
+  }) async {
+    try {
+      final encService = mediaEncryption ?? sl.get<MediaEncryptionService>();
+      final manager = getManagerForRoom(chatRoomId);
+
+      // Check if we already have the decrypted version cached
+      FileInfo? cached = await manager.getFileFromCache(url);
+      if (cached != null && cached.file.existsSync()) {
+        _log.debug('Returning cached decrypted file: ${cached.file.path}',
+            tag: _tag);
+        return cached;
+      }
+
+      // Download encrypted bytes via HTTP
+      _log.debug('Downloading encrypted media from: $url', tag: _tag);
+      final httpClient = http.Client();
+      final response = await httpClient.get(Uri.parse(url));
+
+      if (response.statusCode != 200) {
+        _log.error(
+            'Failed to download encrypted media: ${response.statusCode}',
+            tag: _tag);
+        return null;
+      }
+
+      final encryptedBytes = Uint8List.fromList(response.bodyBytes);
+
+      // Decrypt
+      final decryptedBytes = await encService.decryptFile(
+        encryptedBytes: encryptedBytes,
+        mediaKey: mediaKey,
+        mediaHash: mediaHash,
+      );
+
+      // Determine the extension for the cached file
+      final ext = fileExtension ?? '.bin';
+
+      // Store decrypted bytes in cache (keyed by original URL)
+      await manager.putFile(
+        url,
+        Uint8List.fromList(decryptedBytes),
+        fileExtension: ext,
+      );
+
+      // Retrieve cached FileInfo
+      final fileInfo = await manager.getFileFromCache(url);
+      await _addUrlToIndex(chatRoomId, url);
+      _log.debug('Cached decrypted file: ${fileInfo?.file.path}', tag: _tag);
+      return fileInfo;
+    } catch (e, stackTrace) {
+      _log.error('Error getting encrypted media file: $e', tag: _tag);
+      _log.error('Stack trace: $stackTrace', tag: _tag);
+      return null;
+    }
+  }
+
+  /// Get decrypted media bytes directly without caching.
+  ///
+  /// Useful for thumbnails or small media that don't need persistent caching.
+  Future<Uint8List?> getDecryptedMediaBytes(
+    String url, {
+    required String mediaKey,
+    String? mediaHash,
+    MediaEncryptionService? mediaEncryption,
+  }) async {
+    try {
+      final encService = mediaEncryption ?? sl.get<MediaEncryptionService>();
+
+      // Download encrypted bytes
+      final httpClient = http.Client();
+      final response = await httpClient.get(Uri.parse(url));
+
+      if (response.statusCode != 200) {
+        _log.error('Failed to download media: ${response.statusCode}',
+            tag: _tag);
+        return null;
+      }
+
+      // Decrypt and return
+      return Uint8List.fromList(await encService.decryptFile(
+        encryptedBytes: Uint8List.fromList(response.bodyBytes),
+        mediaKey: mediaKey,
+        mediaHash: mediaHash,
+      ));
+    } catch (e, stackTrace) {
+      _log.error('Error decrypting media bytes: $e', tag: _tag);
       _log.error('Stack trace: $stackTrace', tag: _tag);
       return null;
     }

@@ -325,6 +325,49 @@ class ChatMessageRepository implements IChatMessageRepository {
     await sendMessage(roomId, message);
   }
 
+  /// Send an encrypted media message directly to Firestore.
+  ///
+  /// The message has already been encrypted via Signal Protocol in UploadManager.
+  /// This writes the encrypted payload and updates the room's last message.
+  @override
+  Future<void> sendEncryptedMediaMessage({
+    required String roomId,
+    required EncryptedMessage encryptedMessage,
+    required String senderId,
+    required MessageType messageType,
+  }) async {
+    await ErrorHandler.handle<void>(
+      operation: () async {
+        final messagesRef = _firestore
+            .collection(_roomsCollection)
+            .doc(roomId)
+            .collection(_messagesCollection);
+
+        final docRef = messagesRef.doc();
+
+        final data = {
+          ...encryptedMessage.toJson(),
+          'sender_id': senderId,
+          'timestamp': FieldValue.serverTimestamp(),
+          'type': messageType.toJson(),
+        };
+
+        await docRef.set(data);
+
+        // Update room last message metadata
+        await _roomRepository.updateLastMessage(
+          roomId: roomId,
+          lastMessage: '\u{1F512} Encrypted message',
+        );
+
+        _log.info('Encrypted media message sent: ${docRef.id}', tag: _tag);
+      },
+      onError: (error) =>
+          _log.error('Error sending encrypted media message: $error',
+              tag: _tag),
+    );
+  }
+
   /// Update a message's text.
   /// For encrypted messages, re-encrypts the new content.
   @override

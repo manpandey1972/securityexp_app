@@ -45,6 +45,28 @@ service firebase.storage {
     }
     
     // ============================================
+    // ENCRYPTED MEDIA - E2EE chat attachments
+    // ============================================
+    // Path: encrypted_media/{roomId}/{uuid}.enc
+    // Same participant validation as chat_attachments.
+    // Content type is always application/octet-stream (encrypted bytes).
+    match /encrypted_media/{roomId}/{fileName} {
+      allow read: if request.auth != null && 
+                     (roomId.split('_')[0] == request.auth.uid || 
+                      roomId.split('_')[1] == request.auth.uid);
+      
+      allow write: if request.auth != null && 
+                      (roomId.split('_')[0] == request.auth.uid || 
+                       roomId.split('_')[1] == request.auth.uid) &&
+                      request.resource.size <= 26214400 && // 25MB max
+                      request.resource.contentType == 'application/octet-stream';
+      
+      allow delete: if request.auth != null && 
+                       (roomId.split('_')[0] == request.auth.uid || 
+                        roomId.split('_')[1] == request.auth.uid);
+    }
+    
+    // ============================================
     // USER DOCUMENTS - Private to owner only
     // ============================================
     match /user_documents/{userId}/{document=**} {
