@@ -294,17 +294,10 @@ import {
   handleEndCall,
   handleCallTimeouts,
 } from "./callStateManagement";
-// E2EE functions
+// E2EE functions (v3 — KMS-protected room keys)
 import {
-  handleRegisterDevice,
-  handleDeregisterDevice,
-  handleAttestPrekeyBundle,
-  handleReplenishOPKs,
-  handleRotateSignedPreKey,
-  handleStoreKeyBackup,
-  handleRetrieveKeyBackup,
-  handleDeleteKeyBackup,
-  handleHasKeyBackup,
+  handleSealRoomKey,
+  handleGetRoomKey,
 } from "./e2ee";
 // Account deletion now uses Firestore-triggered background function
 export {onAccountDeletionRequested} from "./accountDeletion";
@@ -352,27 +345,11 @@ export const api = onCall(
     case "endCall":
       return handleEndCall(request.auth, payload);
 
-    // E2EE: Device & Key Management
-    case "registerDevice":
-      return handleRegisterDevice(request.auth, payload);
-    case "deregisterDevice":
-      return handleDeregisterDevice(request.auth, payload);
-    case "attestPrekeyBundle":
-      return handleAttestPrekeyBundle(request.auth, payload);
-    case "replenishOPKs":
-      return handleReplenishOPKs(request.auth, payload);
-    case "rotateSignedPreKey":
-      return handleRotateSignedPreKey(request.auth, payload);
-
-    // E2EE: Key Backup
-    case "storeKeyBackup":
-      return handleStoreKeyBackup(request.auth, payload);
-    case "retrieveKeyBackup":
-      return handleRetrieveKeyBackup(request.auth);
-    case "deleteKeyBackup":
-      return handleDeleteKeyBackup(request.auth);
-    case "hasKeyBackup":
-      return handleHasKeyBackup(request.auth);
+    // E2EE: Room Key Management (v3)
+    case "sealRoomKey":
+      return handleSealRoomKey(request.auth, payload);
+    case "getRoomKey":
+      return handleGetRoomKey(request.auth, payload);
 
     default:
       throw new HttpsError("invalid-argument", `Unknown action: ${action}`);

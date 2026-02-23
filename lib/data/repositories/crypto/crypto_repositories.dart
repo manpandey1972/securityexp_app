@@ -1,15 +1,6 @@
-/// Barrel export for all E2EE crypto repositories.
+/// Barrel export for E2EE crypto repositories (v3).
 ///
-/// Import this file to access all crypto repositories:
-/// ```dart
-/// import 'package:securityexperts_app/data/repositories/crypto/crypto_repositories.dart';
-/// ```
+/// In v3, all crypto repositories have been removed in favor of the
+/// [RoomKeyService] which fetches room keys via Cloud Functions.
+/// This barrel file is kept for backward compatibility but exports nothing.
 library;
-
-export 'key_backup_repository.dart';
-export 'key_store_repository.dart';
-export 'native_key_store.dart';
-export 'prekey_repository.dart';
-export 'session_repository.dart';
-export 'web_key_store.dart';
-export 'web_session_repository.dart';

@@ -399,14 +399,13 @@ class UploadManager extends ChangeNotifier {
           : null,
     );
 
-    // 5. Encrypt via Signal Protocol and send
+    // 5. Encrypt via room-key E2EE and send
     final user = sl<FirebaseAuth>().currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    final recipientId = _deriveRecipientId(roomId, user.uid);
-
     final encryptedMessage = await _encryptionService!.encryptMessage(
-      remoteUserId: recipientId,
+      roomId: roomId,
+      senderId: user.uid,
       messageType: messageType.toJson(),
       content: content,
     );
@@ -420,12 +419,6 @@ class UploadManager extends ChangeNotifier {
     );
 
     _log.info('Encrypted upload sent: $uploadId', tag: _tag);
-  }
-
-  /// Derive the recipient user ID from a room ID.
-  String _deriveRecipientId(String roomId, String senderId) {
-    final parts = roomId.split('_');
-    return parts[0] == senderId ? parts[1] : parts[0];
   }
 
   /// Generate a UUID v4-like random string.

@@ -100,22 +100,9 @@ service cloud.firestore {
       }
       
       // ========================================
-      // E2EE - Device PreKey Bundles
+      // E2EE - Device PreKey Bundles (REMOVED in v3)
+      // Device identity & PreKey bundles removed — no longer needed
       // ========================================
-      
-      // Device identity & PreKey bundles for end-to-end encryption
-      // Each device uploads its public keys so other users can initiate E2EE sessions
-      match /devices/{deviceId} {
-        // Any authenticated user can read device keys (needed to start E2EE sessions)
-        allow read: if isAuthenticated();
-        
-        // Only the device owner can create/update their own keys
-        allow create: if isAuthenticated() && getUserId() == userId;
-        allow update: if isAuthenticated() && getUserId() == userId;
-        
-        // Only the device owner can remove their device keys
-        allow delete: if isAuthenticated() && getUserId() == userId;
-      }
     }
     
     // ========================================
@@ -136,8 +123,12 @@ service cloud.firestore {
                        request.resource.data.participants[0] != request.resource.data.participants[1];
       
       // Allow update if user is a participant (for lastMessage, lastMessageTime)
+      // encrypted_room_key and e2ee_enabled are server-only (Cloud Function admin SDK)
       allow update: if isAuthenticated() && 
-                       getUserId() in resource.data.participants;
+                       getUserId() in resource.data.participants &&
+                       !request.resource.data.diff(resource.data)
+                           .affectedKeys()
+                           .hasAny(['encrypted_room_key', 'e2ee_enabled', 'participants']);
       
       // Allow delete if user is a participant
       allow delete: if isAuthenticated() && 
@@ -170,36 +161,10 @@ service cloud.firestore {
     // ========================================
 
     // ========================================
-    // E2EE - Key Backup & Transparency
+    // E2EE - Key Backup & Transparency (REMOVED in v3)
+    // Encrypted key backups and key transparency log removed
+    // Room keys are now KMS-protected and stored on room docs
     // ========================================
-    
-    // Encrypted key backups - users store their encrypted identity key backup
-    match /key_backups/{userId} {
-      // Only the key owner can read their backup
-      allow read: if isAuthenticated() && getUserId() == userId;
-      
-      // Only the key owner can create/update their backup
-      allow create: if isAuthenticated() && getUserId() == userId;
-      allow update: if isAuthenticated() && getUserId() == userId;
-      
-      // Only the key owner can delete their backup
-      allow delete: if isAuthenticated() && getUserId() == userId;
-    }
-    
-    // Key transparency log - append-only log of identity key changes
-    // Used for auditing and detecting man-in-the-middle attacks
-    match /key_transparency_log/{logId} {
-      // Any authenticated user can read the log (for verification)
-      allow read: if isAuthenticated();
-      
-      // Only the key owner can create log entries
-      allow create: if isAuthenticated() && 
-                       request.resource.data.user_id == getUserId();
-      
-      // Log entries are immutable - no updates or deletes
-      allow update: if false;
-      allow delete: if false;
-    }
 
     // ========================================
     // NOTE: Legacy active_calls collection (WebRTC) has been removed.

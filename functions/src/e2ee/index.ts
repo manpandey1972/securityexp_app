@@ -1,22 +1,11 @@
 /**
- * E2EE barrel export.
+ * E2EE barrel export — v3 (KMS-protected per-room symmetric keys).
  *
- * Re-exports all E2EE Cloud Function handlers for use in the
+ * Re-exports room key management handlers for use in the
  * unified `api` callable in index.ts.
  */
 
 export {
-  handleRegisterDevice,
-  handleDeregisterDevice,
-  handleAttestPrekeyBundle,
-  handleReplenishOPKs,
-  handleRotateSignedPreKey,
-  checkOPKSupply,
-} from "./prekeyManagement";
-
-export {
-  handleStoreKeyBackup,
-  handleRetrieveKeyBackup,
-  handleDeleteKeyBackup,
-  handleHasKeyBackup,
-} from "./keyBackup";
+  handleSealRoomKey,
+  handleGetRoomKey,
+} from "./roomKeyManagement";

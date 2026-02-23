@@ -8,6 +8,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 import 'package:securityexperts_app/data/repositories/interfaces/repository_interfaces.dart';
+import 'package:securityexperts_app/features/chat/services/room_key_service.dart';
 
 /// Repository for chat room operations.
 /// Handles room CRUD and real-time room streams.
@@ -15,6 +16,7 @@ class ChatRoomRepository implements IChatRoomRepository {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
   final MediaCacheService? _mediaCacheService;
+  final RoomKeyService? _roomKeyService;
   final AppLogger _log = sl<AppLogger>();
 
   static const String _tag = 'ChatRoomRepository';
@@ -24,9 +26,11 @@ class ChatRoomRepository implements IChatRoomRepository {
     FirebaseFirestore? firestore,
     FirebaseStorage? storage,
     MediaCacheService? mediaCacheService,
+    RoomKeyService? roomKeyService,
   }) : _firestore = firestore ?? FirestoreInstance().db,
        _storage = storage ?? FirebaseStorage.instance,
-       _mediaCacheService = mediaCacheService;
+       _mediaCacheService = mediaCacheService,
+       _roomKeyService = roomKeyService;
 
   /// Get list of chat rooms the user is a participant of.
   /// Falls back to cache if offline.
@@ -113,6 +117,16 @@ class ChatRoomRepository implements IChatRoomRepository {
                 FieldValue.serverTimestamp(),
             FirestoreConstants.createdAtField: FieldValue.serverTimestamp(),
           });
+
+          // Seal the E2EE room key via Cloud Function (KMS-encrypted)
+          if (_roomKeyService != null) {
+            try {
+              await _roomKeyService.sealRoomKey(roomId);
+              _log.info('E2EE room key sealed for $roomId', tag: _tag);
+            } catch (e) {
+              _log.error('Failed to seal room key: $e', tag: _tag);
+            }
+          }
         }
 
         return roomId;

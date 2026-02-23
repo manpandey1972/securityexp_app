@@ -1,4 +1,4 @@
-/// Barrel export for the core crypto module.
+/// Barrel export for the core crypto module (v3).
 ///
 /// Import this file to access all crypto primitives:
 /// ```dart
@@ -8,9 +8,6 @@ library;
 
 export 'aes_gcm_cipher.dart';
 export 'crypto_provider.dart';
-export 'key_derivation.dart';
 export 'native_crypto_provider.dart';
-export 'safety_number.dart';
 export 'secure_random.dart';
-export 'signal_protocol_engine.dart';
 export 'web_crypto_provider.dart';

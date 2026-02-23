@@ -66,7 +66,7 @@ class ChatMessageRepository implements IChatMessageRepository {
                       .isNotEmpty;
             });
             final messages = await Future.wait(
-              docs.map((doc) => _parseDocument(doc)),
+              docs.map((doc) => _parseDocument(doc, roomId)),
             );
             return messages;
           } catch (e, stackTrace) {
@@ -163,7 +163,7 @@ class ChatMessageRepository implements IChatMessageRepository {
                 .get(const GetOptions(source: Source.serverAndCache));
 
             final messages = await Future.wait(
-              snapshot.docs.map((doc) => _parseDocument(doc)),
+              snapshot.docs.map((doc) => _parseDocument(doc, roomId)),
             );
 
             final newCursor = snapshot.docs.isNotEmpty
@@ -203,12 +203,12 @@ class ChatMessageRepository implements IChatMessageRepository {
             .limitToLast(limit)
             .get(GetOptions(source: source));
         
+        final messages = await Future.wait(
+          snapshot.docs.map((doc) => _parseDocument(doc, roomId)),
+        );
+
         trace.putAttribute('doc_count', snapshot.docs.length.toString());
         await trace.stop();
-
-        final messages = await Future.wait(
-          snapshot.docs.map((doc) => _parseDocument(doc)),
-        );
 
         final cursor = snapshot.docs.isNotEmpty
             ? PaginationCursor(snapshot.docs.first)
@@ -249,12 +249,12 @@ class ChatMessageRepository implements IChatMessageRepository {
               final bool encrypted;
 
               if (_shouldEncrypt(message)) {
-                // E2EE: Encrypt the message before writing to Firestore
-                final recipientId = _deriveRecipientId(roomId, message.senderId);
+                // E2EE: Encrypt the message using per-room key
                 final content = _messageToDecryptedContent(message);
 
                 final encryptedMessage = await _encryptionService!.encryptMessage(
-                  remoteUserId: recipientId,
+                  roomId: roomId,
+                  senderId: message.senderId,
                   messageType: message.type.toJson(),
                   content: content,
                 );
@@ -390,18 +390,18 @@ class ChatMessageRepository implements IChatMessageRepository {
           if (doc.exists && doc.data()?.containsKey('ciphertext') == true) {
             // Re-encrypt the edited message
             final senderId = doc.data()!['sender_id'] as String;
-            final recipientId = _deriveRecipientId(roomId, senderId);
             final content = DecryptedContent(text: newText);
 
             final encryptedMessage = await _encryptionService.encryptMessage(
-              remoteUserId: recipientId,
+              roomId: roomId,
+              senderId: senderId,
               messageType: doc.data()!['type'] as String? ?? 'text',
               content: content,
             );
 
             await docRef.update({
               'ciphertext': encryptedMessage.ciphertext,
-              'header': encryptedMessage.header.toJson(),
+              'iv': encryptedMessage.iv,
               'edited_at': Timestamp.now(),
             });
 
@@ -485,13 +485,6 @@ class ChatMessageRepository implements IChatMessageRepository {
     return _encryptionService != null;
   }
 
-  /// Derive the recipient user ID from a room ID.
-  /// Room IDs are in format: "userA_userB".
-  String _deriveRecipientId(String roomId, String senderId) {
-    final parts = roomId.split('_');
-    return parts[0] == senderId ? parts[1] : parts[0];
-  }
-
   /// Convert a [Message] to [DecryptedContent] for encryption.
   DecryptedContent _messageToDecryptedContent(Message message) {
     return DecryptedContent(
@@ -505,10 +498,11 @@ class ChatMessageRepository implements IChatMessageRepository {
   /// Parse a Firestore document, decrypting if it's an encrypted message.
   Future<Message> _parseDocument(
     QueryDocumentSnapshot<Map<String, dynamic>> doc,
+    String roomId,
   ) async {
     final data = doc.data();
     if (data.containsKey('ciphertext') && _encryptionService != null) {
-      return _decryptToMessage(data, doc.id);
+      return _decryptToMessage(data, doc.id, roomId);
     }
     return Message.fromJson({...data, 'id': doc.id});
   }
@@ -518,10 +512,12 @@ class ChatMessageRepository implements IChatMessageRepository {
   Future<Message> _decryptToMessage(
     Map<String, dynamic> data,
     String docId,
+    String roomId,
   ) async {
     try {
       final encryptedMessage = EncryptedMessage.fromJson({...data, 'id': docId});
       final content = await _encryptionService!.decryptMessage(
+        roomId: roomId,
         message: encryptedMessage,
       );
 
