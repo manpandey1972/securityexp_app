@@ -21,6 +21,8 @@ class TextViewerPage extends StatefulWidget {
   final File? localFile;
   final String fileName;
   final String? roomId;
+  final String? mediaKey;
+  final String? mediaHash;
 
   const TextViewerPage({
     super.key,
@@ -28,6 +30,8 @@ class TextViewerPage extends StatefulWidget {
     this.localFile,
     required this.fileName,
     this.roomId,
+    this.mediaKey,
+    this.mediaHash,
   }) : assert(url != null || localFile != null, 'Either url or localFile must be provided');
 
   @override
@@ -55,6 +59,8 @@ class _TextViewerPageState extends State<TextViewerPage> {
     super.initState();
     _loadContent();
   }
+
+  bool get _isEncrypted => widget.mediaKey != null && widget.mediaKey!.isNotEmpty;
 
   Future<void> _loadContent() async {
     // Handle local file (mobile/desktop only)
@@ -85,6 +91,54 @@ class _TextViewerPageState extends State<TextViewerPage> {
     }
 
     try {
+      // Handle encrypted files
+      if (_isEncrypted) {
+        final cacheService = sl<MediaCacheService>();
+        
+        if (kIsWeb) {
+          // On web, decrypt in memory
+          final bytes = await cacheService.getDecryptedMediaBytes(
+            widget.url!,
+            mediaKey: widget.mediaKey!,
+            mediaHash: widget.mediaHash,
+          );
+          if (bytes != null && mounted) {
+            setState(() {
+              _content = String.fromCharCodes(bytes);
+              _isLoading = false;
+            });
+            return;
+          }
+        } else {
+          // On native, decrypt to file
+          final roomId = widget.roomId ?? 'documents';
+          final fileInfo = await cacheService.getEncryptedMediaFile(
+            roomId,
+            widget.url!,
+            mediaKey: widget.mediaKey!,
+            mediaHash: widget.mediaHash,
+            fileExtension: '.txt',
+          );
+          if (fileInfo != null && fileInfo.file.existsSync() && mounted) {
+            final content = await fileInfo.file.readAsString();
+            setState(() {
+              _content = content;
+              _isLoading = false;
+            });
+            return;
+          }
+        }
+        
+        if (mounted) {
+          setState(() {
+            _hasError = true;
+            _errorMessage = 'Failed to decrypt file';
+            _isLoading = false;
+          });
+        }
+        return;
+      }
+
       // On web, directly fetch via HTTP (no file caching)
       if (kIsWeb) {
         final response = await http.get(Uri.parse(widget.url!));

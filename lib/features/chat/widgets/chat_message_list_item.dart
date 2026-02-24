@@ -156,6 +156,8 @@ class ChatMessageListItem extends StatelessWidget {
                         fileName: message.metadata?['fileName'] ?? message.text,
                         mediaUrl: message.mediaUrl,
                         roomId: roomId,
+                        mediaKey: message.mediaKey,
+                        mediaHash: message.mediaHash,
                       );
                     },
                   )

@@ -11,6 +11,7 @@ import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
 import 'package:securityexperts_app/features/chat/widgets/document_message_bubble.dart';
 import 'package:securityexperts_app/features/chat/pages/pdf_viewer_page.dart';
 import 'package:securityexperts_app/features/chat/pages/text_viewer_page.dart';
+import 'package:securityexperts_app/utils/web_blob_url.dart' as blob_helper;
 import 'package:url_launcher/url_launcher.dart';
 import 'link_preview_widget.dart';
 import 'linkified_text.dart';
@@ -259,6 +260,8 @@ class MessageContentWidget extends StatelessWidget {
     required String fileName,
     required String? mediaUrl,
     String? roomId,
+    String? mediaKey,
+    String? mediaHash,
   }) async {
     if (mediaUrl == null || mediaUrl.isEmpty) return;
 
@@ -277,6 +280,19 @@ class MessageContentWidget extends StatelessWidget {
     if (isPdfFile(extension)) {
       if (kIsWeb) {
         // On web, open PDF in new tab (browser handles it natively)
+        // For encrypted PDFs, decrypt and open via blob URL
+        if (mediaKey != null) {
+          final cacheService = sl<MediaCacheService>();
+          final bytes = await cacheService.getDecryptedMediaBytes(
+            mediaUrl,
+            mediaKey: mediaKey,
+            mediaHash: mediaHash,
+          );
+          if (bytes != null) {
+            blob_helper.openBlobInNewTab(bytes, 'application/pdf');
+            return;
+          }
+        }
         final uri = Uri.parse(mediaUrl);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -289,6 +305,8 @@ class MessageContentWidget extends StatelessWidget {
               url: mediaUrl,
               fileName: fileName,
               roomId: roomId,
+              mediaKey: mediaKey,
+              mediaHash: mediaHash,
             ),
           ),
         );
@@ -300,6 +318,8 @@ class MessageContentWidget extends StatelessWidget {
             url: mediaUrl,
             fileName: fileName,
             roomId: roomId,
+            mediaKey: mediaKey,
+            mediaHash: mediaHash,
           ),
         ),
       );

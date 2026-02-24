@@ -27,3 +27,11 @@ void triggerBlobDownload(Uint8List bytes, String mimeType, String filename) {
   anchor.remove();
   html.Url.revokeObjectUrl(blobUrl);
 }
+
+/// Open decrypted bytes in a new browser tab via blob URL.
+/// Used for PDFs and other documents that the browser can natively render.
+void openBlobInNewTab(Uint8List bytes, String mimeType) {
+  final blob = html.Blob([bytes], mimeType);
+  final blobUrl = html.Url.createObjectUrlFromBlob(blob);
+  html.window.open(blobUrl, '_blank');
+}

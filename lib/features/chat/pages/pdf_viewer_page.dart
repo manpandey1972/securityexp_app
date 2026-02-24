@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -20,6 +21,8 @@ class PDFViewerPage extends StatefulWidget {
   final File? localFile;
   final String fileName;
   final String? roomId;
+  final String? mediaKey;
+  final String? mediaHash;
 
   const PDFViewerPage({
     super.key,
@@ -27,6 +30,8 @@ class PDFViewerPage extends StatefulWidget {
     this.localFile,
     required this.fileName,
     this.roomId,
+    this.mediaKey,
+    this.mediaHash,
   }) : assert(url != null || localFile != null, 'Either url or localFile must be provided');
 
   @override
@@ -43,6 +48,7 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
   bool _hasError = false;
   String? _errorMessage;
   File? _cachedFile;
+  Uint8List? _pdfBytes; // For web: decrypted PDF bytes
   int _currentPage = 1;
   int _totalPages = 0;
   bool _showSearchBar = false;
@@ -55,10 +61,46 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     _loadPdf();
   }
 
+  bool get _isEncrypted => widget.mediaKey != null && widget.mediaKey!.isNotEmpty;
+
   Future<void> _loadPdf() async {
-    // On web, callers should use PDFViewerPageWeb instead
+    // On web, use memory-based approach for encrypted PDFs
     if (kIsWeb) {
-      _logger.error('PDF Viewer: This page should not be used on web. Use PDFViewerPageWeb instead.');
+      if (_isEncrypted) {
+        try {
+          final cacheService = sl<MediaCacheService>();
+          final bytes = await cacheService.getDecryptedMediaBytes(
+            widget.url!,
+            mediaKey: widget.mediaKey!,
+            mediaHash: widget.mediaHash,
+          );
+          if (bytes != null && mounted) {
+            setState(() {
+              _pdfBytes = bytes;
+              _isLoading = false;
+            });
+            return;
+          }
+          if (mounted) {
+            setState(() {
+              _hasError = true;
+              _errorMessage = 'Failed to decrypt PDF';
+              _isLoading = false;
+            });
+          }
+        } catch (e, stack) {
+          _logger.error('Failed to decrypt PDF on web', error: e, stackTrace: stack);
+          if (mounted) {
+            setState(() {
+              _hasError = true;
+              _errorMessage = 'Failed to decrypt PDF: ${e.toString()}';
+              _isLoading = false;
+            });
+          }
+        }
+        return;
+      }
+      _logger.error('PDF Viewer: Non-encrypted web PDF should use PDFViewerPageWeb or launchUrl.');
       setState(() {
         _hasError = true;
         _errorMessage = 'Use PDFViewerPageWeb for web platform';
@@ -86,10 +128,40 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
     }
 
     try {
-      // Try to get from cache first using MediaCacheService
       final cacheService = sl<MediaCacheService>();
       final roomId = widget.roomId ?? 'documents';
+
+      // For encrypted files, use getEncryptedMediaFile then load bytes
+      // into memory for SfPdfViewer.memory() — more reliable than .file()
+      // across platforms (avoids file extension / sandbox issues on iOS).
+      if (_isEncrypted) {
+        final fileInfo = await cacheService.getEncryptedMediaFile(
+          roomId,
+          widget.url!,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+          fileExtension: '.pdf',
+        );
+        if (fileInfo != null && fileInfo.file.existsSync() && mounted) {
+          final bytes = await fileInfo.file.readAsBytes();
+          _logger.debug('Encrypted PDF cached at: ${fileInfo.file.path} (${bytes.length} bytes)');
+          setState(() {
+            _pdfBytes = bytes;
+            _isLoading = false;
+          });
+          return;
+        }
+        if (mounted) {
+          setState(() {
+            _hasError = true;
+            _errorMessage = 'Failed to decrypt PDF';
+            _isLoading = false;
+          });
+        }
+        return;
+      }
       
+      // Non-encrypted: use regular cache
       final fileInfo = await cacheService.getMediaFile(roomId, widget.url!);
 
       if (fileInfo != null && fileInfo.file.existsSync()) {
@@ -430,6 +502,29 @@ class _PDFViewerPageState extends State<PDFViewerPage> {
             ],
           ),
         ),
+      );
+    }
+
+    // If we have decrypted bytes (web encrypted PDFs), use memory viewer
+    if (_pdfBytes != null) {
+      return SfPdfViewer.memory(
+        _pdfBytes!,
+        key: _pdfViewerKey,
+        controller: _pdfController,
+        onDocumentLoaded: _onDocumentLoaded,
+        onPageChanged: _onPageChanged,
+        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+          _logger.error('PDF load failed: ${details.error}');
+          if (mounted) {
+            setState(() {
+              _hasError = true;
+              _errorMessage = 'Failed to load PDF: ${details.description}';
+            });
+          }
+        },
+        canShowScrollHead: true,
+        canShowScrollStatus: true,
+        enableDoubleTapZooming: true,
       );
     }
 
