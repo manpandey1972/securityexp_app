@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/features/chat/utils/chat_utils.dart';
 import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
+import 'package:securityexperts_app/utils/web_blob_url.dart' as blob_helper;
 import 'media_cache_service.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 
@@ -50,9 +51,12 @@ class MediaDownloadService {
     await ErrorHandler.handle<void>(
       operation: () async {
         if (kIsWeb) {
-          // Web cannot decrypt locally; open URL directly (would need
-          // a service worker or client-side decryption in JS)
-          await _downloadMediaWeb(url);
+          await _downloadEncryptedMediaWeb(
+            url: url,
+            filename: filename,
+            mediaKey: mediaKey,
+            mediaHash: mediaHash,
+          );
           return;
         }
 
@@ -71,6 +75,68 @@ class MediaDownloadService {
       onError: (error) =>
           SnackbarService.show('Encrypted download error: $error'),
     );
+  }
+
+  /// Download encrypted media on web: decrypt in-browser, trigger blob download.
+  Future<void> _downloadEncryptedMediaWeb({
+    required String url,
+    required String filename,
+    required String mediaKey,
+    String? mediaHash,
+  }) async {
+    // Use MediaCacheService (has in-memory cache) to get decrypted bytes
+    final decryptedBytes = await _mediaCacheService.getDecryptedMediaBytes(
+      url,
+      mediaKey: mediaKey,
+      mediaHash: mediaHash,
+    );
+    if (decryptedBytes == null) {
+      SnackbarService.show('Failed to decrypt file for download');
+      return;
+    }
+
+    // Determine MIME type from filename extension
+    final mimeType = _mimeTypeFromFilename(filename);
+
+    // Trigger browser download via blob URL + anchor click
+    blob_helper.triggerBlobDownload(decryptedBytes, mimeType, filename);
+    SnackbarService.show('Download started: $filename');
+  }
+
+  /// Infer MIME type from a filename extension.
+  String _mimeTypeFromFilename(String filename) {
+    final ext = filename.contains('.')
+        ? filename.split('.').last.toLowerCase()
+        : '';
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'gif':
+        return 'image/gif';
+      case 'webp':
+        return 'image/webp';
+      case 'mp4':
+        return 'video/mp4';
+      case 'mov':
+        return 'video/quicktime';
+      case 'webm':
+        return 'video/webm';
+      case 'mp3':
+        return 'audio/mpeg';
+      case 'aac':
+        return 'audio/aac';
+      case 'm4a':
+        return 'audio/mp4';
+      case 'wav':
+        return 'audio/wav';
+      case 'pdf':
+        return 'application/pdf';
+      default:
+        return 'application/octet-stream';
+    }
   }
 
   /// Download encrypted bytes from [url], decrypt, and save to device.

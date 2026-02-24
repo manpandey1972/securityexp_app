@@ -24,6 +24,22 @@ class Message extends Equatable {
   /// When true, [text] contains a fallback error string.
   final bool decryptionFailed;
 
+  /// Base64-encoded AES key+IV for decrypting the encrypted media file.
+  /// Only set for messages with encrypted media attachments.
+  final String? mediaKey;
+
+  /// SHA-256 hash of the original plaintext media, used for integrity check.
+  final String? mediaHash;
+
+  /// MIME type of the original media (e.g. "image/jpeg").
+  final String? mediaType;
+
+  /// Size in bytes of the original plaintext media.
+  final int? mediaSize;
+
+  /// Original filename of the media attachment.
+  final String? fileName;
+
   const Message({
     required this.id,
     required this.senderId,
@@ -36,6 +52,11 @@ class Message extends Equatable {
     this.metadata,
     this.isEncrypted = false,
     this.decryptionFailed = false,
+    this.mediaKey,
+    this.mediaHash,
+    this.mediaType,
+    this.mediaSize,
+    this.fileName,
   });
 
   // Convenience getters for common conversions
@@ -84,6 +105,11 @@ class Message extends Equatable {
     Map<String, dynamic>? metadata,
     bool? isEncrypted,
     bool? decryptionFailed,
+    String? mediaKey,
+    String? mediaHash,
+    String? mediaType,
+    int? mediaSize,
+    String? fileName,
   }) {
     return Message(
       id: id ?? this.id,
@@ -97,6 +123,11 @@ class Message extends Equatable {
       metadata: metadata ?? this.metadata,
       isEncrypted: isEncrypted ?? this.isEncrypted,
       decryptionFailed: decryptionFailed ?? this.decryptionFailed,
+      mediaKey: mediaKey ?? this.mediaKey,
+      mediaHash: mediaHash ?? this.mediaHash,
+      mediaType: mediaType ?? this.mediaType,
+      mediaSize: mediaSize ?? this.mediaSize,
+      fileName: fileName ?? this.fileName,
     );
   }
 
@@ -113,5 +144,10 @@ class Message extends Equatable {
     metadata,
     isEncrypted,
     decryptionFailed,
+    mediaKey,
+    mediaHash,
+    mediaType,
+    mediaSize,
+    fileName,
   ];
 }

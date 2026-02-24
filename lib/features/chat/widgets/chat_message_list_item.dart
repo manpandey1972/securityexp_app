@@ -9,6 +9,7 @@ import 'package:securityexperts_app/features/chat/widgets/swipeable_message.dart
 import 'package:securityexperts_app/features/chat/widgets/call_log_message_widget.dart';
 import 'package:securityexperts_app/features/chat/widgets/date_separator_widget.dart';
 import 'package:securityexperts_app/features/chat/widgets/message_video_widget.dart';
+import 'package:securityexperts_app/features/chat/widgets/video_widgets.dart';
 import 'package:securityexperts_app/features/chat/widgets/audio_widgets.dart';
 import 'package:securityexperts_app/features/chat/widgets/document_message_bubble.dart';
 import 'package:securityexperts_app/features/chat/widgets/_message_content_widget.dart';
@@ -109,6 +110,9 @@ class ChatMessageListItem extends StatelessWidget {
                     filename: message.text.isNotEmpty ? message.text : 'Audio',
                     fromMe: fromMe,
                     roomId: roomId,
+                    mediaKey: message.mediaKey,
+                    mediaHash: message.mediaHash,
+                    mediaType: message.mediaType,
                   )
                 : null,
             // Video widget for main message
@@ -116,7 +120,27 @@ class ChatMessageListItem extends StatelessWidget {
                 ? MessageVideoWidget(
                     videoUrl: message.mediaUrl!,
                     cacheHelper: cacheHelper,
-                    onTapExpand: () => actions.onPlayVideo(message.mediaUrl!),
+                    onTapExpand: () {
+                      if (message.isEncrypted && message.mediaKey != null) {
+                        // Navigate directly to encrypted-aware video player
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => VideoPlayerPage(
+                              url: message.mediaUrl!,
+                              roomId: roomId,
+                              mediaKey: message.mediaKey,
+                              mediaHash: message.mediaHash,
+                            ),
+                          ),
+                        );
+                      } else {
+                        actions.onPlayVideo(message.mediaUrl!);
+                      }
+                    },
+                    mediaKey: message.mediaKey,
+                    mediaHash: message.mediaHash,
+                    mediaType: message.mediaType,
+                    roomId: roomId,
                   )
                 : null,
             // Document widget for main message
@@ -157,13 +181,31 @@ class ChatMessageListItem extends StatelessWidget {
                         message.replyToMessage!.senderId ==
                         currentUserId,
                     roomId: roomId,
-                    onTapDownload: () => mediaDownloadService.downloadMedia(
-                      message.replyToMessage!.mediaUrl!,
-                      message.replyToMessage!.text.isNotEmpty
-                          ? message.replyToMessage!.text
-                          : 'audio.m4a',
-                      roomId,
-                    ),
+                    mediaKey: message.replyToMessage!.mediaKey,
+                    mediaHash: message.replyToMessage!.mediaHash,
+                    mediaType: message.replyToMessage!.mediaType,
+                    onTapDownload: () {
+                      final replyMsg = message.replyToMessage!;
+                      if (replyMsg.isEncrypted && replyMsg.mediaKey != null) {
+                        mediaDownloadService.downloadEncryptedMedia(
+                          url: replyMsg.mediaUrl!,
+                          filename: replyMsg.text.isNotEmpty
+                              ? replyMsg.text
+                              : 'audio.m4a',
+                          roomId: roomId,
+                          mediaKey: replyMsg.mediaKey!,
+                          mediaHash: replyMsg.mediaHash,
+                        );
+                      } else {
+                        mediaDownloadService.downloadMedia(
+                          replyMsg.mediaUrl!,
+                          replyMsg.text.isNotEmpty
+                              ? replyMsg.text
+                              : 'audio.m4a',
+                          roomId,
+                        );
+                      }
+                    },
                   )
                 : null,
             // Video widget for reply
@@ -174,27 +216,75 @@ class ChatMessageListItem extends StatelessWidget {
                 ? MessageVideoWidget(
                     videoUrl: message.replyToMessage!.mediaUrl!,
                     cacheHelper: cacheHelper,
-                    onTapExpand: () =>
-                        actions.onPlayReplyVideo(message.replyToMessage!),
-                    onTapDownload: () => mediaDownloadService.downloadMedia(
-                      message.replyToMessage!.mediaUrl!,
-                      message.replyToMessage!.text.isNotEmpty
-                          ? message.replyToMessage!.text
-                          : 'video.mp4',
-                      roomId,
-                    ),
+                    onTapExpand: () {
+                      final replyMsg = message.replyToMessage!;
+                      if (replyMsg.isEncrypted && replyMsg.mediaKey != null) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => VideoPlayerPage(
+                              url: replyMsg.mediaUrl!,
+                              roomId: roomId,
+                              mediaKey: replyMsg.mediaKey,
+                              mediaHash: replyMsg.mediaHash,
+                            ),
+                          ),
+                        );
+                      } else {
+                        actions.onPlayReplyVideo(replyMsg);
+                      }
+                    },
+                    onTapDownload: () {
+                      final replyMsg = message.replyToMessage!;
+                      if (replyMsg.isEncrypted && replyMsg.mediaKey != null) {
+                        mediaDownloadService.downloadEncryptedMedia(
+                          url: replyMsg.mediaUrl!,
+                          filename: replyMsg.text.isNotEmpty
+                              ? replyMsg.text
+                              : 'video.mp4',
+                          roomId: roomId,
+                          mediaKey: replyMsg.mediaKey!,
+                          mediaHash: replyMsg.mediaHash,
+                        );
+                      } else {
+                        mediaDownloadService.downloadMedia(
+                          replyMsg.mediaUrl!,
+                          replyMsg.text.isNotEmpty
+                              ? replyMsg.text
+                              : 'video.mp4',
+                          roomId,
+                        );
+                      }
+                    },
+                    mediaKey: message.replyToMessage!.mediaKey,
+                    mediaHash: message.replyToMessage!.mediaHash,
+                    mediaType: message.replyToMessage!.mediaType,
+                    roomId: roomId,
                   )
                 : null,
             onCopy: () => actions.onCopy(message),
             onDownload:
                 (message.mediaUrl != null && message.mediaUrl!.isNotEmpty)
-                ? () => mediaDownloadService.downloadMedia(
-                    message.mediaUrl!,
-                    message.text.isNotEmpty
-                        ? message.text
-                        : DateTimeFormatter.getDefaultFilename(message),
-                    roomId,
-                  )
+                ? () {
+                    if (message.isEncrypted && message.mediaKey != null) {
+                      mediaDownloadService.downloadEncryptedMedia(
+                        url: message.mediaUrl!,
+                        filename: message.text.isNotEmpty
+                            ? message.text
+                            : DateTimeFormatter.getDefaultFilename(message),
+                        roomId: roomId,
+                        mediaKey: message.mediaKey!,
+                        mediaHash: message.mediaHash,
+                      );
+                    } else {
+                      mediaDownloadService.downloadMedia(
+                        message.mediaUrl!,
+                        message.text.isNotEmpty
+                            ? message.text
+                            : DateTimeFormatter.getDefaultFilename(message),
+                        roomId,
+                      );
+                    }
+                  }
                 : null,
           ),
           ),

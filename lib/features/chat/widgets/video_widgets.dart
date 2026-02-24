@@ -12,6 +12,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/shared/services/media_audio_session_helper.dart';
 import 'package:securityexperts_app/features/chat/widgets/cached_media_widgets.dart';
 import 'package:securityexperts_app/shared/services/media_cache_service.dart';
+import 'package:securityexperts_app/utils/web_blob_url.dart' as blob_helper;
 
 // Re-export inline video preview widgets
 export 'inline_video_preview.dart';
@@ -19,7 +20,15 @@ export 'inline_video_preview.dart';
 class VideoPlayerPage extends StatefulWidget {
   final String url;
   final String roomId;
-  const VideoPlayerPage({super.key, required this.url, this.roomId = 'global'});
+  final String? mediaKey;
+  final String? mediaHash;
+  const VideoPlayerPage({
+    super.key,
+    required this.url,
+    this.roomId = 'global',
+    this.mediaKey,
+    this.mediaHash,
+  });
 
   @override
   State<VideoPlayerPage> createState() => _VideoPlayerPageState();
@@ -27,7 +36,7 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage>
     with WidgetsBindingObserver {
-  late final VideoPlayerController _controller;
+  VideoPlayerController? _controller;
   bool _ready = false;
   bool _error = false;
   bool _showControls = true;
@@ -54,6 +63,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   Future<void> _loadFromCacheOrNetwork() async {
     try {
+      final isEncrypted = widget.mediaKey != null;
+
+      if (isEncrypted) {
+        await _loadEncryptedVideo();
+        return;
+      }
+
       // On web, video_player doesn't support local files, so always use network URL
       if (kIsWeb) {
         _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url));
@@ -77,6 +93,50 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       _log.warning('Cache check failed, falling back to network', tag: _tag);
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url));
       _initialize();
+    }
+  }
+
+  /// Load and decrypt an encrypted video file.
+  Future<void> _loadEncryptedVideo() async {
+    try {
+      if (kIsWeb) {
+        // On web: decrypt to bytes, create blob URL
+        final bytes = await _mediaCacheService.getDecryptedMediaBytes(
+          widget.url,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+        );
+        if (bytes != null) {
+          final blobUrl = blob_helper.createBlobUrl(bytes, 'video/mp4');
+          if (blobUrl != null) {
+            _controller = VideoPlayerController.networkUrl(Uri.parse(blobUrl));
+            _initialize();
+            return;
+          }
+        }
+        _log.error('Failed to decrypt video on web', tag: _tag);
+        if (mounted) setState(() => _error = true);
+      } else {
+        // On native: decrypt to cached file
+        final fileInfo = await _mediaCacheService.getEncryptedMediaFile(
+          widget.roomId,
+          widget.url,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+          fileExtension: '.mp4',
+        );
+        if (fileInfo != null && fileInfo.file.existsSync()) {
+          _cachedFile = fileInfo.file;
+          _controller = VideoPlayerController.file(_cachedFile!);
+          _initialize();
+          return;
+        }
+        _log.error('Failed to decrypt video on native', tag: _tag);
+        if (mounted) setState(() => _error = true);
+      }
+    } catch (e) {
+      _log.error('Error loading encrypted video: $e', tag: _tag);
+      if (mounted) setState(() => _error = true);
     }
   }
 
@@ -116,15 +176,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   }
 
   Future<void> _initialize() async {
+    if (_controller == null) return;
     try {
       _log.debug('Starting initialization...', tag: _tag);
       // Configure audio session for speaker output on iOS (native)
       await MediaAudioSessionHelper.configureForMediaPlayback();
-      await _controller.initialize();
+      await _controller!.initialize();
       _log.debug('Controller initialized successfully', tag: _tag);
-      await _controller.setVolume(1.0);
-      await _controller.setLooping(true);
-      await _controller.play();
+      await _controller!.setVolume(1.0);
+      await _controller!.setLooping(true);
+      await _controller!.play();
       _log.debug('Video playing', tag: _tag);
       if (mounted) {
         setState(() => _ready = true);
@@ -141,7 +202,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    _controller?.dispose();
 
     // Reset to portrait only
     SystemChrome.setPreferredOrientations([
@@ -193,16 +254,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                       fontWeight: FontWeight.normal,
                     ),
                   )
-                : !_ready
+                : !_ready || _controller == null
                 ? const CircularProgressIndicator()
                 : Stack(
                     children: [
                       Center(
                         child: AspectRatio(
-                          aspectRatio: _controller.value.aspectRatio == 0
+                          aspectRatio: _controller!.value.aspectRatio == 0
                               ? 16 / 9
-                              : _controller.value.aspectRatio,
-                          child: VideoPlayer(_controller),
+                              : _controller!.value.aspectRatio,
+                          child: VideoPlayer(_controller!),
                         ),
                       ),
                       // Top bar with back button
@@ -254,14 +315,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           ),
                         ),
                       // Center play/pause overlay
-                      PlayPauseOverlay(controller: _controller),
+                      PlayPauseOverlay(controller: _controller!),
                       // Bottom controls
                       if (_showControls)
                         Positioned(
                           bottom: 0,
                           left: 0,
                           right: 0,
-                          child: _VideoControls(controller: _controller),
+                          child: _VideoControls(controller: _controller!),
                         ),
                     ],
                   ),

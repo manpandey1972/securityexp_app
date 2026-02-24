@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -11,6 +12,9 @@ import 'package:securityexperts_app/data/models/crypto/room_key_info.dart';
 /// Each room's AES-256 key is fetched once per app session from the
 /// `sealRoomKey` / `getRoomKey` Cloud Functions, then cached in a
 /// Dart [Map] for the lifetime of the service instance.
+///
+/// Concurrent requests for the same room are coalesced into a single
+/// Cloud Function call using [Completer]-based deduplication.
 class RoomKeyService {
   static const String _tag = 'RoomKeyService';
 
@@ -19,6 +23,9 @@ class RoomKeyService {
 
   /// In-memory cache: roomId → RoomKeyInfo.
   final Map<String, RoomKeyInfo> _cache = {};
+
+  /// In-flight requests: coalesces concurrent calls for the same room.
+  final Map<String, Future<RoomKeyInfo>> _pending = {};
 
   RoomKeyService({
     required FirebaseFunctions functions,
@@ -31,40 +38,66 @@ class RoomKeyService {
   /// First checks the in-memory cache. On miss, calls the
   /// `getRoomKey` Cloud Function, which verifies the caller is
   /// a room participant and returns the KMS-decrypted key.
+  ///
+  /// If the room has no key yet (pre-existing room), automatically
+  /// seals one via `sealRoomKey`. Concurrent calls for the same room
+  /// are coalesced into a single CF call.
   Future<RoomKeyInfo> getRoomKey(String roomId) async {
     // 1. Check memory cache
     final cached = _cache[roomId];
     if (cached != null) return cached;
 
-    // 2. Call Cloud Function
-    _log.debug('Fetching room key for $roomId', tag: _tag);
+    // 2. Coalesce concurrent requests for the same room
+    if (_pending.containsKey(roomId)) {
+      _log.debug('Coalescing concurrent key request for $roomId', tag: _tag);
+      return _pending[roomId]!;
+    }
 
-    final result = await _functions
-        .httpsCallable('api')
-        .call<Map<String, dynamic>>(
-          {'action': 'getRoomKey', 'payload': {'roomId': roomId}},
-        );
+    // 3. Start the fetch (only one in-flight per room)
+    final future = _fetchOrSealRoomKey(roomId);
+    _pending[roomId] = future;
 
-    final data = result.data;
-    final keyBytes = base64Decode(data['roomKey'] as String);
-
-    final info = RoomKeyInfo(
-      roomId: roomId,
-      key: Uint8List.fromList(keyBytes),
-      retrievedAt: DateTime.now(),
-    );
-
-    // 3. Cache in memory
-    _cache[roomId] = info;
-    _log.debug('Room key cached for $roomId', tag: _tag);
-    return info;
+    try {
+      return await future;
+    } finally {
+      _pending.remove(roomId);
+    }
   }
 
-  /// Seal a new room key (called after room creation).
+  /// Fetch the room key from CF, auto-sealing if it doesn't exist yet.
+  Future<RoomKeyInfo> _fetchOrSealRoomKey(String roomId) async {
+    _log.debug('Fetching room key for $roomId', tag: _tag);
+
+    try {
+      // Try getRoomKey first
+      final result = await _functions
+          .httpsCallable('api')
+          .call<Map<String, dynamic>>(
+            {'action': 'getRoomKey', 'payload': {'roomId': roomId}},
+          );
+
+      return _cacheResult(roomId, result.data);
+    } on FirebaseFunctionsException catch (e) {
+      if (e.code == 'not-found') {
+        // Room has no key yet (pre-existing room) — seal one now
+        _log.info(
+          'No room key for $roomId — auto-sealing',
+          tag: _tag,
+        );
+        return sealRoomKey(roomId);
+      }
+      rethrow;
+    }
+  }
+
+  /// Seal a new room key (called after room creation or on first access).
   ///
   /// Calls the `sealRoomKey` Cloud Function which generates a
   /// random AES-256 key, KMS-encrypts it, stores the ciphertext
   /// on the room document, and returns the plaintext key.
+  ///
+  /// Idempotent on the server side — if a key already exists,
+  /// the CF returns the existing decrypted key.
   Future<RoomKeyInfo> sealRoomKey(String roomId) async {
     _log.debug('Sealing room key for $roomId', tag: _tag);
 
@@ -74,7 +107,13 @@ class RoomKeyService {
           {'action': 'sealRoomKey', 'payload': {'roomId': roomId}},
         );
 
-    final data = result.data;
+    final info = _cacheResult(roomId, result.data);
+    _log.info('Room key sealed and cached for $roomId', tag: _tag);
+    return info;
+  }
+
+  /// Parse CF response and cache the room key.
+  RoomKeyInfo _cacheResult(String roomId, Map<String, dynamic> data) {
     final keyBytes = base64Decode(data['roomKey'] as String);
 
     final info = RoomKeyInfo(
@@ -84,7 +123,7 @@ class RoomKeyService {
     );
 
     _cache[roomId] = info;
-    _log.info('Room key sealed and cached for $roomId', tag: _tag);
+    _log.debug('Room key cached for $roomId', tag: _tag);
     return info;
   }
 

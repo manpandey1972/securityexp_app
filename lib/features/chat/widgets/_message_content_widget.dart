@@ -1,8 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
 import 'package:securityexperts_app/features/chat/widgets/document_message_bubble.dart';
@@ -98,7 +101,20 @@ class MessageContentWidget extends StatelessWidget {
     }
   }
 
+  /// Whether this message has encrypted media that needs decryption.
+  bool get _hasEncryptedMedia =>
+      message.isEncrypted &&
+      message.mediaKey != null &&
+      message.mediaUrl != null;
+
   Widget _buildImageMessage() {
+    if (_hasEncryptedMedia) {
+      return _EncryptedImageWidget(
+        message: message,
+        roomId: roomId,
+        onShowImagePreview: onShowImagePreview,
+      );
+    }
     return GestureDetector(
       onTap: onShowImagePreview != null
           ? () => onShowImagePreview!(message.mediaUrl!)
@@ -353,6 +369,176 @@ class MessageContentWidget extends StatelessWidget {
           style: AppTypography.bodyEmphasis.copyWith(color: AppColors.textPrimary),
         ),
       ],
+    );
+  }
+}
+
+/// A widget that downloads, decrypts, caches, and displays an encrypted image.
+class _EncryptedImageWidget extends StatefulWidget {
+  final Message message;
+  final String? roomId;
+  final Function(String)? onShowImagePreview;
+
+  const _EncryptedImageWidget({
+    required this.message,
+    this.roomId,
+    this.onShowImagePreview,
+  });
+
+  @override
+  State<_EncryptedImageWidget> createState() => _EncryptedImageWidgetState();
+}
+
+class _EncryptedImageWidgetState extends State<_EncryptedImageWidget> {
+  Future<Uint8List?>? _decryptFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _decryptFuture = _loadDecryptedImage();
+  }
+
+  Future<Uint8List?> _loadDecryptedImage() async {
+    final roomId = widget.roomId;
+    final mediaUrl = widget.message.mediaUrl!;
+    final mediaKey = widget.message.mediaKey!;
+    final mediaHash = widget.message.mediaHash;
+
+    if (roomId == null) return null;
+
+    try {
+      final mediaCacheService = sl<MediaCacheService>();
+
+      // On web, dart:io File operations don't work.
+      // Use getDecryptedMediaBytes which returns raw bytes.
+      if (kIsWeb) {
+        return await mediaCacheService.getDecryptedMediaBytes(
+          mediaUrl,
+          mediaKey: mediaKey,
+          mediaHash: mediaHash,
+        );
+      }
+
+      // On native, use file-based caching for efficiency.
+      final ext = _extensionFromMimeType(widget.message.mediaType);
+
+      final fileInfo = await mediaCacheService.getEncryptedMediaFile(
+        roomId,
+        mediaUrl,
+        mediaKey: mediaKey,
+        mediaHash: mediaHash,
+        fileExtension: ext,
+      );
+
+      if (fileInfo != null && fileInfo.file.existsSync()) {
+        return await fileInfo.file.readAsBytes();
+      }
+
+      // Fallback: get raw decrypted bytes
+      return await mediaCacheService.getDecryptedMediaBytes(
+        mediaUrl,
+        mediaKey: mediaKey,
+        mediaHash: mediaHash,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Open a full-screen preview showing the already-decrypted image bytes.
+  void _showDecryptedImagePreview(BuildContext context, Uint8List bytes) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (innerContext) => Scaffold(
+          appBar: AppBar(title: const Text('Image')),
+          body: Center(
+            child: InteractiveViewer(
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.broken_image, size: 64),
+                    SizedBox(height: 16),
+                    Text('Image failed to load'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _extensionFromMimeType(String? mimeType) {
+    if (mimeType == null) return '.bin';
+    switch (mimeType) {
+      case 'image/jpeg':
+        return '.jpg';
+      case 'image/png':
+        return '.png';
+      case 'image/gif':
+        return '.gif';
+      case 'image/webp':
+        return '.webp';
+      case 'image/heic':
+        return '.heic';
+      default:
+        return '.bin';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Uint8List?>(
+      future: _decryptFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            width: 140,
+            height: 140,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final bytes = snapshot.data;
+        if (bytes == null || bytes.isEmpty) {
+          return Container(
+            width: 140,
+            height: 140,
+            color: AppColors.textSecondary,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.lock, color: AppColors.white, size: 24),
+                SizedBox(height: 4),
+                Text(
+                  'Cannot decrypt',
+                  style: TextStyle(color: AppColors.white, fontSize: 10),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return GestureDetector(
+          onTap: () => _showDecryptedImagePreview(context, bytes),
+          child: Image.memory(
+            bytes,
+            width: 140,
+            height: 140,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 140,
+              height: 140,
+              color: AppColors.textSecondary,
+              child: const Icon(Icons.broken_image),
+            ),
+          ),
+        );
+      },
     );
   }
 }

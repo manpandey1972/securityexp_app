@@ -496,15 +496,39 @@ class ChatMessageRepository implements IChatMessageRepository {
   }
 
   /// Parse a Firestore document, decrypting if it's an encrypted message.
+  ///
+  /// Handles three cases:
+  /// - No `ciphertext` field → plaintext message, parse normally
+  /// - `encryption_version` == 1 (old Signal Protocol) → unrecoverable,
+  ///   show fallback without attempting decryption
+  /// - `encryption_version` == 2 (per-room AES-256-GCM) → decrypt
   Future<Message> _parseDocument(
     QueryDocumentSnapshot<Map<String, dynamic>> doc,
     String roomId,
   ) async {
     final data = doc.data();
-    if (data.containsKey('ciphertext') && _encryptionService != null) {
-      return _decryptToMessage(data, doc.id, roomId);
+
+    if (!data.containsKey('ciphertext') || _encryptionService == null) {
+      // Plaintext message or no encryption service available
+      return Message.fromJson({...data, 'id': doc.id});
     }
-    return Message.fromJson({...data, 'id': doc.id});
+
+    final version = data['encryption_version'] as int? ?? 1;
+    if (version < 2) {
+      // Old Signal Protocol messages — keys have been deleted and
+      // these cannot be recovered. Show a clear fallback.
+      return Message(
+        id: doc.id,
+        senderId: data['sender_id'] as String? ?? '',
+        type: MessageTypeExtension.fromJson(data['type'] as String? ?? 'text'),
+        text: '\u{1F512} Message from previous encryption protocol',
+        timestamp: (data['timestamp'] as Timestamp?) ?? Timestamp.now(),
+        isEncrypted: true,
+        decryptionFailed: true,
+      );
+    }
+
+    return _decryptToMessage(data, doc.id, roomId);
   }
 
   /// Decrypt an encrypted Firestore document into a [Message].
@@ -531,6 +555,11 @@ class ChatMessageRepository implements IChatMessageRepository {
         timestamp: encryptedMessage.timestamp,
         metadata: content.metadata,
         isEncrypted: true,
+        mediaKey: content.mediaKey,
+        mediaHash: content.mediaHash,
+        mediaType: content.mediaType,
+        mediaSize: content.mediaSize,
+        fileName: content.fileName,
       );
     } catch (e) {
       _log.error('Failed to decrypt message $docId: $e', tag: _tag);

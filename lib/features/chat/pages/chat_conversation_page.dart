@@ -337,6 +337,7 @@ class _ChatConversationPageContentState
     final fromMe = m.senderId == state.currentUserId;
 
     return ChatMessageListItem(
+      key: ValueKey('msg_${m.id}'),
       message: m,
       previousMessage: previousMessage,
       fromMe: fromMe,

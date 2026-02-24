@@ -192,7 +192,11 @@ class ChatPageInitializer {
           ChatNavigationHelper(
             context,
             roomId: roomId,
-          ).openVideoPlayer(message.mediaUrl!);
+          ).openVideoPlayer(
+            message.mediaUrl!,
+            mediaKey: message.mediaKey,
+            mediaHash: message.mediaHash,
+          );
         }
       },
       onShowReplyImagePreview: (url) =>

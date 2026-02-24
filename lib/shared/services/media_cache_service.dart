@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/chat/services/media_encryption_service.dart';
@@ -170,6 +171,74 @@ class MediaCacheService {
   final _log = sl<AppLogger>();
   static const _tag = 'MediaCacheService';
 
+  /// In-memory cache for decrypted media bytes (keyed by URL).
+  /// Prevents re-downloading + re-decrypting when widgets are recreated.
+  static final Map<String, Uint8List> _decryptedBytesCache = {};
+
+  /// In-flight decrypt requests, keyed by URL.
+  /// Prevents duplicate concurrent downloads of the same encrypted file.
+  static final Map<String, Future<Uint8List?>> _inflightDecrypts = {};
+
+  /// Download raw bytes from a Firebase Storage URL.
+  ///
+  /// On web, first tries the token URL directly (requires CORS on the bucket).
+  /// If that fails, refreshes the download URL via Firebase Storage SDK and
+  /// retries. On native platforms, uses http.Client directly.
+  Future<Uint8List?> _downloadBytes(String url) async {
+    final httpClient = http.Client();
+    try {
+      final response = await httpClient.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return Uint8List.fromList(response.bodyBytes);
+      }
+      _log.warning(
+          'Direct download returned ${response.statusCode}, trying fresh URL',
+          tag: _tag);
+    } catch (e) {
+      _log.warning('Direct download failed: $e', tag: _tag);
+    } finally {
+      httpClient.close();
+    }
+
+    // Fallback: get a fresh download URL via Firebase Storage SDK
+    // and retry. This helps when the token in the stored URL has expired.
+    return _downloadWithFreshUrl(url);
+  }
+
+  /// Extract the storage object path from a download URL, get a fresh
+  /// download URL via the Firebase Storage SDK, and download the bytes.
+  Future<Uint8List?> _downloadWithFreshUrl(String url) async {
+    try {
+      final uri = Uri.parse(url);
+      final path = uri.path;
+      final oIndex = path.indexOf('/o/');
+      if (oIndex == -1) {
+        _log.error('Cannot parse storage path from URL: $url', tag: _tag);
+        return null;
+      }
+      final storagePath = Uri.decodeComponent(path.substring(oIndex + 3));
+      _log.debug('Getting fresh download URL for: $storagePath', tag: _tag);
+
+      final freshUrl =
+          await FirebaseStorage.instance.ref(storagePath).getDownloadURL();
+
+      final httpClient = http.Client();
+      try {
+        final response = await httpClient.get(Uri.parse(freshUrl));
+        if (response.statusCode == 200) {
+          return Uint8List.fromList(response.bodyBytes);
+        }
+        _log.error(
+            'Fresh URL download failed: ${response.statusCode}', tag: _tag);
+      } finally {
+        httpClient.close();
+      }
+    } catch (e) {
+      _log.error('Fresh URL fallback failed: $e', tag: _tag);
+    }
+    return null;
+  }
+
   /// Helper to get the SharedPreferences key for a chat room's cache index.
   String _prefsKey(String chatRoomId) => 'media_cache_urls_v2_$chatRoomId';
 
@@ -295,19 +364,13 @@ class MediaCacheService {
         return cached;
       }
 
-      // Download encrypted bytes via HTTP
+      // Download encrypted bytes
       _log.debug('Downloading encrypted media from: $url', tag: _tag);
-      final httpClient = http.Client();
-      final response = await httpClient.get(Uri.parse(url));
-
-      if (response.statusCode != 200) {
-        _log.error(
-            'Failed to download encrypted media: ${response.statusCode}',
-            tag: _tag);
+      final encryptedBytes = await _downloadBytes(url);
+      if (encryptedBytes == null) {
+        _log.error('Failed to download encrypted media', tag: _tag);
         return null;
       }
-
-      final encryptedBytes = Uint8List.fromList(response.bodyBytes);
 
       // Decrypt
       final decryptedBytes = await encService.decryptFile(
@@ -338,10 +401,50 @@ class MediaCacheService {
     }
   }
 
-  /// Get decrypted media bytes directly without caching.
+  /// Get decrypted media bytes with in-memory caching.
   ///
-  /// Useful for thumbnails or small media that don't need persistent caching.
+  /// Results are cached in-memory so that widget rebuilds (e.g. list scrolling,
+  /// new messages arriving) return instantly without re-downloading or
+  /// re-decrypting.
   Future<Uint8List?> getDecryptedMediaBytes(
+    String url, {
+    required String mediaKey,
+    String? mediaHash,
+    MediaEncryptionService? mediaEncryption,
+  }) async {
+    // 1. Return from in-memory cache instantly
+    final cached = _decryptedBytesCache[url];
+    if (cached != null) {
+      _log.debug('Returning cached decrypted bytes for: $url', tag: _tag);
+      return cached;
+    }
+
+    // 2. Coalesce concurrent requests for the same URL
+    if (_inflightDecrypts.containsKey(url)) {
+      _log.debug('Coalescing concurrent decrypt request for: $url', tag: _tag);
+      return _inflightDecrypts[url]!;
+    }
+
+    // 3. Start the actual download + decrypt and track it
+    final future = _doDecryptBytes(url,
+        mediaKey: mediaKey,
+        mediaHash: mediaHash,
+        mediaEncryption: mediaEncryption);
+    _inflightDecrypts[url] = future;
+
+    try {
+      final result = await future;
+      if (result != null) {
+        _decryptedBytesCache[url] = result;
+      }
+      return result;
+    } finally {
+      _inflightDecrypts.remove(url);
+    }
+  }
+
+  /// Internal helper that actually downloads and decrypts bytes.
+  Future<Uint8List?> _doDecryptBytes(
     String url, {
     required String mediaKey,
     String? mediaHash,
@@ -351,18 +454,15 @@ class MediaCacheService {
       final encService = mediaEncryption ?? sl.get<MediaEncryptionService>();
 
       // Download encrypted bytes
-      final httpClient = http.Client();
-      final response = await httpClient.get(Uri.parse(url));
-
-      if (response.statusCode != 200) {
-        _log.error('Failed to download media: ${response.statusCode}',
-            tag: _tag);
+      final encryptedBytes = await _downloadBytes(url);
+      if (encryptedBytes == null) {
+        _log.error('Failed to download media for decryption', tag: _tag);
         return null;
       }
 
       // Decrypt and return
       return Uint8List.fromList(await encService.decryptFile(
-        encryptedBytes: Uint8List.fromList(response.bodyBytes),
+        encryptedBytes: encryptedBytes,
         mediaKey: mediaKey,
         mediaHash: mediaHash,
       ));
@@ -595,6 +695,7 @@ class MediaCacheService {
           await clearCache(roomId);
         }
         _chatRoomManagers.clear();
+        _decryptedBytesCache.clear();
         _log.info('Cleared all media caches', tag: _tag);
       },
       onError: (error) {

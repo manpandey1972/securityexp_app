@@ -14,6 +14,9 @@ class InlineAudioPlayer extends StatefulWidget {
   final bool fromMe;
   final String roomId;
   final VoidCallback? onTapDownload;
+  final String? mediaKey;
+  final String? mediaHash;
+  final String? mediaType;
 
   const InlineAudioPlayer({
     super.key,
@@ -22,6 +25,9 @@ class InlineAudioPlayer extends StatefulWidget {
     required this.fromMe,
     required this.roomId,
     this.onTapDownload,
+    this.mediaKey,
+    this.mediaHash,
+    this.mediaType,
   });
 
   @override
@@ -125,6 +131,8 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
     }
   }
 
+  bool get _isEncrypted => widget.mediaKey != null;
+
   Future<void> _setSourceAndGetDuration() async {
     // Check if URL looks like a video file (data integrity issue from past uploads)
     final lowerUrl = widget.audioUrl.toLowerCase();
@@ -142,8 +150,10 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
     }
 
     try {
-      // Web: Always use network URL (no local file system)
-      if (kIsWeb) {
+      if (_isEncrypted) {
+        await _setEncryptedSource();
+      } else if (kIsWeb) {
+        // Web: Always use network URL (no local file system)
         await _audioPlayer.setSource(UrlSource(widget.audioUrl));
       } else {
         // Mobile: Check cache first for faster playback
@@ -172,6 +182,61 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
     }
   }
 
+  /// Download, decrypt, and set the audio source for encrypted media.
+  Future<void> _setEncryptedSource() async {
+    try {
+      if (kIsWeb) {
+        // Web: decrypt to bytes, use BytesSource
+        final bytes = await _cacheService.getDecryptedMediaBytes(
+          widget.audioUrl,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+        );
+        if (bytes != null) {
+          await _audioPlayer.setSource(BytesSource(bytes));
+          return;
+        }
+        _log.error('Failed to decrypt audio on web', tag: _tag);
+      } else {
+        // Native: decrypt to cached file
+        final ext = _audioExtension();
+        final fileInfo = await _cacheService.getEncryptedMediaFile(
+          widget.roomId,
+          widget.audioUrl,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+          fileExtension: ext,
+        );
+        if (fileInfo != null && fileInfo.file.existsSync()) {
+          _log.debug('Using decrypted cached audio: ${fileInfo.file.path}', tag: _tag);
+          await _audioPlayer.setSource(DeviceFileSource(fileInfo.file.path));
+          return;
+        }
+        _log.error('Failed to decrypt audio on native', tag: _tag);
+      }
+    } catch (e) {
+      _log.error('Error decrypting audio: $e', tag: _tag);
+    }
+  }
+
+  String _audioExtension() {
+    switch (widget.mediaType) {
+      case 'audio/aac':
+        return '.aac';
+      case 'audio/mp4':
+      case 'audio/m4a':
+        return '.m4a';
+      case 'audio/mpeg':
+        return '.mp3';
+      case 'audio/wav':
+        return '.wav';
+      case 'audio/ogg':
+        return '.ogg';
+      default:
+        return '.m4a';
+    }
+  }
+
   Future<void> _togglePlayPause() async {
     _log.debug(
       '_togglePlayPause called (current isPlaying: $_isPlaying)',
@@ -189,9 +254,12 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
 
       // Always stop and play fresh to ensure clean state
       await _audioPlayer.stop();
-      
-      // Web: Always play from network URL (no local file system)
-      if (kIsWeb) {
+
+      if (_isEncrypted) {
+        // For encrypted audio, decrypt then play from cached decrypted file
+        await _playEncryptedAudio();
+      } else if (kIsWeb) {
+        // Web: Always play from network URL (no local file system)
         await _audioPlayer.play(UrlSource(widget.audioUrl));
       } else {
         // Mobile: Check cache first for instant playback
@@ -208,6 +276,41 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
       
       setState(() => _isPlaying = true);
       _log.debug('Playback started, isPlaying set to true', tag: _tag);
+    }
+  }
+
+  /// Play encrypted audio by decrypting first, then playing from decrypted source.
+  Future<void> _playEncryptedAudio() async {
+    try {
+      if (kIsWeb) {
+        final bytes = await _cacheService.getDecryptedMediaBytes(
+          widget.audioUrl,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+        );
+        if (bytes != null) {
+          await _audioPlayer.play(BytesSource(bytes));
+          return;
+        }
+        _log.error('Failed to decrypt audio for playback on web', tag: _tag);
+      } else {
+        final ext = _audioExtension();
+        final fileInfo = await _cacheService.getEncryptedMediaFile(
+          widget.roomId,
+          widget.audioUrl,
+          mediaKey: widget.mediaKey!,
+          mediaHash: widget.mediaHash,
+          fileExtension: ext,
+        );
+        if (fileInfo != null && fileInfo.file.existsSync()) {
+          _log.debug('Playing decrypted audio: ${fileInfo.file.path}', tag: _tag);
+          await _audioPlayer.play(DeviceFileSource(fileInfo.file.path));
+          return;
+        }
+        _log.error('Failed to decrypt audio for playback on native', tag: _tag);
+      }
+    } catch (e) {
+      _log.error('Error playing encrypted audio: $e', tag: _tag);
     }
   }
 
