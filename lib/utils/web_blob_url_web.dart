@@ -1,13 +1,14 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'package:web/web.dart';
 import 'dart:typed_data';
+import 'dart:js_interop';
 
 /// Creates a blob URL from raw bytes for use with HTML5 media elements.
 /// Only available on web platform.
 String? createBlobUrl(Uint8List bytes, String mimeType) {
   try {
-    final blob = html.Blob([bytes], mimeType);
-    return html.Url.createObjectUrlFromBlob(blob);
+    final blob = Blob([bytes.toJS].toJS, BlobPropertyBag(type: mimeType));
+    return URL.createObjectURL(blob);
   } catch (_) {
     return null;
   }
@@ -17,21 +18,22 @@ String? createBlobUrl(Uint8List bytes, String mimeType) {
 /// Creates a temporary blob URL, programmatically clicks an anchor, then
 /// revokes the URL.
 void triggerBlobDownload(Uint8List bytes, String mimeType, String filename) {
-  final blob = html.Blob([bytes], mimeType);
-  final blobUrl = html.Url.createObjectUrlFromBlob(blob);
-  final anchor = html.AnchorElement(href: blobUrl)
-    ..setAttribute('download', filename)
-    ..style.display = 'none';
-  html.document.body?.children.add(anchor);
+  final blob = Blob([bytes.toJS].toJS, BlobPropertyBag(type: mimeType));
+  final blobUrl = URL.createObjectURL(blob);
+  final anchor = HTMLAnchorElement();
+  anchor.href = blobUrl;
+  anchor.download = filename;
+  anchor.style.display = 'none';
+  document.body?.children.add(anchor);
   anchor.click();
   anchor.remove();
-  html.Url.revokeObjectUrl(blobUrl);
+  URL.revokeObjectURL(blobUrl);
 }
 
 /// Open decrypted bytes in a new browser tab via blob URL.
 /// Used for PDFs and other documents that the browser can natively render.
 void openBlobInNewTab(Uint8List bytes, String mimeType) {
-  final blob = html.Blob([bytes], mimeType);
-  final blobUrl = html.Url.createObjectUrlFromBlob(blob);
-  html.window.open(blobUrl, '_blank');
+  final blob = Blob([bytes.toJS].toJS, BlobPropertyBag(type: mimeType));
+  final blobUrl = URL.createObjectURL(blob);
+  window.open(blobUrl, '_blank');
 }

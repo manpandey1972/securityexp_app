@@ -66,6 +66,7 @@ dependencies:
   pointycastle: ^4.0.0           # Fallback crypto primitives
   protobuf: ^4.2.0               # Efficient session state serialization
   convert: ^3.1.1                # Base64 encoding utilities
+  web: ^1.1.0                    # Modern web APIs (replaces dart:html)
 
 
 dependency_overrides:
