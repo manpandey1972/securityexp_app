@@ -48,9 +48,19 @@ class ChatRoomRepository implements IChatRoomRepository {
             final snapshot = await query.get(
               const GetOptions(source: Source.serverAndCache),
             );
-            return snapshot.docs
+            final rooms = snapshot.docs
                 .map((doc) => Room.fromJson({...doc.data(), 'id': doc.id}))
                 .toList();
+
+            // Sort by lastMessageTime descending (newest first) —
+            // consistent with getUserRoomsStream
+            rooms.sort((a, b) {
+              final aTime = a.lastMessageDateTime?.millisecondsSinceEpoch ?? 0;
+              final bTime = b.lastMessageDateTime?.millisecondsSinceEpoch ?? 0;
+              return bTime.compareTo(aTime);
+            });
+
+            return rooms;
           },
           fallback: <Room>[],
           onError: (error) =>

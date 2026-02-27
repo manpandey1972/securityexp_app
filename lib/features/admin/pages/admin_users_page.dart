@@ -113,7 +113,7 @@ class _AdminUsersViewState extends State<_AdminUsersView> {
 
     final currentRoles = List<String>.from(user.roles);
     final availableRoles = [
-      {'key': 'Consumer', 'display': 'User'},
+      {'key': 'User', 'display': 'User'},
       {'key': 'Expert', 'display': 'Expert'},
       {'key': 'Support', 'display': 'Support'},
       {'key': 'Admin', 'display': 'Admin'},

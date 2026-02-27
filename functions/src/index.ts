@@ -275,6 +275,47 @@ async function handleUnreadCountUpdate(
 
 
 // ============================================================================
+// Per-user in-memory rate limiter (SEC-06)
+// ============================================================================
+// Simple sliding-window rate limiter scoped to each Cloud Function container.
+// Not globally distributed, but prevents a single user from flooding the
+// callable *within a container*.  For global enforcement, swap to a Firestore
+// or Redis counter.
+// ============================================================================
+
+interface RateWindow { timestamps: number[]; }
+const rateLimitMap = new Map<string, RateWindow>();
+
+/** Maximum calls per user per window (60 s). */
+const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+
+function checkRateLimit(uid: string): void {
+  const now = Date.now();
+  let entry = rateLimitMap.get(uid);
+  if (!entry) {
+    entry = {timestamps: []};
+    rateLimitMap.set(uid, entry);
+  }
+  // Evict timestamps outside the window
+  entry.timestamps = entry.timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  if (entry.timestamps.length >= RATE_LIMIT_MAX) {
+    logger.warn("🚫 Rate limit exceeded", {uid, count: entry.timestamps.length});
+    throw new HttpsError("resource-exhausted", "Too many requests. Please try again later.");
+  }
+  entry.timestamps.push(now);
+}
+
+// Periodic cleanup so the map doesn't grow forever (runs once per minute)
+setInterval(() => {
+  const now = Date.now();
+  for (const [uid, entry] of rateLimitMap) {
+    entry.timestamps = entry.timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+    if (entry.timestamps.length === 0) rateLimitMap.delete(uid);
+  }
+}, RATE_LIMIT_WINDOW_MS);
+
+// ============================================================================
 // Unified Callable Facade (Optimization 3 + 4)
 // ============================================================================
 // All callable functions consolidated into a single `api` endpoint to minimize
@@ -313,7 +354,7 @@ export {handleCallTimeouts};
  */
 export const api = onCall(
   {
-    enforceAppCheck: false,
+    enforceAppCheck: true,
     cors: true,
     // Secrets required for createCall (VoIP push via APNS)
     secrets: [apnsKeyId, apnsTeamId, apnsPrivateKey, apnsBundleId],
@@ -323,6 +364,9 @@ export const api = onCall(
       logger.warn("❌ api: Unauthorized access attempt");
       throw new HttpsError("unauthenticated", "Authentication required");
     }
+
+    // Per-user rate limiting (SEC-06)
+    checkRateLimit(request.auth.uid);
 
     const {action, payload} = request.data as {action: string; payload: Record<string, any>};
 

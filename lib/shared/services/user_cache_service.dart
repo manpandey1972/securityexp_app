@@ -14,11 +14,17 @@ class UserCacheService {
   UserCacheService();
 
   static const String _tag = 'UserCacheService';
+  /// Maximum number of concurrent Firestore real-time listeners.
+  /// When exceeded, the least-recently-accessed listener is evicted.
+  static const int _maxListeners = 20;
+
   AppLogger get _log => sl<AppLogger>();
 
   final Map<String, models.User> _cache = {};
   final Map<String, StreamSubscription<DocumentSnapshot>> _listeners = {};
   final Map<String, StreamController<models.User>> _userStreamControllers = {};
+  /// Tracks access order for LRU eviction of listeners.
+  final List<String> _listenerAccessOrder = [];
   final FirebaseFirestore _firestore = FirestoreInstance().db;
 
   /// Get a user from cache
@@ -241,8 +247,21 @@ class UserCacheService {
 
     // Don't create duplicate listeners
     if (_listeners.containsKey(userId)) {
+      // Move to end of access order (most recently used)
+      _listenerAccessOrder.remove(userId);
+      _listenerAccessOrder.add(userId);
       return;
     }
+
+    // Evict least-recently-used listener if at capacity
+    while (_listeners.length >= _maxListeners && _listenerAccessOrder.isNotEmpty) {
+      final evictId = _listenerAccessOrder.removeAt(0);
+      _stopListeningToUser(evictId);
+      _log.debug('Evicted LRU listener for $evictId', tag: _tag);
+    }
+
+    // Track access order
+    _listenerAccessOrder.add(userId);
 
     // ignore: cancel_subscriptions - subscription is stored in _listeners and cancelled via _stopListeningToUser
     final subscription = _firestore
@@ -288,6 +307,7 @@ class UserCacheService {
   void _stopListeningToUser(String userId) {
     final subscription = _listeners.remove(userId);
     subscription?.cancel();
+    _listenerAccessOrder.remove(userId);
   }
 
   /// Dispose of all listeners (call this when app closes)
@@ -296,6 +316,7 @@ class UserCacheService {
       subscription.cancel();
     }
     _listeners.clear();
+    _listenerAccessOrder.clear();
 
     // Close all stream controllers
     for (final controller in _userStreamControllers.values) {

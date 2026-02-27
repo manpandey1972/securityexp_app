@@ -12,6 +12,7 @@ import 'package:securityexperts_app/core/permissions/permission_types.dart';
 import 'package:securityexperts_app/features/phone_auth/pages/phone_auth_screen.dart';
 import 'package:securityexperts_app/features/support/pages/support_hub_page.dart';
 import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
+import 'package:securityexperts_app/core/routing/app_routes.dart';
 
 /// Reusable Profile Menu widget for user profile actions.
 ///
@@ -410,7 +411,7 @@ class ProfileMenu {
     } else if (value == 'admin_dashboard') {
       if (!context.mounted) return;
       // Import dynamically to avoid circular dependencies
-      Navigator.of(context).pushNamed('/admin');
+      Navigator.of(context).pushNamed(AppRoutes.admin);
     } else if (value == 'logout') {
       if (!context.mounted) return;
       final confirmed = await showLogoutConfirmation(context);

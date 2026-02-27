@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Test Runner Script for GreenHive App
+# Test Runner Script for SecurityExperts App
 # Runs all tests and generates coverage report
 
-echo "🧪 GreenHive App - Test Runner"
+echo "🧪 SecurityExperts App - Test Runner"
 echo "================================"
 echo ""
 
@@ -138,7 +138,7 @@ echo "  - Core logging tests: ✅"
 echo "  - Error handler tests: ✅"
 echo "  - Validator tests: ✅"
 echo "  - Model tests: ✅"
-echo "  - Total tests created: 184"
+echo "  - All tests executed"
 echo ""
 
 print_status "Next steps:"

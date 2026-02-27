@@ -8,13 +8,8 @@ class RemoteConfigService {
   final AppLogger _log = sl<AppLogger>();
   static const String _tag = 'RemoteConfigService';
 
-  static final RemoteConfigService _instance = RemoteConfigService._internal();
-
-  factory RemoteConfigService() {
-    return _instance;
-  }
-
-  RemoteConfigService._internal();
+  /// Public constructor — singleton lifecycle managed by GetIt (service locator).
+  RemoteConfigService();
 
   late FirebaseRemoteConfig _remoteConfig;
 
@@ -44,6 +39,7 @@ class RemoteConfigService {
 
       // ==================== PERFORMANCE TUNING ====================
       'max_setup_retries': 2,
+      'message_batch_size': 50,
 
       // ==================== LIVEKIT CONFIGURATION ====================
       // SECURITY: Production must use wss:// with a valid TLS certificate.
@@ -62,6 +58,7 @@ class RemoteConfigService {
 
   // ==================== PERFORMANCE TUNING ====================
   int get maxSetupRetries => _getInt('max_setup_retries');
+  int get messageBatchSize => _getInt('message_batch_size');
 
   // ==================== LIVEKIT CONFIGURATION ====================
   /// LiveKit WebSocket server URL
@@ -113,6 +110,7 @@ class RemoteConfigService {
       'callTimeoutSeconds': callTimeoutSeconds,
       'connectionTimeoutSeconds': connectionTimeoutSeconds,
       'maxSetupRetries': maxSetupRetries,
+      'messageBatchSize': messageBatchSize,
       'liveKitUrl': liveKitUrl,
       'logLevel': logLevel,
     };

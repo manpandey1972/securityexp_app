@@ -53,54 +53,58 @@ export async function handleSealRoomKey(
     throw new HttpsError("invalid-argument", "roomId is required");
   }
 
-  // 1. Verify caller is a room participant
   const roomRef = db.collection("chat_rooms").doc(roomId);
-  const roomDoc = await roomRef.get();
 
-  if (!roomDoc.exists) {
-    throw new HttpsError("not-found", "Room not found");
-  }
+  // Use a transaction to prevent two concurrent sealRoomKey calls from
+  // each creating a different key (check-then-write race condition).
+  return db.runTransaction(async (txn) => {
+    const roomDoc = await txn.get(roomRef);
 
-  const participants = roomDoc.data()?.participants as string[] | undefined;
-  if (!participants?.includes(uid)) {
-    throw new HttpsError("permission-denied", "Not a room participant");
-  }
+    if (!roomDoc.exists) {
+      throw new HttpsError("not-found", "Room not found");
+    }
 
-  // 2. Idempotency — if key already exists, decrypt and return it
-  const existingCiphertext = roomDoc.data()?.encrypted_room_key as string | undefined;
-  if (existingCiphertext) {
-    logger.info(`Room ${roomId} already has a key — returning existing`, {uid});
-    return decryptAndReturn(existingCiphertext);
-  }
+    const participants = roomDoc.data()?.participants as string[] | undefined;
+    if (!participants?.includes(uid)) {
+      throw new HttpsError("permission-denied", "Not a room participant");
+    }
 
-  // 3. Generate random 32-byte room key
-  const roomKey = crypto.randomBytes(32);
+    // Idempotency — if key already exists, decrypt and return it
+    const existingCiphertext = roomDoc.data()?.encrypted_room_key as string | undefined;
+    if (existingCiphertext) {
+      logger.info("Room already has a key — returning existing", {roomId, uid});
+      return decryptAndReturn(existingCiphertext);
+    }
 
-  // 4. KMS encrypt
-  const [encResult] = await kms.encrypt({
-    name: KMS_KEY_NAME,
-    plaintext: roomKey,
+    // Generate random 32-byte room key
+    const roomKey = crypto.randomBytes(32);
+
+    // KMS encrypt
+    const [encResult] = await kms.encrypt({
+      name: KMS_KEY_NAME,
+      plaintext: roomKey,
+    });
+
+    if (!encResult.ciphertext) {
+      throw new HttpsError("internal", "KMS encryption failed");
+    }
+
+    const ciphertextB64 = Buffer.from(encResult.ciphertext).toString("base64");
+
+    // Store within the transaction (atomically safe)
+    txn.update(roomRef, {
+      encrypted_room_key: ciphertextB64,
+      e2ee_enabled: true,
+    });
+
+    logger.info("Room key sealed", {roomId, uid});
+
+    // Return plaintext key to caller
+    return {
+      success: true,
+      roomKey: roomKey.toString("base64"),
+    };
   });
-
-  if (!encResult.ciphertext) {
-    throw new HttpsError("internal", "KMS encryption failed");
-  }
-
-  const ciphertextB64 = Buffer.from(encResult.ciphertext).toString("base64");
-
-  // 5. Store on room document (atomic — only write if field doesn't exist yet)
-  await roomRef.update({
-    encrypted_room_key: ciphertextB64,
-    e2ee_enabled: true,
-  });
-
-  logger.info(`Room key sealed for room ${roomId}`, {uid});
-
-  // 6. Return plaintext key to caller
-  return {
-    success: true,
-    roomKey: roomKey.toString("base64"),
-  };
 }
 
 // ============================================================================
@@ -145,7 +149,7 @@ export async function handleGetRoomKey(
     throw new HttpsError("not-found", "Room key not yet created");
   }
 
-  logger.info(`Room key retrieved for room ${roomId}`, {uid});
+  logger.info(`Room key retrieved for room`, {roomId, uid});
 
   // 3. KMS decrypt and return
   return decryptAndReturn(ciphertextB64);

@@ -7,8 +7,10 @@ import 'package:securityexperts_app/features/chat/services/chat_stream_service.d
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/data/models/models.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
+import '../helpers/call_test_helpers.dart';
 import 'chat_stream_service_test.mocks.dart';
 
 @GenerateNiceMocks([
@@ -31,6 +33,12 @@ void main() {
     }
     sl.registerSingleton<AppLogger>(mockLogger);
 
+    // Register mock RemoteConfigService (needed by ChatStreamService._subscribeToMessages)
+    if (sl.isRegistered<RemoteConfigService>()) {
+      sl.unregister<RemoteConfigService>();
+    }
+    sl.registerSingleton<RemoteConfigService>(MockRemoteConfigService());
+
     // Create mock Firebase Auth with signed-in user
     final mockUser = MockUser(uid: 'user123', email: 'test@test.com');
     mockAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
@@ -46,6 +54,9 @@ void main() {
     service.dispose();
     if (sl.isRegistered<AppLogger>()) {
       sl.unregister<AppLogger>();
+    }
+    if (sl.isRegistered<RemoteConfigService>()) {
+      sl.unregister<RemoteConfigService>();
     }
   });
 

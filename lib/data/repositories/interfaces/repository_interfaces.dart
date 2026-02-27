@@ -18,4 +18,6 @@ export 'expert_repository_interface.dart';
 export 'chat_room_repository_interface.dart';
 export 'chat_message_repository_interface.dart';
 export 'product_repository_interface.dart';
+export 'support_repository_interface.dart';
+export 'rating_repository_interface.dart';
 export 'pagination_cursor.dart';

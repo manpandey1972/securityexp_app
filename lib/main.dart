@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
@@ -30,6 +31,7 @@ import 'package:securityexperts_app/features/admin/pages/admin_skills_page.dart'
 import 'package:securityexperts_app/features/admin/pages/admin_skill_editor_page.dart';
 import 'package:securityexperts_app/features/admin/pages/admin_users_page.dart';
 import 'package:securityexperts_app/core/analytics/analytics_route_observer.dart';
+import 'package:securityexperts_app/core/routing/app_routes.dart';
 import 'package:securityexperts_app/core/debug/shake_handler.dart';
 
 // Track main() calls for debugging duplicate log issues
@@ -95,6 +97,18 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      // Activate App Check — uses Debug provider in debug builds so that
+      // simulators / emulators work; Device Check (iOS) and Play Integrity
+      // (Android) are used in release builds. Web uses free reCAPTCHA v3.
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid:
+            kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),
+        providerApple:
+            kDebugMode ? const AppleDebugProvider() : const AppleDeviceCheckProvider(),
+        providerWeb: ReCaptchaV3Provider('6Ld3UHksAAAAAPAAR4sXYc6Dz7tw-4ZNE4cOQ8EQ'),
+      );
+
       // Ensure Firebase is ready before proceeding
       await Future.delayed(AppConstants.firebaseInitDelay);
 
@@ -106,7 +120,7 @@ void main() async {
 
       // Initialize logger after service locator is set up
       final logger = sl<AppLogger>();
-      logger.debug('🚀 main() called (count: $_mainCallCount)', tag: _tag);
+      logger.debug('[Main] main() called (count: $_mainCallCount)', tag: _tag);
       logger.debug('All services initialized via service locator', tag: _tag);
 
       // Handle cold start notification tap (app was terminated)
@@ -150,7 +164,10 @@ void main() async {
                 tag: _tag,
               );
               final token = await FirebaseMessaging.instance.getToken();
-              sl<AppLogger>().debug('Web FCM Token: $token', tag: _tag);
+              sl<AppLogger>().debug(
+                'Web FCM Token obtained (${token != null ? '${token.length} chars' : 'null'})',
+                tag: _tag,
+              );
             } else {
               sl<AppLogger>().warning(
                 'Web notification permission denied or provisional',
@@ -206,7 +223,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     sl<AppLogger>().debug(
-      '🏠 [MyApp-$_instanceId] Created (total: $_myAppInstanceCounter)',
+      '[MyApp-$_instanceId] Created (total: $_myAppInstanceCounter)',
       tag: _tag,
     );
     WidgetsBinding.instance.addObserver(this);
@@ -266,7 +283,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         home: const SplashPage(),
         onGenerateRoute: (settings) {
           // Handle named routes for notification navigation
-          if (settings.name == '/chat') {
+          if (settings.name == AppRoutes.chat) {
             final args = settings.arguments as Map<String, dynamic>?;
             return MaterialPageRoute(
               builder: (_) => ChatConversationPage(
@@ -276,30 +293,30 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             );
           }
           // Admin dashboard route
-          if (settings.name == '/admin') {
+          if (settings.name == AppRoutes.admin) {
             return MaterialPageRoute(
               builder: (_) => const AdminDashboardPage(),
             );
           }
           // Admin tickets routes
-          if (settings.name == '/admin/tickets') {
+          if (settings.name == AppRoutes.adminTickets) {
             return MaterialPageRoute(
               builder: (_) => const AdminTicketsPage(),
             );
           }
-          if (settings.name?.startsWith('/admin/tickets/') == true) {
+          if (settings.name?.startsWith('${AppRoutes.adminTickets}/') == true) {
             final ticketId = settings.name!.split('/').last;
             return MaterialPageRoute(
               builder: (_) => AdminTicketDetailPage(ticketId: ticketId),
             );
           }
           // Admin FAQs routes
-          if (settings.name == '/admin/faqs') {
+          if (settings.name == AppRoutes.adminFaqs) {
             return MaterialPageRoute(
               builder: (_) => const AdminFaqsPage(),
             );
           }
-          if (settings.name?.startsWith('/admin/faqs/') == true) {
+          if (settings.name?.startsWith('${AppRoutes.adminFaqs}/') == true) {
             final faqId = settings.name!.split('/').last;
             return MaterialPageRoute(
               builder: (_) => AdminFaqEditorPage(
@@ -308,12 +325,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             );
           }
           // Admin skills routes
-          if (settings.name == '/admin/skills') {
+          if (settings.name == AppRoutes.adminSkills) {
             return MaterialPageRoute(
               builder: (_) => const AdminSkillsPage(),
             );
           }
-          if (settings.name?.startsWith('/admin/skills/') == true) {
+          if (settings.name?.startsWith('${AppRoutes.adminSkills}/') == true) {
             final skillId = settings.name!.split('/').last;
             return MaterialPageRoute(
               builder: (_) => AdminSkillEditorPage(
@@ -322,7 +339,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             );
           }
           // Admin users route
-          if (settings.name == '/admin/users') {
+          if (settings.name == AppRoutes.adminUsers) {
             return MaterialPageRoute(
               builder: (_) => const AdminUsersPage(),
             );

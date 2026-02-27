@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:securityexperts_app/data/repositories/interfaces/rating_repository_interface.dart';
 import 'package:securityexperts_app/data/services/firestore_instance.dart';
 import 'package:securityexperts_app/features/ratings/data/models/rating.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
@@ -23,7 +24,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 ///   - isAnonymous: bool
 ///   - createdAt: timestamp
 /// ```
-class RatingRepository {
+class RatingRepository implements IRatingRepository {
   final FirestoreInstance _firestoreService = FirestoreInstance();
   final AppLogger _log = sl<AppLogger>();
 
@@ -45,6 +46,7 @@ class RatingRepository {
   /// Creates a new rating in Firestore.
   ///
   /// Returns the created Rating with its assigned ID, or null on failure.
+  @override
   Future<Rating?> createRating(Rating rating) async {
     return await ErrorHandler.handle<Rating?>(
       operation: () async {
@@ -72,6 +74,7 @@ class RatingRepository {
   // ============= Read =============
 
   /// Gets a rating by its ID.
+  @override
   Future<Rating?> getRating(String ratingId) async {
     return await ErrorHandler.handle<Rating?>(
       operation: () async {
@@ -87,6 +90,7 @@ class RatingRepository {
   /// Gets a rating for a specific booking.
   ///
   /// Used to check if user has already rated a session.
+  @override
   Future<Rating?> getRatingByBooking(String bookingId) async {
     return await ErrorHandler.handle<Rating?>(
       operation: () async {
@@ -109,6 +113,7 @@ class RatingRepository {
   /// Gets all ratings for an expert with pagination.
   ///
   /// Results are ordered by createdAt descending (newest first).
+  @override
   Future<List<Rating>> getExpertRatings(
     String expertId, {
     int limit = 20,
@@ -138,6 +143,7 @@ class RatingRepository {
   }
 
   /// Gets all ratings submitted by a user.
+  @override
   Future<List<Rating>> getUserRatings(String userId) async {
     return await ErrorHandler.handle<List<Rating>>(
       operation: () async {
@@ -157,6 +163,7 @@ class RatingRepository {
   }
 
   /// Checks if a user has already rated a specific booking.
+  @override
   Future<bool> hasUserRatedBooking(String userId, String bookingId) async {
     return await ErrorHandler.handle<bool>(
       operation: () async {
@@ -177,6 +184,7 @@ class RatingRepository {
   // ============= Streams =============
 
   /// Streams all ratings for an expert in real-time.
+  @override
   Stream<List<Rating>> watchExpertRatings(String expertId, {int limit = 20}) {
     return _ratingsRef
         .where('expertId', isEqualTo: expertId)
@@ -194,6 +202,7 @@ class RatingRepository {
   ///
   /// Returns a map with 'averageRating' and 'totalRatings'.
   /// This is typically handled by Cloud Functions, but useful for fallback.
+  @override
   Future<Map<String, dynamic>> getExpertRatingStats(String expertId) async {
     return await ErrorHandler.handle<Map<String, dynamic>>(
       operation: () async {

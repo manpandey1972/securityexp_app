@@ -502,6 +502,15 @@ class ChatMessageRepository implements IChatMessageRepository {
   /// - `encryption_version` == 1 (old Signal Protocol) → unrecoverable,
   ///   show fallback without attempting decryption
   /// - `encryption_version` == 2 (per-room AES-256-GCM) → decrypt
+  /// Parse and (optionally) decrypt a single Firestore message document.
+  ///
+  /// Note: `compute()` / `Isolate.run()` is not used here because
+  /// [EncryptionService.decryptMessage] depends on [RoomKeyService] which
+  /// holds a Firestore connection — instances with platform channels cannot
+  /// be transferred to a separate isolate.  The raw AES-GCM operation itself
+  /// completes in microseconds, so the main-isolate cost is negligible.
+  /// The async `Future.wait` in the calling code already parallelises I/O
+  /// across all messages in a snapshot.
   Future<Message> _parseDocument(
     QueryDocumentSnapshot<Map<String, dynamic>> doc,
     String roomId,

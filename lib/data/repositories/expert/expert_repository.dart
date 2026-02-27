@@ -67,11 +67,8 @@ class ExpertRepository implements IExpertRepository {
         final experts = snapshot.docs
             .map((doc) {
               final data = doc.data();
-              // Use document ID as user ID if not present
-              if (!data.containsKey('id') ||
-                  (data['id'] as String?)?.isEmpty == true) {
-                data['id'] = doc.id;
-              }
+              // Always use document ID as user ID (auth UID is the doc ID)
+              data['id'] = doc.id;
               try {
                 final user = User.fromJson(data);
                 // Log rating data for debugging
@@ -160,10 +157,8 @@ class ExpertRepository implements IExpertRepository {
           final experts = snapshot.docs
               .map((doc) {
                 final data = doc.data();
-                if (!data.containsKey('id') ||
-                    (data['id'] as String?)?.isEmpty == true) {
-                  data['id'] = doc.id;
-                }
+                // Always use document ID as user ID (auth UID is the doc ID)
+                data['id'] = doc.id;
                 try {
                   return User.fromJson(data);
                 } catch (_) {

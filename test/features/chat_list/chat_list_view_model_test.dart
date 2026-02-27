@@ -7,6 +7,7 @@ import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/chat_list/presentation/view_models/chat_list_view_model.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 import 'package:securityexperts_app/data/models/models.dart' as models;
 
 import 'chat_list_view_model_test.mocks.dart';
@@ -29,6 +30,12 @@ void main() {
     }
     sl.registerSingleton<AppLogger>(mockAppLogger);
 
+    // Register MediaCacheService (needed by ChatListViewModel field initializer)
+    if (sl.isRegistered<MediaCacheService>()) {
+      sl.unregister<MediaCacheService>();
+    }
+    sl.registerSingleton<MediaCacheService>(MediaCacheService());
+
     // Default stub for room stream
     when(
       mockRoomRepository.getUserRoomsStream(any),
@@ -48,6 +55,9 @@ void main() {
     viewModel.dispose();
     if (sl.isRegistered<AppLogger>()) {
       sl.unregister<AppLogger>();
+    }
+    if (sl.isRegistered<MediaCacheService>()) {
+      sl.unregister<MediaCacheService>();
     }
   });
 

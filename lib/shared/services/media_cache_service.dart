@@ -171,9 +171,16 @@ class MediaCacheService {
   final _log = sl<AppLogger>();
   static const _tag = 'MediaCacheService';
 
+  /// Maximum number of entries in the decrypted bytes cache.
+  /// When exceeded, the oldest entries are evicted first.
+  static const int _maxDecryptedCacheEntries = 50;
+
   /// In-memory cache for decrypted media bytes (keyed by URL).
   /// Prevents re-downloading + re-decrypting when widgets are recreated.
   static final Map<String, Uint8List> _decryptedBytesCache = {};
+
+  /// Tracks insertion order for LRU eviction of `_decryptedBytesCache`.
+  static final List<String> _decryptedCacheOrder = [];
 
   /// In-flight decrypt requests, keyed by URL.
   /// Prevents duplicate concurrent downloads of the same encrypted file.
@@ -281,11 +288,8 @@ class MediaCacheService {
     await prefs.remove(legacyKey);
   }
 
-  static final MediaCacheService _instance = MediaCacheService._internal();
+  /// Public constructor — singleton lifecycle managed by GetIt (service locator).
   final Map<String, CacheManager> _chatRoomManagers = {};
-
-  MediaCacheService._internal();
-  factory MediaCacheService() => _instance;
 
   /// Get or create a cache manager for a specific chat room.
   /// Made public to allow CachedNetworkImage to share the same cache.
@@ -416,6 +420,9 @@ class MediaCacheService {
     final cached = _decryptedBytesCache[url];
     if (cached != null) {
       _log.debug('Returning cached decrypted bytes for: $url', tag: _tag);
+      // Move to end of access order (most recently used)
+      _decryptedCacheOrder.remove(url);
+      _decryptedCacheOrder.add(url);
       return cached;
     }
 
@@ -435,7 +442,14 @@ class MediaCacheService {
     try {
       final result = await future;
       if (result != null) {
+        // Evict oldest entries if at capacity
+        while (_decryptedBytesCache.length >= _maxDecryptedCacheEntries &&
+            _decryptedCacheOrder.isNotEmpty) {
+          final evictUrl = _decryptedCacheOrder.removeAt(0);
+          _decryptedBytesCache.remove(evictUrl);
+        }
         _decryptedBytesCache[url] = result;
+        _decryptedCacheOrder.add(url);
       }
       return result;
     } finally {

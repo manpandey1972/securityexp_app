@@ -4,18 +4,12 @@ import 'package:securityexperts_app/data/models/models.dart';
 /// Global user profile service that maintains the current user's profile
 /// across the entire application. Uses the ChangeNotifier pattern for reactive updates.
 class UserProfileService extends ChangeNotifier {
-  static final UserProfileService _instance = UserProfileService._internal();
-
   User? _userProfile;
   bool _isLoading = false;
   String? _error;
 
-  UserProfileService._internal();
-
-  /// Get the singleton instance
-  factory UserProfileService() {
-    return _instance;
-  }
+  /// Public constructor — singleton lifecycle managed by GetIt (service locator).
+  UserProfileService();
 
   /// Get the current user profile (nullable if not loaded)
   User? get userProfile => _userProfile;

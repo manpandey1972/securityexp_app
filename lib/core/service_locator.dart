@@ -4,12 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:securityexperts_app/core/di/call_dependencies.dart' as call_di;
 import 'package:securityexperts_app/core/di/crypto_dependencies.dart' as crypto_di;
+import 'package:securityexperts_app/core/di/support_dependencies.dart' as support_di;
+import 'package:securityexperts_app/core/di/admin_dependencies.dart' as admin_di;
+import 'package:securityexperts_app/core/di/rating_dependencies.dart' as rating_di;
 
 // Core Services
 import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/auth/role_service.dart';
 import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+
+// Providers (registered here, exposed via ChangeNotifierProvider.value in widget tree)
+import 'package:securityexperts_app/providers/auth_provider.dart';
+import 'package:securityexperts_app/providers/role_provider.dart';
 
 // Data Services
 import 'package:securityexperts_app/data/services/firestore_instance.dart';
@@ -74,23 +81,6 @@ import 'package:securityexperts_app/features/onboarding/presentation/view_models
 // Profile Feature Services
 import 'package:securityexperts_app/features/profile/presentation/view_models/user_profile_view_model.dart';
 
-// Support Feature Services
-import 'package:securityexperts_app/features/support/data/repositories/support_repository.dart';
-import 'package:securityexperts_app/features/support/data/repositories/support_attachment_repository.dart';
-import 'package:securityexperts_app/features/support/services/device_info_service.dart';
-import 'package:securityexperts_app/features/support/services/support_service.dart';
-import 'package:securityexperts_app/features/support/services/support_analytics.dart';
-import 'package:securityexperts_app/features/support/services/faq_service.dart';
-
-// Admin Feature Services
-import 'package:securityexperts_app/features/admin/services/admin_ticket_service.dart';
-import 'package:securityexperts_app/features/admin/services/admin_faq_service.dart';
-import 'package:securityexperts_app/features/admin/services/admin_skills_service.dart';
-import 'package:securityexperts_app/features/admin/services/admin_user_service.dart';
-
-// Rating Feature Services
-import 'package:securityexperts_app/features/ratings/data/repositories/rating_repository.dart';
-import 'package:securityexperts_app/features/ratings/services/rating_service.dart';
 
 
 /// Global service locator instance
@@ -141,7 +131,7 @@ Future<void> setupServiceLocator() async {
   _serviceLocatorInitialized = true;
 
   final logger = kDebugMode ? DebugAppLogger() : ProductionAppLogger();
-  logger.debug('🔧 [ServiceLocator] Initializing dependency injection...');
+  logger.debug('[ServiceLocator] Initializing dependency injection...');
 
   // ========================================
   // CORE SERVICES - Foundation layer
@@ -168,11 +158,13 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
 
   // Initialize analytics early (non-blocking)
-  sl<AnalyticsService>().initialize().catchError((e) {
-    sl<AppLogger>().warning('Analytics initialization failed: $e');
-  });
+  ErrorHandler.handle<void>(
+    operation: () => sl<AnalyticsService>().initialize(),
+    fallback: null,
+    onError: (e) => sl<AppLogger>().warning('Analytics initialization failed: $e'),
+  );
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Core services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Core services registered');
 
   // ========================================
   // DATA LAYER - Database and repositories
@@ -195,7 +187,7 @@ Future<void> setupServiceLocator() async {
     () => RoleService(firestore: sl<FirestoreInstance>().db),
   );
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Data layer registered');
+  sl<AppLogger>().debug('[ServiceLocator] Data layer registered');
 
   // ========================================
   // E2EE CRYPTO SERVICES
@@ -204,7 +196,7 @@ Future<void> setupServiceLocator() async {
   // Register all E2EE encryption services (Signal Protocol, key storage, etc.)
   crypto_di.registerCryptoServices(sl);
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Crypto services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Crypto services registered');
 
   // ========================================
   // SHARED SERVICES - Used across features
@@ -236,7 +228,7 @@ Future<void> setupServiceLocator() async {
     () => AccountCleanupService(sl<AppLogger>()),
   );
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Shared services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Shared services registered');
 
   // ========================================
   // FEATURE SERVICES - CHAT
@@ -327,6 +319,15 @@ Future<void> setupServiceLocator() async {
   // Product Repository - Firestore CRUD for products
   sl.registerLazySingleton<ProductRepository>(() => ProductRepository());
 
+  // Auth State — created eagerly so FCM/VoIP tokens initialise on startup.
+  // Exposed in the widget tree via ChangeNotifierProvider.value.
+  sl.registerSingleton<AuthState>(AuthState(sl<FirebaseAuth>()));
+
+  // Role Provider — streams user role from Firestore; eager for UI gating.
+  sl.registerSingleton<RoleProvider>(
+    RoleProvider(sl<RoleService>(), auth: sl<FirebaseAuth>()),
+  );
+
   // ========================================
   // FEATURE SERVICES - NOTIFICATIONS
   // ========================================
@@ -339,7 +340,7 @@ Future<void> setupServiceLocator() async {
     () => FirebaseMessagingService(),
   );
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Notification services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Notification services registered');
 
   // ========================================
   // UTILITY SERVICES
@@ -348,7 +349,7 @@ Future<void> setupServiceLocator() async {
   // Dialog Service - For showing dialogs consistently
   sl.registerLazySingleton<DialogService>(() => DialogService());
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Utility services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Utility services registered');
 
   // ========================================
   // HOME FEATURE SERVICES
@@ -362,7 +363,7 @@ Future<void> setupServiceLocator() async {
     () => HomeViewModel(dataLoader: sl<HomeDataLoader>()),
   );
 
-  sl<AppLogger>().debug('✅ [ServiceLocator] Home feature services registered');
+  sl<AppLogger>().debug('[ServiceLocator] Home feature services registered');
 
   // ========================================
   // CHAT FEATURE SERVICES
@@ -389,7 +390,7 @@ Future<void> setupServiceLocator() async {
   );
 
   sl<AppLogger>().debug(
-    '✅ [ServiceLocator] Auth & Profile services registered',
+    '[ServiceLocator] Auth & Profile services registered',
   );
 
   // ========================================
@@ -411,7 +412,7 @@ Future<void> setupServiceLocator() async {
   );
 
   sl<AppLogger>().debug(
-    '✅ [ServiceLocator] Phone auth feature services registered',
+    '[ServiceLocator] Phone auth feature services registered',
   );
 
   // ========================================
@@ -439,75 +440,12 @@ Future<void> setupServiceLocator() async {
   );
 
   // ========================================
-  // SUPPORT FEATURE SERVICES
+  // FEATURE SERVICES — delegated to per-feature registrars
   // ========================================
 
-  // Support Repository - Firestore CRUD for support tickets
-  sl.registerLazySingleton<SupportRepository>(() => SupportRepository());
-
-  // Support Attachment Repository - Firebase Storage for ticket attachments
-  sl.registerLazySingleton<SupportAttachmentRepository>(
-    () => SupportAttachmentRepository(),
-  );
-
-  // Device Info Service - Captures device context for tickets
-  sl.registerLazySingleton<DeviceInfoService>(() => DeviceInfoService());
-
-  // Support Service - High-level API for support operations
-  sl.registerLazySingleton<SupportService>(
-    () => SupportService(
-      repository: sl<SupportRepository>(),
-      attachmentRepository: sl<SupportAttachmentRepository>(),
-      deviceInfoService: sl<DeviceInfoService>(),
-      notificationService: sl<NotificationService>(),
-      log: sl<AppLogger>(),
-    ),
-  );
-
-  // Support Analytics - Tracks support feature usage
-  sl.registerLazySingleton<SupportAnalytics>(() => SupportAnalytics());
-
-  // FAQ Service - Public FAQ service for users (no permission checks)
-  sl.registerLazySingleton<FaqService>(() => FaqService());
-
-  sl<AppLogger>().debug(
-    '✅ [ServiceLocator] Support feature services registered',
-  );
-
-  // ========================================
-  // ADMIN FEATURE SERVICES
-  // ========================================
-
-  // Admin Ticket Service - Admin operations for ticket management
-  sl.registerLazySingleton<AdminTicketService>(() => AdminTicketService());
-
-  // Admin FAQ Service - Admin operations for FAQ management
-  sl.registerLazySingleton<AdminFaqService>(() => AdminFaqService());
-
-  // Admin Skills Service - Admin operations for skills management
-  sl.registerLazySingleton<AdminSkillsService>(() => AdminSkillsService());
-
-  // Admin User Service - Admin operations for user management
-  sl.registerLazySingleton<AdminUserService>(() => AdminUserService());
-
-  sl<AppLogger>().debug('✅ [ServiceLocator] Admin feature services registered');
-
-  // ========================================
-  // RATING FEATURE SERVICES
-  // ========================================
-
-  // Rating Repository - Firestore CRUD for expert ratings
-  sl.registerLazySingleton<RatingRepository>(() => RatingRepository());
-
-  // Rating Service - High-level API for rating operations
-  sl.registerLazySingleton<RatingService>(
-    () => RatingService(
-      repository: sl<RatingRepository>(),
-      log: sl<AppLogger>(),
-    ),
-  );
-
-  sl<AppLogger>().debug('✅ [ServiceLocator] Rating feature services registered');
+  support_di.registerSupportDependencies(sl);
+  admin_di.registerAdminDependencies(sl);
+  rating_di.registerRatingDependencies(sl);
 
 }
 

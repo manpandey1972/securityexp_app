@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/calling/services/call_navigation_coordinator.dart';
-import 'package:securityexperts_app/shared/themes/app_colors.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
-import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 /// Consolidated service for call initiation and coordination
 /// Combines CallService and CallInitiatorService functionality
@@ -102,36 +100,5 @@ class CallCoordinator {
   /// Returns true if user can make calls, false otherwise
   static bool canStartCall(firebase_auth.User? user) {
     return user != null;
-  }
-
-  /// Show delete message confirmation dialog (utility method)
-  static Future<bool?> showDeleteMessageDialog(BuildContext context) async {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Delete Message',
-          style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.normal),
-        ),
-        content: const Text(
-          'Are you sure you want to delete this message?',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 14, fontWeight: FontWeight.normal),
-        ),
-        actions: [
-          AppButtonVariants.dialogCancel(
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          AppButtonVariants.dialogAction(
-            onPressed: () => Navigator.of(context).pop(true),
-            label: 'Delete',
-            isDestructive: true,
-          ),
-        ],
-      ),
-    );
   }
 }

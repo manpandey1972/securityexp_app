@@ -32,8 +32,22 @@ import 'package:securityexperts_app/features/calling/services/call_logger.dart';
 
 /// ViewModel for ChatConversationPage
 ///
-/// Manages business logic and state updates using ChangeNotifier pattern.
-/// Follows the same architecture as HomeViewModel.
+/// Thin facade that coordinates specialised handler classes.  Business logic
+/// lives in the handlers; this ViewModel exposes a unified API to the UI.
+///
+/// **Handler responsibilities**:
+/// | Handler                | Domain                                |
+/// |------------------------|---------------------------------------|
+/// | [ChatMediaHandler]     | File / image / video attachment        |
+/// | [MessageSendHandler]   | Composing & sending messages           |
+/// | [ChatRecordingHandler] | Audio recording lifecycle              |
+/// | [ChatScrollHandler]    | Infinite-scroll & jump-to-bottom       |
+/// | [ChatMediaCacheHelper] | Per-room media cache warm-up           |
+/// | [ChatPageService]      | High-level operations (delete, edit)   |
+/// | [ChatStreamService]    | Real-time Firestore message stream     |
+/// | [ReplyManagementService]| Reply-to state management             |
+/// | [ChatPageInitializer]  | Room-level initialisation              |
+/// | [ChatMessageActions]   | Long-press / context-menu actions      |
 class ChatConversationViewModel extends ChangeNotifier {
   // Logger
   final CallLogger _logger;
@@ -461,11 +475,11 @@ class ChatConversationViewModel extends ChangeNotifier {
   /// Mark room as read when leaving
   Future<void> markRoomAsRead() async {
     if (_state.roomId.isNotEmpty) {
-      await _unreadMessagesService.markRoomAsRead(_state.roomId).catchError((
-        e,
-      ) {
-        _logger.warning('Error marking room as read: $e');
-      });
+      await ErrorHandler.handle<void>(
+        operation: () => _unreadMessagesService.markRoomAsRead(_state.roomId),
+        fallback: null,
+        onError: (e) => _logger.warning('Error marking room as read: $e'),
+      );
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/data/repositories/interfaces/support_repository_interface.dart';
 import 'package:securityexperts_app/data/services/firestore_instance.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 
@@ -10,7 +11,7 @@ import '../models/models.dart';
 ///
 /// Handles all Firestore operations for support tickets including
 /// CRUD operations, queries, and real-time streams.
-class SupportRepository {
+class SupportRepository implements ISupportRepository {
   final FirestoreInstance _firestoreService = FirestoreInstance();
   final AppLogger _log = sl<AppLogger>();
 
@@ -32,6 +33,7 @@ class SupportRepository {
   // ============= Ticket CRUD Operations =============
 
   /// Get a single ticket by ID
+  @override
   Future<SupportTicket?> getTicket(String ticketId) async {
     return await ErrorHandler.handle<SupportTicket?>(
       operation: () async {
@@ -48,6 +50,7 @@ class SupportRepository {
   }
 
   /// Get a ticket by booking ID
+  @override
   Future<SupportTicket?> getTicketByBooking(String bookingId) async {
     return await ErrorHandler.handle<SupportTicket?>(
       operation: () async {
@@ -71,6 +74,7 @@ class SupportRepository {
   }
 
   /// Create a new support ticket
+  @override
   Future<SupportTicket?> createTicket(SupportTicket ticket) async {
     return await ErrorHandler.handle<SupportTicket?>(
       operation: () async {
@@ -96,6 +100,7 @@ class SupportRepository {
   }
 
   /// Update a ticket
+  @override
   Future<bool> updateTicket(
     String ticketId,
     Map<String, dynamic> updates,
@@ -116,6 +121,7 @@ class SupportRepository {
   }
 
   /// Update ticket satisfaction rating
+  @override
   Future<bool> updateTicketSatisfaction(
     String ticketId, {
     required int rating,
@@ -147,6 +153,7 @@ class SupportRepository {
   // ============= Ticket Queries =============
 
   /// Get tickets for a specific user
+  @override
   Future<List<SupportTicket>> getTicketsByUser({
     required String userId,
     TicketStatus? statusFilter,
@@ -187,6 +194,7 @@ class SupportRepository {
   }
 
   /// Get open tickets for a user (convenience method)
+  @override
   Future<List<SupportTicket>> getOpenTickets(String userId) async {
     return await ErrorHandler.handle<List<SupportTicket>>(
       operation: () async {
@@ -208,6 +216,7 @@ class SupportRepository {
   }
 
   /// Count unread tickets for a user
+  @override
   Future<int> getUnreadTicketCount(String userId) async {
     return await ErrorHandler.handle<int>(
       operation: () async {
@@ -229,6 +238,7 @@ class SupportRepository {
   // ============= Real-time Streams =============
 
   /// Watch a single ticket for real-time updates
+  @override
   Stream<SupportTicket?> watchTicket(String ticketId) {
     return _ticketRef(ticketId).snapshots().map((snapshot) {
       if (!snapshot.exists || snapshot.data() == null) {
@@ -239,6 +249,7 @@ class SupportRepository {
   }
 
   /// Watch all tickets for a user
+  @override
   Stream<List<SupportTicket>> watchUserTickets(
     String userId, {
     TicketStatus? statusFilter,
@@ -264,6 +275,7 @@ class SupportRepository {
   // ============= Message Operations =============
 
   /// Add a message to a ticket
+  @override
   Future<SupportMessage?> addMessage(
     String ticketId,
     SupportMessage message,
@@ -316,6 +328,7 @@ class SupportRepository {
   }
 
   /// Get messages for a ticket
+  @override
   Future<List<SupportMessage>> getMessages(
     String ticketId, {
     int limit = 50,
@@ -344,6 +357,7 @@ class SupportRepository {
   }
 
   /// Watch messages for a ticket in real-time
+  @override
   Stream<List<SupportMessage>> watchMessages(String ticketId) {
     return _messagesRef(ticketId)
         .orderBy('createdAt', descending: false)
@@ -356,6 +370,7 @@ class SupportRepository {
   }
 
   /// Mark all support messages as read for a user
+  @override
   Future<void> markMessagesAsRead(String ticketId) async {
     await ErrorHandler.handle<void>(
       operation: () async {
@@ -403,6 +418,7 @@ class SupportRepository {
   // ============= Utility Methods =============
 
   /// Get the last document snapshot for pagination
+  @override
   Future<DocumentSnapshot?> getLastTicketSnapshot(String userId) async {
     return await ErrorHandler.handle<DocumentSnapshot?>(
       operation: () async {

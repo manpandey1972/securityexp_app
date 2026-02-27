@@ -20,7 +20,7 @@ class ChatListViewModel extends ChangeNotifier {
   
   // Services
   final UnreadMessagesService _unreadMessagesService;
-  final MediaCacheService _mediaCacheService = MediaCacheService();
+  final MediaCacheService _mediaCacheService = sl<MediaCacheService>();
   final AppLogger _log = sl<AppLogger>();
   static const String _tag = 'ChatListViewModel';
 
@@ -109,17 +109,8 @@ class ChatListViewModel extends ChangeNotifier {
         throw Exception('User not authenticated');
       }
 
-      // Fetch rooms from Firestore
-      var rooms = await _roomRepository.getUserRooms(user.uid);
-
-      // Sort rooms by lastMessageDateTime in descending order (most recent first)
-      rooms.sort((a, b) {
-        final aTime =
-            a.lastMessageDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
-        final bTime =
-            b.lastMessageDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
-        return bTime.compareTo(aTime); // Descending order
-      });
+      // Fetch rooms from Firestore (pre-sorted by repository)
+      final rooms = await _roomRepository.getUserRooms(user.uid);
 
       if (_isDisposed) return;
 
@@ -149,32 +140,22 @@ class ChatListViewModel extends ChangeNotifier {
           (updatedRooms) async {
             if (_isDisposed) return;
 
-            // Sort rooms by lastMessageDateTime in descending order (most recent first)
-            final sortedRooms = List<models.Room>.from(updatedRooms);
-            sortedRooms.sort((a, b) {
-              final aTime =
-                  a.lastMessageDateTime ??
-                  DateTime.fromMillisecondsSinceEpoch(0);
-              final bTime =
-                  b.lastMessageDateTime ??
-                  DateTime.fromMillisecondsSinceEpoch(0);
-              return bTime.compareTo(aTime); // Descending order
-            });
+            // Rooms are already sorted by the repository stream
 
             // Prefetch participant profiles BEFORE notifying the UI.
             // This ensures the cache is warm so names/avatars render instantly
             // instead of briefly showing UserIDs while Firestore fetches complete.
-            await _prefetchParticipants(sortedRooms);
+            await _prefetchParticipants(updatedRooms);
 
             if (_isDisposed) return;
 
             // Clear loading state after first emission
-            _state = _state.copyWith(rooms: sortedRooms, loading: false, clearError: true);
+            _state = _state.copyWith(rooms: updatedRooms, loading: false, clearError: true);
             if (!_isDisposed) notifyListeners();
 
             // Clean up orphaned caches once per session (after initial room load)
-            if (!_hasCleanedOrphanedCaches && sortedRooms.isNotEmpty) {
-              _cleanOrphanedCaches(sortedRooms);
+            if (!_hasCleanedOrphanedCaches && updatedRooms.isNotEmpty) {
+              _cleanOrphanedCaches(updatedRooms);
             }
           },
           onError: (e) {

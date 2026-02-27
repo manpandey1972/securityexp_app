@@ -88,6 +88,7 @@ class _ProfanityFilteredTextFieldState extends State<ProfanityFilteredTextField>
 
   Future<void> _initializeFilter() async {
     await _profanityFilter.initialize();
+    if (!mounted) return;
     setState(() {
       _isInitialized = true;
     });
@@ -134,6 +135,7 @@ class _ProfanityFilteredTextFieldState extends State<ProfanityFilteredTextField>
         ? await _profanityFilter.checkProfanitySubstring(text, language: widget.language, context: widget.context)
         : await _profanityFilter.checkProfanity(text, language: widget.language, context: widget.context);
 
+    if (!mounted) return;
     setState(() {
       if (result.containsProfanity && widget.showProfanityError) {
         _profanityError = widget.profanityErrorMessage ??

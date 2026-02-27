@@ -34,7 +34,7 @@ service cloud.firestore {
     //   - Experts can read any user profile (to see client info in chat/calls)
     //   - Admins/SuperAdmins can read all
     match /users/{userId} {
-      // Read own profile OR read expert profiles OR requester is expert/admin
+      // Read own profile OR resource is expert OR requester has expert/admin/superAdmin role
       allow read: if isAuthenticated() && (
                      getUserId() == userId || 
                      isExpert() ||
@@ -206,27 +206,29 @@ service cloud.firestore {
     // ========================================
     // ADMIN HELPER FUNCTIONS
     // ========================================
+    // Role checks use Firestore get() to read the user's roles array.
     
-    // Get user's roles array from their document
-    function getUserRoles() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles;
-    }
-    
-    // Check if user is admin (Admin or SuperAdmin in roles array)
+    // Check if user is admin (Admin or SuperAdmin role)
     function isAdmin() {
-      let roles = getUserRoles();
-      return isAuthenticated() && ('Admin' in roles || 'SuperAdmin' in roles);
+      return isAuthenticated() && (
+        'Admin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles ||
+        'SuperAdmin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles
+      );
     }
     
-    // Check if user is support or higher (Support, Admin, or SuperAdmin in roles array)
+    // Check if user is support or higher (Support, Admin, or SuperAdmin role)
     function isSupport() {
-      let roles = getUserRoles();
-      return isAuthenticated() && ('Support' in roles || 'Admin' in roles || 'SuperAdmin' in roles);
+      return isAuthenticated() && (
+        'Support' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles ||
+        'Admin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles ||
+        'SuperAdmin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles
+      );
     }
     
     // Check if user is super admin
     function isSuperAdmin() {
-      return isAuthenticated() && 'SuperAdmin' in getUserRoles();
+      return isAuthenticated() && 
+        'SuperAdmin' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles;
     }
     
     // ========================================

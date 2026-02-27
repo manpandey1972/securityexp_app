@@ -4,6 +4,8 @@ import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dar
 import 'package:securityexperts_app/shared/services/dialog_service.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
+import 'package:securityexperts_app/shared/themes/app_colors.dart';
+import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 
 /// Helper class for chat-related dialogs
 class ChatDialogHelper {
@@ -66,5 +68,44 @@ class ChatDialogHelper {
     );
 
     return result;
+  }
+
+  /// Show delete message confirmation dialog
+  static Future<bool?> showDeleteMessageDialog(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Delete Message',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        content: const Text(
+          'Are you sure you want to delete this message?',
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        actions: [
+          AppButtonVariants.dialogCancel(
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          AppButtonVariants.dialogAction(
+            onPressed: () => Navigator.of(context).pop(true),
+            label: 'Delete',
+            isDestructive: true,
+          ),
+        ],
+      ),
+    );
   }
 }

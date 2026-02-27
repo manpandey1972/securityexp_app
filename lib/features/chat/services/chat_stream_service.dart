@@ -4,6 +4,7 @@ import 'package:securityexperts_app/data/models/models.dart';
 import 'package:securityexperts_app/data/services/firestore_instance.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 
@@ -50,9 +51,10 @@ class ChatStreamService {
 
   /// Subscribe to messages
   void _subscribeToMessages() {
+    final batchSize = sl<RemoteConfigService>().messageBatchSize;
     final stopwatch = Stopwatch()..start();
     _messagesSubscription = _messageRepository
-        .getMessagesStream(roomId, limit: 50)
+        .getMessagesStream(roomId, limit: batchSize)
         .listen(
           (streamMessages) {
             ErrorHandler.handleSync(

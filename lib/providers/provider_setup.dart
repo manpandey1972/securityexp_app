@@ -1,38 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:securityexperts_app/providers/auth_provider.dart';
 import 'package:securityexperts_app/providers/role_provider.dart';
 import 'package:securityexperts_app/shared/services/upload_manager.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
-import 'package:securityexperts_app/core/auth/role_service.dart';
 
 /// Provider utilities and factory functions
 
-/// Create all app providers as a list for MultiProvider
-/// Usage: MultiProvider(providers: createAppProviders(), child: App())
+/// Create all app providers as a list for MultiProvider.
+///
+/// All three ChangeNotifiers are owned by GetIt (service locator).
+/// We use [ChangeNotifierProvider.value] so that the widget tree can
+/// access them via `context.read<T>()` / `context.watch<T>()`
+/// while the actual lifecycle is managed centrally.
 List<ChangeNotifierProvider> createAppProviders() {
   return [
-    // Auth provider - must be created first
-    // lazy: false ensures AuthState is created immediately, not when first accessed
-    // This is critical for FCM/VoIP token initialization on app startup
-    ChangeNotifierProvider<AuthState>(
-      create: (_) => AuthState(sl<FirebaseAuth>()),
-      lazy: false,
+    // Auth provider — eager singleton registered in setupServiceLocator().
+    ChangeNotifierProvider<AuthState>.value(
+      value: sl<AuthState>(),
     ),
-    // Role provider - streams user role from Firestore for admin features
-    // lazy: false ensures role is fetched immediately for proper UI rendering
-    // Passes FirebaseAuth instance to listen for auth state changes
-    // This ensures role stream is re-subscribed when user logs in/out
-    ChangeNotifierProvider<RoleProvider>(
-      create: (_) => RoleProvider(
-        sl<RoleService>(),
-        auth: sl<FirebaseAuth>(),
-      ),
-      lazy: false,
+    // Role provider — eager singleton registered in setupServiceLocator().
+    ChangeNotifierProvider<RoleProvider>.value(
+      value: sl<RoleProvider>(),
     ),
-    // Upload manager - global upload manager for background uploads
-    // Uses existing singleton from service locator
+    // Upload manager — lazy singleton registered in setupServiceLocator().
     ChangeNotifierProvider<UploadManager>.value(
       value: sl<UploadManager>(),
     ),

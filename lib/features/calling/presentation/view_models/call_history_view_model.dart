@@ -6,6 +6,7 @@ import 'package:securityexperts_app/features/calling/domain/repositories/call_hi
 import 'package:securityexperts_app/features/calling/presentation/state/call_history_state.dart';
 import 'package:securityexperts_app/features/calling/services/call_logger.dart';
 import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
 /// ViewModel for CallHistoryPage
@@ -152,10 +153,11 @@ class CallHistoryViewModel extends ChangeNotifier {
   /// Deletes orphaned call history entries from Firestore.
   /// This is fire-and-forget - we don't await completion.
   void _deleteOrphanedCallHistoryEntries(List<String> callHistoryIds) {
-    _repository.deleteCallHistoryEntries(userId, callHistoryIds).catchError((e) {
-      _logger.error('Failed to delete orphaned call history entries', {'error': e.toString()});
-      return 0;
-    });
+    ErrorHandler.handle<int>(
+      operation: () => _repository.deleteCallHistoryEntries(userId, callHistoryIds),
+      fallback: 0,
+      onError: (e) => _logger.error('Failed to delete orphaned call history entries', {'error': e}),
+    );
   }
 
   // =============== Selection Mode ===============

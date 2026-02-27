@@ -70,8 +70,20 @@ service firebase.storage {
     // USER DOCUMENTS - Private to owner only
     // ============================================
     match /user_documents/{userId}/{document=**} {
-      allow read, write, delete: if request.auth != null && 
-                                    request.auth.uid == userId;
+      allow read: if request.auth != null && 
+                     request.auth.uid == userId;
+      
+      // Write: owner only, max 25MB, restricted to safe content types
+      allow write: if request.auth != null && 
+                      request.auth.uid == userId &&
+                      request.resource.size <= 26214400 && // 25MB max
+                      (request.resource.contentType.matches('image/.*') ||
+                       request.resource.contentType == 'application/pdf' ||
+                       request.resource.contentType == 'text/plain' ||
+                       request.resource.contentType == 'application/octet-stream');
+      
+      allow delete: if request.auth != null && 
+                       request.auth.uid == userId;
     }
     
     // ============================================
@@ -89,27 +101,27 @@ service firebase.storage {
     // ============================================
     // SUPPORT TICKET ATTACHMENTS - Ticket creator + support staff
     // ============================================
-    // Path: support/{ticketId}/{attachmentId}.ext
-    // NOTE: Storage rules cannot query Firestore to verify ticket ownership.
-    // Ticket IDs are Firestore-generated UUIDs (low discovery risk).
-    // Write is restricted to the uploader's own content; delete requires
-    // the userId to match the file's custom metadata 'uploadedBy'.
-    // TODO: For full owner-only reads, restructure path to
-    //       support/{userId}/{ticketId}/... or use custom claims.
-    match /support/{ticketId}/{allPaths=**} {
-      // Read for authenticated users (cannot verify ticket ownership without Firestore lookup)
-      allow read: if request.auth != null;
+    // Path: support/{userId}/{ticketId}/{attachmentId}.ext
+    // Restructured with userId prefix so Storage rules can enforce ownership
+    // without needing a Firestore lookup.
+    match /support/{userId}/{ticketId}/{allPaths=**} {
+      // Read: owner of the folder OR users with 'support' custom claim
+      allow read: if request.auth != null &&
+                     (request.auth.uid == userId ||
+                      request.auth.token.support == true ||
+                      request.auth.token.admin == true);
       
-      // Write: authenticated users with size and type limits
+      // Write: only the folder owner, with size and type limits
       allow write: if request.auth != null &&
+                      request.auth.uid == userId &&
                       request.resource.size <= 10485760 && // 10MB max
                       (request.resource.contentType.matches('image/.*') ||
                        request.resource.contentType == 'application/pdf' ||
                        request.resource.contentType == 'text/plain');
       
-      // Delete: only the original uploader (via custom metadata) or deny
-      // Until custom metadata is set on upload, restrict delete to auth only
-      allow delete: if request.auth != null;
+      // Delete: only the folder owner
+      allow delete: if request.auth != null &&
+                       request.auth.uid == userId;
     }
     
     // ============================================
