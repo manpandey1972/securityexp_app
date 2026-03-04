@@ -11,6 +11,8 @@ import 'package:securityexperts_app/features/profile/widgets/profile_widgets.dar
 import 'package:securityexperts_app/shared/widgets/profile_picture_widget.dart';
 import 'package:securityexperts_app/data/models/skill.dart';
 import 'package:securityexperts_app/shared/widgets/profanity_filtered_text_field.dart';
+import 'package:securityexperts_app/features/ratings/widgets/expert_rating_summary.dart';
+import 'package:securityexperts_app/features/ratings/pages/expert_reviews_page.dart';
 
 /// User profile page with Provider state management
 class UserProfilePage extends StatelessWidget {
@@ -247,6 +249,30 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                         : const CircularProgressIndicator(),
                   ),
                 ),
+
+                // Expert Rating (centered below profile pic)
+                if (state.isExpert && state.profile != null) ...[  
+                  SizedBox(height: AppSpacing.spacing8),
+                  Center(
+                    child: ExpertRatingSummary(
+                      averageRating: state.profile!.averageRating ?? 0.0,
+                      totalRatings: state.profile!.totalRatings ?? 0,
+                      variant: 'compact',
+                      showEmptyState: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ExpertReviewsPage(
+                              expertId: state.profile!.id,
+                              expertName: state.profile!.name,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
                 SizedBox(height: AppSpacing.spacing24),
 
                 // Display Name Section
@@ -303,6 +329,8 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                   },
                 ),
                 SizedBox(height: AppSpacing.spacing20),
+
+
 
                 // Expert-Only Sections
                 if (state.isExpert) ...[

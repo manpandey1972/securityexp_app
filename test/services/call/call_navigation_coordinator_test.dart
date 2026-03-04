@@ -29,6 +29,9 @@ void main() {
       // Initialize Flutter binding
       TestWidgetsFlutterBinding.ensureInitialized();
 
+      // Mock platform channels for wakelock and permissions
+      setupCallPlatformMocks();
+
       // Register AppLogger in GetIt before creating coordinator
       mockAppLogger = MockAppLogger();
       if (!sl.isRegistered<AppLogger>()) {
@@ -53,6 +56,7 @@ void main() {
       if (sl.isRegistered<AppLogger>()) {
         sl.unregister<AppLogger>();
       }
+      tearDownCallPlatformMocks();
     });
 
     test('initializes with no active call', () {

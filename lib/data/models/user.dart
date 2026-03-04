@@ -149,6 +149,8 @@ class User extends Equatable {
     Timestamp? profilePictureUpdatedAt,
     bool? hasProfilePicture,
     bool? notificationsEnabled,
+    double? averageRating,
+    int? totalRatings,
   }) {
     return User(
       id: id ?? this.id,
@@ -169,6 +171,8 @@ class User extends Equatable {
           profilePictureUpdatedAt ?? this.profilePictureUpdatedAt,
       hasProfilePicture: hasProfilePicture ?? this.hasProfilePicture,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      averageRating: averageRating ?? this.averageRating,
+      totalRatings: totalRatings ?? this.totalRatings,
     );
   }
 

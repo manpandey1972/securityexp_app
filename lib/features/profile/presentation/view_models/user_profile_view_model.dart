@@ -111,6 +111,8 @@ class UserProfileViewModel extends ChangeNotifier {
               profilePictureUrl: profile.profilePictureUrl,
               profilePictureUpdatedAt: profile.profilePictureUpdatedAt,
               hasProfilePicture: profile.hasProfilePicture,
+              averageRating: profile.averageRating,
+              totalRatings: profile.totalRatings,
             );
           }
 

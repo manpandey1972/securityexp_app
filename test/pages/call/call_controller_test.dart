@@ -23,6 +23,8 @@ void main() {
     CallController? controller;
 
     setUp(() {
+      setupCallPlatformMocks();
+
       // Register AppLogger first
       if (sl.isRegistered<AppLogger>()) {
         sl.unregister<AppLogger>();
@@ -46,6 +48,7 @@ void main() {
       if (sl.isRegistered<AppLogger>()) {
         sl.unregister<AppLogger>();
       }
+      tearDownCallPlatformMocks();
     });
 
     test('initializes with correct initial state', () {
@@ -224,6 +227,8 @@ void main() {
     CallController? controller;
 
     setUp(() {
+      setupCallPlatformMocks();
+
       // Register AppLogger first
       if (sl.isRegistered<AppLogger>()) {
         sl.unregister<AppLogger>();
@@ -247,6 +252,7 @@ void main() {
       if (sl.isRegistered<AppLogger>()) {
         sl.unregister<AppLogger>();
       }
+      tearDownCallPlatformMocks();
     });
 
     test('successfully accepts incoming call', () async {
@@ -298,6 +304,14 @@ void main() {
     CallController? controller;
 
     setUp(() {
+      setupCallPlatformMocks();
+
+      // Register AppLogger (needed by CallErrorHandler for error logging)
+      if (sl.isRegistered<AppLogger>()) {
+        sl.unregister<AppLogger>();
+      }
+      sl.registerSingleton<AppLogger>(DebugAppLogger());
+
       mockSignaling = MockSignalingService();
       mockMediaFactory = MockMediaManagerFactory();
       mockLogger = MockCallLogger();
@@ -311,6 +325,10 @@ void main() {
       mockSignaling.dispose();
       mockMediaFactory.mockMediaManager.dispose();
       mockLogger.clear();
+      if (sl.isRegistered<AppLogger>()) {
+        sl.unregister<AppLogger>();
+      }
+      tearDownCallPlatformMocks();
     });
 
     test('toggleMute works correctly', () async {
@@ -452,6 +470,14 @@ void main() {
     CallController? controller;
 
     setUp(() {
+      setupCallPlatformMocks();
+
+      // Register AppLogger (needed by CallErrorHandler for error logging)
+      if (sl.isRegistered<AppLogger>()) {
+        sl.unregister<AppLogger>();
+      }
+      sl.registerSingleton<AppLogger>(DebugAppLogger());
+
       mockSignaling = MockSignalingService();
       mockMediaFactory = MockMediaManagerFactory();
       mockLogger = MockCallLogger();
@@ -465,6 +491,10 @@ void main() {
       mockSignaling.dispose();
       mockMediaFactory.mockMediaManager.dispose();
       mockLogger.clear();
+      if (sl.isRegistered<AppLogger>()) {
+        sl.unregister<AppLogger>();
+      }
+      tearDownCallPlatformMocks();
     });
 
     test('properly disposes all resources', () async {

@@ -1,7 +1,6 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:securityexperts_app/shared/themes/app_colors.dart';
 import 'package:securityexperts_app/shared/themes/app_typography.dart';
 import 'package:securityexperts_app/features/calling/services/call_navigation_coordinator.dart';
@@ -57,7 +56,6 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
   @override
   void initState() {
     super.initState();
-    WakelockPlus.enable();
 
     // Get dependencies from DI container
     _logger = sl<CallLogger>();
@@ -255,7 +253,6 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
 
   @override
   void dispose() {
-    WakelockPlus.disable();
     _controller.removeListener(_handleStateChange);
 
     // Only dispose the controller if:

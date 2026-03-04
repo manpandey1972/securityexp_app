@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
@@ -113,6 +114,10 @@ class CallNavigationCoordinator extends ChangeNotifier {
     _activeController = controller;
     _pendingCalleeName = calleeName;
     _isMinimized = false;
+
+    // Enable wake lock to prevent screen from locking during call
+    WakelockPlus.enable();
+    _log.debug('Wake lock enabled for call', tag: _tag);
 
     // Listen to controller state changes and forward to our listeners
     // Only notify when UI-relevant state actually changes to prevent excessive rebuilds
@@ -251,6 +256,10 @@ class CallNavigationCoordinator extends ChangeNotifier {
     _pendingIsVideo = false;
     _pendingIsCaller = false;
     _isMinimized = false;
+
+    // Disable wake lock when call ends
+    WakelockPlus.disable();
+    _log.debug('Wake lock disabled - call ended', tag: _tag);
   }
 
   /// Reset singleton state (useful for testing and logout)

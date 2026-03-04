@@ -1,6 +1,9 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:securityexperts_app/core/config/call_config.dart';
 import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import 'package:securityexperts_app/data/models/call_session.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus_platform_interface/wakelock_plus_platform_interface.dart';
 
 /// Test helper utilities for call system tests
 ///
@@ -132,4 +135,34 @@ Future<bool> waitForAsyncCondition(
 /// Delays execution for testing timing-dependent behavior
 Future<void> testDelay([Duration? duration]) async {
   await Future.delayed(duration ?? const Duration(milliseconds: 100));
+}
+
+/// Mock WakelockPlus platform implementation for tests.
+///
+/// Prevents Pigeon channel errors when [WakelockPlus.enable]/[WakelockPlus.disable]
+/// are called during tests.
+class MockWakelockPlusPlatform extends WakelockPlusPlatformInterface {
+  bool _enabled = false;
+
+  @override
+  Future<void> toggle({required bool enable}) async {
+    _enabled = enable;
+  }
+
+  @override
+  Future<bool> get enabled => Future.value(_enabled);
+}
+
+/// Sets up mock platform channels needed by call tests.
+///
+/// Call this in `setUp` to prevent platform channel errors from:
+/// - `wakelock_plus` (enable/disable during calls)
+void setupCallPlatformMocks() {
+  // Mock wakelock_plus via its @visibleForTesting platform instance
+  wakelockPlusPlatformInstance = MockWakelockPlusPlatform();
+}
+
+/// Tears down mock platform channels set up by [setupCallPlatformMocks].
+void tearDownCallPlatformMocks() {
+  // No-op for now; wakelock mock doesn't need explicit teardown
 }
