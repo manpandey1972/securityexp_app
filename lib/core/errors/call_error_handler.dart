@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 import 'package:securityexperts_app/features/calling/services/call_logger.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
@@ -102,6 +103,28 @@ class CallErrorHandler {
   static CallError fromException(dynamic exception, {StackTrace? stackTrace}) {
     if (exception is CallError) {
       return exception;
+    }
+
+    // Handle Firebase Cloud Functions errors specifically
+    if (exception is FirebaseFunctionsException) {
+      final code = exception.code;
+      if (code == 'unauthenticated' || code == 'UNAUTHENTICATED') {
+        return CallSignalingError(
+          'App attestation failed (code: $code). '
+          'On iOS debug builds, register the App Check debug token in Firebase Console.',
+          originalError: exception,
+        );
+      }
+      if (code == 'invalid-argument') {
+        return CallSignalingError(
+          'Cloud Function rejected request: ${exception.message}',
+          originalError: exception,
+        );
+      }
+      return CallSignalingError(
+        'Cloud Function error ($code): ${exception.message}',
+        originalError: exception,
+      );
     }
 
     final errorMessage = exception.toString().toLowerCase();

@@ -284,8 +284,8 @@ class CallController extends ChangeNotifier {
       }
     } on CallError catch (e) {
       // Only ignore errors if call was explicitly ended by user
-      _logger.info(
-        'CallError caught - state: $_callState, disposed: $_isDisposed, ending: $_isEndingCall',
+      _logger.debug(
+        'CallError caught - state: $_callState, disposed: $_isDisposed, ending: $_isEndingCall, error: ${e.message}',
       );
 
       if (_callState == CallState.ended || _isDisposed || _isEndingCall) {
@@ -308,9 +308,9 @@ class CallController extends ChangeNotifier {
         await _mediaManager!.disconnect();
       }
     } catch (e, stackTrace) {
-      // Only ignore errors if call was explicitly ended by user
-      _logger.info(
-        'Exception caught - state: $_callState, disposed: $_isDisposed, ending: $_isEndingCall, error: ${e.toString().substring(0, e.toString().length > 100 ? 100 : e.toString().length)}',
+      // Log at DEBUG level so error is always visible regardless of log filter
+      _logger.debug(
+        'Exception caught - state: $_callState, disposed: $_isDisposed, ending: $_isEndingCall, error: ${e.toString().substring(0, e.toString().length > 200 ? 200 : e.toString().length)}',
       );
 
       if (_callState == CallState.ended || _isDisposed || _isEndingCall) {

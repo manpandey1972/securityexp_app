@@ -84,11 +84,15 @@ export async function handleCreateCall(
     // Debug: Log request data
     logger.info("🔍 createCall: Request data", {callerId, requestData: payload});
 
-    const {callee_id: calleeId, is_video: isVideo, caller_name: callerName, callee_name: calleeName} = payload as unknown as CreateCallRequest;
+    const {callee_id: calleeId, is_video: rawIsVideo, caller_name: callerName, callee_name: calleeName} = payload as unknown as CreateCallRequest;
+
+    // Coerce is_video to boolean — iOS Firebase SDK may serialize Dart bool
+    // as NSNumber, which arrives as a number (1/0) instead of a boolean.
+    const isVideo = typeof rawIsVideo === "boolean" ? rawIsVideo : rawIsVideo === 1 || rawIsVideo === true;
 
     // Validation
-    if (!calleeId || typeof isVideo !== "boolean") {
-      logger.warn("❌ createCall: Invalid parameters", {callerId, calleeId, isVideo});
+    if (!calleeId || (typeof rawIsVideo !== "boolean" && typeof rawIsVideo !== "number")) {
+      logger.warn("❌ createCall: Invalid parameters", {callerId, calleeId, isVideo: rawIsVideo, typeofIsVideo: typeof rawIsVideo});
       throw new HttpsError("invalid-argument", "Missing or invalid parameters: callee_id and is_video required");
     }
 

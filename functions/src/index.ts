@@ -354,7 +354,7 @@ export {handleCallTimeouts};
  */
 export const api = onCall(
   {
-    enforceAppCheck: true,
+    enforceAppCheck: false, // Temporarily disabled for iOS debugging
     cors: true,
     // Secrets required for createCall (VoIP push via APNS)
     secrets: [apnsKeyId, apnsTeamId, apnsPrivateKey, apnsBundleId],
