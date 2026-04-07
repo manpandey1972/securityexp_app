@@ -126,8 +126,14 @@ class MessageContentWidget extends StatelessWidget {
         width: 140,
         height: 140,
         fit: BoxFit.cover,
-        placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
+        memCacheWidth: 280, // 2x for retina, keeps decoded pixels in memory
+        fadeInDuration: Duration.zero, // No fade on cached images — instant display
+        fadeOutDuration: Duration.zero,
+        placeholder: (context, url) => Container(
+          width: 140,
+          height: 140,
+          color: AppColors.divider,
+        ),
         errorWidget: (context, url, error) => Container(
           width: 140,
           height: 140,

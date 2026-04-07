@@ -41,6 +41,7 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
   static const String _tag = 'InlineAudioPlayer';
 
   bool _isPlaying = false;
+  bool _isSourceSet = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
 
@@ -52,19 +53,21 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
   @override
   void initState() {
     super.initState();
-    _initPlayer();
+    _initListeners();
+    // Audio source is NOT pre-loaded here — it is loaded lazily on first
+    // play tap to avoid expensive cache lookups and I/O during scroll.
   }
 
-  Future<void> _initPlayer() async {
+  /// Set up player listeners (lightweight, no I/O).
+  void _initListeners() {
     // Set player mode to media player for full volume output
-    await _audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
+    _audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
 
     // Set volume to maximum for better audio message playback
-    await _audioPlayer.setVolume(1.0);
+    _audioPlayer.setVolume(1.0);
 
     // Configure audio context for playback
-    // For playback category, we don't need any special options - audio routes automatically
-    await _audioPlayer.setAudioContext(
+    _audioPlayer.setAudioContext(
       AudioContext(
         iOS: AudioContextIOS(
           category: AVAudioSessionCategory.playback,
@@ -117,9 +120,6 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
         }
       }
     });
-
-    // Pre-load the audio source to get duration
-    await _setSourceAndGetDuration();
   }
 
   void _handleCompletion() {
@@ -251,6 +251,12 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
       _log.debug('Starting playback', tag: _tag);
       // Configure iOS audio session for media playback (native)
       await MediaAudioSessionHelper.configureForMediaPlayback();
+
+      // Lazy-load the audio source on first play if not set yet
+      if (!_isSourceSet) {
+        await _setSourceAndGetDuration();
+        _isSourceSet = true;
+      }
 
       // Always stop and play fresh to ensure clean state
       await _audioPlayer.stop();

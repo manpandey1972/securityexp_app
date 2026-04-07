@@ -49,8 +49,13 @@ class ReplyPreviewWidget extends StatelessWidget {
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(strokeWidth: 1),
+              memCacheWidth: 80, // 2x for retina
+              fadeInDuration: Duration.zero,
+              fadeOutDuration: Duration.zero,
+              placeholder: (context, url) => Container(
+                width: 40,
+                height: 40,
+                color: AppColors.divider,
               ),
               errorWidget: (context, url, error) => Container(
                 width: 40,

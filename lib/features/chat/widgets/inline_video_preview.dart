@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart' show FileInfo;
@@ -12,6 +13,30 @@ import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/shared/services/media_audio_session_helper.dart';
+
+/// Persistent thumbnail cache directory path (lazily initialized).
+String? _thumbnailCacheDir;
+
+/// Get or create the thumbnail cache directory.
+Future<String> _getThumbnailCacheDir() async {
+  if (_thumbnailCacheDir != null) return _thumbnailCacheDir!;
+  final tempDir = await getTemporaryDirectory();
+  final dir = Directory('${tempDir.path}/video_thumbnails');
+  if (!dir.existsSync()) {
+    await dir.create(recursive: true);
+  }
+  _thumbnailCacheDir = dir.path;
+  return _thumbnailCacheDir!;
+}
+
+/// Get a stable thumbnail path for a given video source (URL or file path).
+/// Uses base64url encoding of the source to create a unique, stable filename.
+String _thumbnailPathForUrl(String cacheDir, String source) {
+  final hash = base64Url.encode(utf8.encode(source)).replaceAll('=', '');
+  // Truncate to avoid overly long filenames
+  final shortHash = hash.length > 64 ? hash.substring(0, 64) : hash;
+  return '$cacheDir/thumb_$shortHash.png';
+}
 
 /// Inline video preview widget for network videos.
 /// Shows a thumbnail with play button, supports inline playback.
@@ -44,11 +69,13 @@ class _InlineVideoPreviewState extends State<InlineVideoPreview> {
   @override
   void initState() {
     super.initState();
-    _generateThumbnail();
-    _initializeController();
+    _loadThumbnail();
+    // Video controller is NOT initialized here — it is created lazily
+    // on first user tap to avoid expensive network downloads during scroll.
   }
 
   Future<void> _initializeController() async {
+    if (_miniController != null) return; // Already initialized
     _miniController = VideoPlayerController.networkUrl(
       Uri.parse(widget.videoUrl),
     );
@@ -79,23 +106,36 @@ class _InlineVideoPreviewState extends State<InlineVideoPreview> {
     }
   }
 
-  Future<void> _generateThumbnail() async {
+  /// Load thumbnail from persistent cache, or generate and cache it.
+  Future<void> _loadThumbnail() async {
     // Skip thumbnail generation on web - path_provider not supported
-    if (kIsWeb) {
-      return;
-    }
+    if (kIsWeb) return;
 
     try {
-      final tempDir = await getTemporaryDirectory();
+      final cacheDir = await _getThumbnailCacheDir();
+      final cachedPath = _thumbnailPathForUrl(cacheDir, widget.videoUrl);
+
+      // Check persistent cache first
+      if (File(cachedPath).existsSync()) {
+        if (mounted) setState(() => _thumbnailPath = cachedPath);
+        return;
+      }
+
+      // Generate thumbnail and save to persistent cache
       final thumbnailPath = await video_thumbnail.VideoThumbnail.thumbnailFile(
         video: widget.videoUrl,
-        thumbnailPath: tempDir.path,
+        thumbnailPath: cacheDir,
         imageFormat: video_thumbnail.ImageFormat.PNG,
         maxWidth: 300,
         quality: 75,
       );
-      if (mounted) {
-        setState(() => _thumbnailPath = thumbnailPath);
+      // Rename to our stable hash-based name so future mounts find it
+      if (thumbnailPath != null) {
+        final generated = File(thumbnailPath);
+        if (generated.existsSync()) {
+          await generated.rename(cachedPath);
+        }
+        if (mounted) setState(() => _thumbnailPath = cachedPath);
       }
     } catch (e) {
       _log.error('Thumbnail generation failed: $e', tag: _tag);
@@ -103,11 +143,15 @@ class _InlineVideoPreviewState extends State<InlineVideoPreview> {
   }
 
   Future<void> _toggleMiniPlayer() async {
+    // Lazy initialization: create controller on first tap
     if (!_isInitialized || _miniController == null) {
-      if (mounted) {
-        SnackbarService.show('Video is still loading...');
+      await _initializeController();
+      if (!_isInitialized || _miniController == null) {
+        if (mounted) {
+          SnackbarService.show('Video is still loading...');
+        }
+        return;
       }
-      return;
     }
 
     if (_isPlaying) {
@@ -322,10 +366,13 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
   @override
   void initState() {
     super.initState();
-    _initializeWithCorrectExtension();
+    _prepareFile();
+    // Video controller is NOT initialized here — it is created lazily
+    // on first user tap to avoid expensive I/O during scroll.
   }
 
-  Future<void> _initializeWithCorrectExtension() async {
+  /// Validate the cached file and load a persistent thumbnail.
+  Future<void> _prepareFile() async {
     try {
       if (!mounted) return;
 
@@ -339,10 +386,9 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
 
       setState(() => _fileWithCorrectExt = file);
 
-      _generateThumbnail();
-      _initializeController();
+      _loadThumbnail();
     } catch (e) {
-      _log.error('Error initializing: $e', tag: _tag);
+      _log.error('Error preparing file: $e', tag: _tag);
       if (mounted) {
         setState(() => _initializationFailed = true);
       }
@@ -350,6 +396,7 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
   }
 
   Future<void> _initializeController() async {
+    if (_miniController != null) return; // Already initialized
     if (_fileWithCorrectExt == null) return;
 
     _miniController = VideoPlayerController.file(_fileWithCorrectExt!);
@@ -387,10 +434,24 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
     }
   }
 
-  Future<void> _generateThumbnail() async {
+  /// Load thumbnail from persistent cache, or generate and cache it.
+  Future<void> _loadThumbnail() async {
     if (_fileWithCorrectExt == null) return;
 
     try {
+      final cacheDir = await _getThumbnailCacheDir();
+      final cachedPath = _thumbnailPathForUrl(
+        cacheDir,
+        _fileWithCorrectExt!.path,
+      );
+
+      // Check persistent cache first
+      if (File(cachedPath).existsSync()) {
+        if (mounted) setState(() => _thumbnailPath = cachedPath);
+        return;
+      }
+
+      // Generate thumbnail and save to persistent cache
       final thumbnailData = await video_thumbnail.VideoThumbnail.thumbnailData(
         video: _fileWithCorrectExt!.path,
         imageFormat: video_thumbnail.ImageFormat.PNG,
@@ -398,12 +459,9 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
         quality: 75,
       );
       if (thumbnailData != null && mounted) {
-        final tempDir = await getTemporaryDirectory();
-        final thumbnailFile = File(
-          '${tempDir.path}/thumb_${_fileWithCorrectExt!.path.hashCode}.png',
-        );
+        final thumbnailFile = File(cachedPath);
         await thumbnailFile.writeAsBytes(thumbnailData);
-        setState(() => _thumbnailPath = thumbnailFile.path);
+        setState(() => _thumbnailPath = cachedPath);
       }
     } catch (e) {
       _log.error('Failed to generate thumbnail: $e', tag: _tag);
@@ -419,11 +477,15 @@ class _InlineCachedVideoPreviewState extends State<InlineCachedVideoPreview> {
       return;
     }
 
+    // Lazy initialization: create controller on first tap
     if (!_isInitialized || _miniController == null) {
-      if (mounted) {
-        SnackbarService.show('Video is still loading...');
+      await _initializeController();
+      if (!_isInitialized || _miniController == null) {
+        if (mounted) {
+          SnackbarService.show('Video is still loading...');
+        }
+        return;
       }
-      return;
     }
 
     if (_isPlaying) {

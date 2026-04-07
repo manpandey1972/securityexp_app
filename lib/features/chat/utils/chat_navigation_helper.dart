@@ -60,7 +60,10 @@ class ChatNavigationHelper {
                     )
                   : CachedNetworkImage(
                       imageUrl: source,
+                      cacheManager: sl<MediaCacheService>().getManagerForRoom(roomId),
                       fit: BoxFit.contain,
+                      fadeInDuration: Duration.zero,
+                      fadeOutDuration: Duration.zero,
                       placeholder: (context, _) =>
                           const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => const Column(
