@@ -184,7 +184,6 @@ class _CallOverlayState extends State<CallOverlay> {
     final incomingCallData = _incomingCallManager.incomingCallData;
     final minimizedPosition = _coordinator.minimizedPosition;
 
-    // Debug logging
     if (hasIncomingCall) {
       _log.debug('Building with incoming call: $incomingCallData', tag: _tag);
     }

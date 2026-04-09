@@ -66,6 +66,10 @@ class CallKitService {
   final StreamController<String> _voipTokenController =
       StreamController<String>.broadcast();
 
+  /// Stream controller for VoIP token invalidation
+  final StreamController<void> _voipTokenInvalidatedController =
+      StreamController<void>.broadcast();
+
   /// Current active call UUID
   String? _activeCallUUID;
 
@@ -91,6 +95,9 @@ class CallKitService {
 
   /// Stream of VoIP token updates
   Stream<String> get voipTokenUpdates => _voipTokenController.stream;
+
+  /// Stream that fires when the VoIP token is invalidated by Apple
+  Stream<void> get voipTokenInvalidated => _voipTokenInvalidatedController.stream;
 
   /// Current active call UUID
   String? get activeCallUUID => _activeCallUUID;
@@ -149,6 +156,7 @@ class CallKitService {
 
       case 'onVoIPTokenInvalidated':
         _voipToken = null;
+        _voipTokenInvalidatedController.add(null);
         sl<AppLogger>().debug('VoIP token invalidated', tag: 'CallKit');
         break;
 
@@ -495,6 +503,7 @@ class CallKitService {
     _channel.setMethodCallHandler(null);
     _callActionController.close();
     _voipTokenController.close();
+    _voipTokenInvalidatedController.close();
     _instance = null;
   }
 }

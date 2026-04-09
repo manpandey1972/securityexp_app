@@ -129,12 +129,16 @@ class CallController extends ChangeNotifier {
       'Created instance $_instanceId (active: $_activeInstances, total: $_instanceCounter)',
     );
 
-    // Debug assertion to catch UI bugs creating multiple controllers
-    assert(
-      _activeInstances <= 1,
-      'Multiple CallController instances detected ($_activeInstances active). '
-      'This usually indicates a UI bug where previous controller was not disposed.',
-    );
+    // Warn (but don't crash) if previous controller was leaked
+    if (_activeInstances > 1) {
+      _logger.warning(
+        'Multiple CallController instances detected ($_activeInstances active). '
+        'This usually indicates a UI bug where previous controller was not disposed. '
+        'Resetting counter to 1.',
+      );
+      // Reset to 1 since we're the only live instance now
+      _activeInstances = 1;
+    }
   }
 
   Future<void> connect() async {
@@ -146,21 +150,6 @@ class CallController extends ChangeNotifier {
     _callStartTime = DateTime.now();
     _setCallState(CallState.connecting);
 
-    // Start ringback tone for caller (dialing sound)
-    if (isCaller) {
-      _startRingbackTone();
-    }
-
-    // Track call start
-    final callIdForAnalytics =
-        callId ?? 'outgoing-${DateTime.now().millisecondsSinceEpoch}';
-    _analytics?.trackCallStart(
-      callId: callIdForAnalytics,
-      isVideo: isVideo,
-      isCaller: isCaller,
-      calleeId: calleeId,
-    );
-
     _logger.info('Starting call connection', {
       'isCaller': isCaller,
       'isVideo': isVideo,
@@ -169,6 +158,20 @@ class CallController extends ChangeNotifier {
     });
 
     try {
+      // Start ringback tone for caller (dialing sound)
+      if (isCaller) {
+        _startRingbackTone();
+      }
+
+      // Track call start
+      final callIdForAnalytics =
+          callId ?? 'outgoing-${DateTime.now().millisecondsSinceEpoch}';
+      _analytics?.trackCallStart(
+        callId: callIdForAnalytics,
+        isVideo: isVideo,
+        isCaller: isCaller,
+        calleeId: calleeId,
+      );
       // 1. App Signaling Handshake
       _logger.debug(
         '[STEP 1/6] Starting signaling handshake (isCaller: $isCaller)',

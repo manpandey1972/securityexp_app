@@ -75,7 +75,7 @@ class ChatMessageListItem extends StatelessWidget {
       return Column(
         key: ValueKey('call_log_${message.id}'),
         children: [
-          if (dateSeparator != null) dateSeparator,
+          ?dateSeparator,
           CallLogMessageWidget(message: message, fromMe: fromMe),
         ],
       );
@@ -85,7 +85,7 @@ class ChatMessageListItem extends StatelessWidget {
     return Column(
       key: ValueKey('message_${message.id}'),
       children: [
-        if (dateSeparator != null) dateSeparator,
+        ?dateSeparator,
         SwipeableMessage(
           onReply: () => actions.onReply(message),
           enabled: true,

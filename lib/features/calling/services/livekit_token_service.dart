@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:securityexperts_app/core/config/livekit_config.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/core/services/cloud_callable_service.dart';
 
 /// Service for generating LiveKit access tokens from cloud function
 class LiveKitTokenService {
@@ -31,19 +33,31 @@ class LiveKitTokenService {
           tag: _tag,
         );
 
-        // Use Firebase Cloud Functions SDK instead of raw HTTP
-        final functions = FirebaseFunctions.instance;
-        final result = await functions
-            .httpsCallable('generateLiveKitTokenFunction')
-            .call({
-              'user_id': userId,
-              'user_name': userName,
-              'room': roomName,
-              'can_publish': canPublish,
-              'can_subscribe': canSubscribe,
-            });
-
-        final response = Map<String, dynamic>.from(result.data);
+        // Use HTTP workaround on iOS to avoid native Firebase SDK crash (Xcode 26)
+        final Map<String, dynamic> response;
+        if (CloudCallableService.shouldUseHttpWorkaround) {
+          final httpCallable = CloudCallableService(auth: FirebaseAuth.instance);
+          final result = await httpCallable.call('generateLiveKitTokenFunction', {
+            'user_id': userId,
+            'user_name': userName,
+            'room': roomName,
+            'can_publish': canPublish,
+            'can_subscribe': canSubscribe,
+          });
+          response = Map<String, dynamic>.from(result);
+        } else {
+          final functions = FirebaseFunctions.instance;
+          final result = await functions
+              .httpsCallable('generateLiveKitTokenFunction')
+              .call({
+                'user_id': userId,
+                'user_name': userName,
+                'room': roomName,
+                'can_publish': canPublish,
+                'can_subscribe': canSubscribe,
+              });
+          response = Map<String, dynamic>.from(result.data);
+        }
         _log.debug('Cloud function response received', tag: _tag);
 
         final success = response['success'] as bool? ?? false;

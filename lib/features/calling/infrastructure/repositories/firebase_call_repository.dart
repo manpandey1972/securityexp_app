@@ -10,6 +10,7 @@ import 'package:securityexperts_app/core/config/call_config.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/analytics/analytics_service.dart';
+import 'package:securityexperts_app/core/services/cloud_callable_service.dart';
 
 /// Firebase implementation of CallRepository
 ///
@@ -22,6 +23,7 @@ class FirebaseCallRepository implements CallRepository {
   final UserCacheService _userCache;
   final AppLogger _log = sl<AppLogger>();
   final AnalyticsService _analytics = sl<AnalyticsService>();
+  late final CloudCallableService? _httpCallable;
 
   static const String _tag = 'FirebaseCallRepo';
 
@@ -34,7 +36,12 @@ class FirebaseCallRepository implements CallRepository {
   }) : _functions = functions,
        _firestore = firestore,
        _auth = auth,
-       _userCache = userCache;
+       _userCache = userCache {
+    // Use HTTP workaround on iOS to avoid native Firebase SDK crash (Xcode 26)
+    _httpCallable = CloudCallableService.shouldUseHttpWorkaround
+        ? CloudCallableService(auth: auth)
+        : null;
+  }
 
   @override
   Future<CallSession> createCall(CreateCallRequest request) async {
@@ -91,18 +98,32 @@ class FirebaseCallRepository implements CallRepository {
         },
       );
 
-      final result = await _functions.httpsCallable('api').call({
-        'action': 'createCall',
-        'payload': {
-          'callee_id': request.calleeId,
-          'is_video': request.isVideo,
-          'caller_name': finalCallerName,
-          'callee_name': finalCalleeName,
-        },
-      });
+      final Map<String, dynamic> response;
+      if (_httpCallable != null) {
+        final result = await _httpCallable.call('api', {
+          'action': 'createCall',
+          'payload': {
+            'callee_id': request.calleeId,
+            'is_video': request.isVideo,
+            'caller_name': finalCallerName,
+            'callee_name': finalCalleeName,
+          },
+        });
+        response = Map<String, dynamic>.from(result);
+      } else {
+        final result = await _functions.httpsCallable('api').call({
+          'action': 'createCall',
+          'payload': {
+            'callee_id': request.calleeId,
+            'is_video': request.isVideo,
+            'caller_name': finalCallerName,
+            'callee_name': finalCalleeName,
+          },
+        });
+        response = Map<String, dynamic>.from(result.data);
+      }
 
       _log.info('createCall response received', tag: _tag);
-      final response = Map<String, dynamic>.from(result.data);
       _log.debug('Response success: ${response['success']}', tag: _tag);
 
       if (response['success'] != true) {
@@ -131,14 +152,14 @@ class FirebaseCallRepository implements CallRepository {
         isVideo: request.isVideo,
       );
     } catch (e) {
-      _log.error('createCall failed', tag: _tag, error: e);
       trace.putAttribute('error', e.runtimeType.toString());
+      _log.error('createCall failed', tag: _tag, error: e);
       rethrow;
     } finally {
       try {
         await trace.stop();
       } catch (e) {
-        // Ignore trace errors (can happen on web platform)
+        // Ignore trace stop errors
       }
     }
   }
@@ -152,12 +173,20 @@ class FirebaseCallRepository implements CallRepository {
     try {
       _log.info('Accepting call: $callId', tag: _tag);
 
-      final result = await _functions.httpsCallable('api').call({
-        'action': 'acceptCall',
-        'payload': {'room_id': callId},
-      });
-
-      final response = Map<String, dynamic>.from(result.data);
+      final Map<String, dynamic> response;
+      if (_httpCallable != null) {
+        final result = await _httpCallable.call('api', {
+          'action': 'acceptCall',
+          'payload': {'room_id': callId},
+        });
+        response = Map<String, dynamic>.from(result);
+      } else {
+        final result = await _functions.httpsCallable('api').call({
+          'action': 'acceptCall',
+          'payload': {'room_id': callId},
+        });
+        response = Map<String, dynamic>.from(result.data);
+      }
       if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Unknown error');
       }
@@ -204,10 +233,17 @@ class FirebaseCallRepository implements CallRepository {
   Future<void> endCall(String callId) async {
     try {
       _log.info('Ending call: $callId', tag: _tag);
-      await _functions.httpsCallable('api').call({
-        'action': 'endCall',
-        'payload': {'room_id': callId},
-      });
+      if (_httpCallable != null) {
+        await _httpCallable.call('api', {
+          'action': 'endCall',
+          'payload': {'room_id': callId},
+        });
+      } else {
+        await _functions.httpsCallable('api').call({
+          'action': 'endCall',
+          'payload': {'room_id': callId},
+        });
+      }
       _log.info('endCall succeeded', tag: _tag);
     } catch (e) {
       // "not-found" error is expected if the call was already deleted
@@ -227,10 +263,17 @@ class FirebaseCallRepository implements CallRepository {
   Future<void> rejectCall(String callId) async {
     try {
       _log.info('Rejecting call: $callId', tag: _tag);
-      await _functions.httpsCallable('api').call({
-        'action': 'rejectCall',
-        'payload': {'room_id': callId},
-      });
+      if (_httpCallable != null) {
+        await _httpCallable.call('api', {
+          'action': 'rejectCall',
+          'payload': {'room_id': callId},
+        });
+      } else {
+        await _functions.httpsCallable('api').call({
+          'action': 'rejectCall',
+          'payload': {'room_id': callId},
+        });
+      }
       _log.info('rejectCall succeeded', tag: _tag);
     } catch (e) {
       _log.error('rejectCall failed', tag: _tag, error: e);

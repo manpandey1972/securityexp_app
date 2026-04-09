@@ -25,7 +25,9 @@ class VoIPTokenRepository {
   static const String _tag = 'VoIPTokenRepository';
 
   StreamSubscription? _tokenSubscription;
+  StreamSubscription? _invalidationSubscription;
   String? _currentUserId;
+  String? _lastSavedToken;
 
   VoIPTokenRepository({
     FirebaseFirestore? firestore,
@@ -46,17 +48,12 @@ class VoIPTokenRepository {
 
     _log.debug('Initializing VoIP token repository', tag: _tag);
 
-    // Get and save the current token (may be null if not yet received)
-    final token = await _callKitService.getVoIPToken();
-    if (token != null) {
-      await _saveToken(userId, token);
-    }
-
-    // Cancel existing subscription to prevent duplicates
+    // Cancel existing subscriptions to prevent duplicates
     _tokenSubscription?.cancel();
+    _invalidationSubscription?.cancel();
 
-    // Listen for token updates (will fire when native sends token)
-    // Using captured userId to ensure we save to correct user even if _currentUserId changes
+    // Subscribe to token updates FIRST (before async fetch) to avoid
+    // missing events on the broadcast stream during the await gap
     final capturedUserId = userId;
     _tokenSubscription = _callKitService.voipTokenUpdates.listen(
       (token) async {
@@ -82,7 +79,61 @@ class VoIPTokenRepository {
       },
     );
 
+    // Subscribe to token invalidation — clear from Firestore when Apple
+    // invalidates the token so backend doesn't attempt stale VoIP pushes
+    _invalidationSubscription = _callKitService.voipTokenInvalidated.listen(
+      (_) async {
+        _log.debug('VoIP token invalidated, clearing from Firestore', tag: _tag);
+        try {
+          await _clearTokenFromFirestore(capturedUserId);
+        } catch (e, stackTrace) {
+          _log.error(
+            'Error clearing invalidated token',
+            tag: _tag,
+            error: e,
+            stackTrace: stackTrace,
+          );
+        }
+      },
+    );
+
+    // Now fetch current token as backup (in case event fired before subscription)
+    final token = await _callKitService.getVoIPToken();
+    if (token != null) {
+      await _saveToken(userId, token);
+    }
+
     _log.info('VoIP token repository initialized', tag: _tag);
+  }
+
+  /// Re-sync VoIP token with Firestore.
+  ///
+  /// Call this on app resume (foreground) to ensure Firestore stays up-to-date
+  /// for users who stay logged in for extended periods without cold-starting.
+  Future<void> refreshToken() async {
+    final userId = _currentUserId;
+    if (userId == null || !_callKitService.isAvailable) return;
+
+    try {
+      final token = await _callKitService.getVoIPToken();
+      if (token != null) {
+        if (token != _lastSavedToken) {
+          _log.debug('VoIP token changed, updating Firestore', tag: _tag);
+          await _saveToken(userId, token);
+        }
+      } else if (_lastSavedToken != null) {
+        // Token was previously saved but is now null — clear from Firestore
+        _log.debug('VoIP token gone, clearing from Firestore', tag: _tag);
+        await _clearTokenFromFirestore(userId);
+      }
+    } catch (e, stackTrace) {
+      _log.error(
+        'Error refreshing VoIP token',
+        tag: _tag,
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   /// Save the VoIP token to Firestore
@@ -96,10 +147,30 @@ class VoIPTokenRepository {
         'platform': 'ios',
       }, SetOptions(merge: true));
 
+      _lastSavedToken = token;
       _log.debug('VoIP token saved', tag: _tag);
     } catch (e, stackTrace) {
       _log.error(
         'Error saving VoIP token',
+        tag: _tag,
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  /// Clear the VoIP token from Firestore (internal — called on invalidation)
+  Future<void> _clearTokenFromFirestore(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).set({
+        'voipToken': FieldValue.delete(),
+        'voipTokenUpdatedAt': FieldValue.delete(),
+      }, SetOptions(merge: true));
+      _lastSavedToken = null;
+      _log.debug('VoIP token cleared from Firestore', tag: _tag);
+    } catch (e, stackTrace) {
+      _log.error(
+        'Error clearing VoIP token from Firestore',
         tag: _tag,
         error: e,
         stackTrace: stackTrace,
@@ -147,6 +218,8 @@ class VoIPTokenRepository {
   /// Dispose of resources
   void dispose() {
     _tokenSubscription?.cancel();
+    _invalidationSubscription?.cancel();
     _currentUserId = null;
+    _lastSavedToken = null;
   }
 }

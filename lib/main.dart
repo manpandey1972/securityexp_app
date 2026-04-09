@@ -33,6 +33,7 @@ import 'package:securityexperts_app/features/admin/pages/admin_users_page.dart';
 import 'package:securityexperts_app/core/analytics/analytics_route_observer.dart';
 import 'package:securityexperts_app/core/routing/app_routes.dart';
 import 'package:securityexperts_app/core/debug/shake_handler.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/voip_token_repository.dart';
 
 // Track main() calls for debugging duplicate log issues
 int _mainCallCount = 0;
@@ -250,6 +251,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         );
         // Update presence to online
         presenceService.setAppInForeground();
+        // Re-sync VoIP token so Firestore stays current for long-lived sessions
+        sl<VoIPTokenRepository>().refreshToken();
         break;
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
