@@ -203,6 +203,11 @@ class _CallOverlayState extends State<CallOverlay> {
       _left = size.width - 150 - 16; // right: 16
     }
 
+    // Dismiss keyboard when expanding from minimized to full screen
+    if (!isMinimized && _wasMinimized) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+
     // Track state for next build
     _wasMinimized = isMinimized;
 

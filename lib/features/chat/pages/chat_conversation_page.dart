@@ -452,6 +452,9 @@ class _ChatConversationPageContentState
   }
 
   void _startCall(BuildContext context, bool isVideo) async {
+    // Dismiss keyboard before showing the call overlay
+    FocusScope.of(context).unfocus();
+
     _log.debug(
       '_startCall called - isVideo: $isVideo, partnerId: ${widget.partnerId}',
       tag: _tag,
