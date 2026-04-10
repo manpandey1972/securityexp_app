@@ -375,12 +375,9 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
       }
     }
     
-    // Add earpiece if no external audio devices are connected
-    // On iPhones, Speaker and Earpiece are always switchable when no external devices present
-    let hasExternalDevices = devices.contains("bluetooth") || devices.contains("headset")
-    if !hasExternalDevices && UIDevice.current.userInterfaceIdiom == .phone {
-      // Always add earpiece for iPhones when no external devices are connected
-      // Speaker and Earpiece are always available for switching
+    // Add earpiece for iPhones — always available as a routing option
+    // even when external devices (Bluetooth, headset) are connected
+    if UIDevice.current.userInterfaceIdiom == .phone {
       if !devices.contains("earpiece") {
         devices.append("earpiece")
       }

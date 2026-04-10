@@ -80,12 +80,14 @@ class CallKitManager: NSObject {
     }
     
     /// Report an outgoing call to CallKit
-    func reportOutgoingCall(uuid: UUID, handle: String, hasVideo: Bool) {
-        debugPrint("flutter: 📞 [CallKit] Starting outgoing call: \(handle)")
+    func reportOutgoingCall(uuid: UUID, handle: String, calleeName: String?, hasVideo: Bool) {
+        debugPrint("flutter: 📞 [CallKit] Starting outgoing call: \(calleeName ?? handle)")
         
         let handle = CXHandle(type: .generic, value: handle)
         let startCallAction = CXStartCallAction(call: uuid, handle: handle)
         startCallAction.isVideo = hasVideo
+        // Set contact identifier so car displays show the name
+        startCallAction.contactIdentifier = calleeName
         
         let transaction = CXTransaction(action: startCallAction)
         callController.request(transaction) { [weak self] error in
@@ -94,6 +96,16 @@ class CallKitManager: NSObject {
             } else {
                 debugPrint("flutter: ✅ [CallKit] Outgoing call started")
                 self?.activeCallUUID = uuid
+                
+                // Update the call with callee name so car displays and system UI
+                // show the name instead of the handle string
+                if let name = calleeName {
+                    let update = CXCallUpdate()
+                    update.localizedCallerName = name
+                    update.remoteHandle = handle
+                    update.hasVideo = hasVideo
+                    self?.provider.reportCall(with: uuid, updated: update)
+                }
                 
                 // Report that outgoing call is connecting
                 self?.provider.reportOutgoingCall(with: uuid, startedConnectingAt: Date())

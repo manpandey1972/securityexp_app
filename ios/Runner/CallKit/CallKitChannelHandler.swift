@@ -103,22 +103,24 @@ class CallKitChannelHandler {
     
     private func handleReportOutgoingCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-              let callId = args["callId"] as? String,
-              let handle = args["handle"] as? String else {
+              let callUUID = args["callUUID"] as? String else {
             result(FlutterError(
                 code: "INVALID_ARGS",
-                message: "callId and handle are required",
+                message: "callUUID is required",
                 details: nil
             ))
             return
         }
         
+        let calleeId = args["calleeId"] as? String ?? callUUID
+        let calleeName = args["calleeName"] as? String
         let hasVideo = args["hasVideo"] as? Bool ?? false
-        let uuid = UUID(uuidString: callId) ?? UUID()
+        let uuid = UUID(uuidString: callUUID) ?? UUID()
         
         CallKitManager.shared.reportOutgoingCall(
             uuid: uuid,
-            handle: handle,
+            handle: calleeId,
+            calleeName: calleeName,
             hasVideo: hasVideo
         )
         
@@ -127,11 +129,11 @@ class CallKitChannelHandler {
     
     private func handleReportOutgoingCallConnected(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-              let callId = args["callId"] as? String,
-              let uuid = UUID(uuidString: callId) else {
+              let callUUID = args["callUUID"] as? String,
+              let uuid = UUID(uuidString: callUUID) else {
             result(FlutterError(
                 code: "INVALID_ARGS",
-                message: "Valid callId UUID is required",
+                message: "Valid callUUID is required",
                 details: nil
             ))
             return
