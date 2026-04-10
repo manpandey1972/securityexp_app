@@ -11,6 +11,7 @@
 import * as http2 from "http2";
 import * as jwt from "jsonwebtoken";
 import {defineSecret} from "firebase-functions/params";
+import {logger} from "firebase-functions/v2";
 
 // Define secrets for APNS authentication
 // These should be set via: firebase functions:secrets:set APNS_KEY_ID
@@ -23,11 +24,6 @@ const apnsBundleId = defineSecret("APNS_BUNDLE_ID");
 const APNS_HOST_PRODUCTION = "api.push.apple.com";
 const APNS_HOST_SANDBOX = "api.sandbox.push.apple.com";
 const APNS_PORT = 443;
-
-// Sandbox is for Xcode-installed development builds only.
-// TestFlight and App Store builds use production APNS.
-// Toggle to true ONLY when testing with a local Xcode build.
-const USE_SANDBOX = false;
 
 interface VoIPPayload {
   callId: string;
@@ -72,16 +68,32 @@ function generateAPNSToken(): string {
 
 /**
  * Send a VoIP push notification via APNS HTTP/2
+ *
+ * @param deviceToken - The VoIP device token
+ * @param payload - The notification payload
+ * @param environment - "sandbox" for Xcode builds, "production" for TestFlight/App Store (default)
  */
 export async function sendVoIPNotification(
   deviceToken: string,
-  payload: VoIPPayload
+  payload: VoIPPayload,
+  environment: string = "production"
 ): Promise<APNSResult> {
-  const host = USE_SANDBOX ? APNS_HOST_SANDBOX : APNS_HOST_PRODUCTION;
+  const useSandbox = environment === "sandbox";
+  const host = useSandbox ? APNS_HOST_SANDBOX : APNS_HOST_PRODUCTION;
   const bundleId = apnsBundleId.value();
 
   // VoIP push topic must end with .voip
   const topic = `${bundleId}.voip`;
+
+  logger.info(`📡 APNS request details`, {
+    host,
+    environment,
+    useSandbox,
+    topic,
+    bundleId,
+    tokenPrefix: deviceToken.substring(0, 20),
+    tokenLength: deviceToken.length,
+  });
 
   // Build the APNS payload
   // For VoIP pushes, the payload goes directly in the body
@@ -141,6 +153,7 @@ export async function sendVoIPNotification(
           client.close();
 
           if (status === 200) {
+            logger.info(`✅ APNS response: ${status} (host: ${host})`);
             resolve({success: true, statusCode: status});
           } else {
             let errorMessage = `APNS error: ${status}`;
@@ -150,7 +163,13 @@ export async function sendVoIPNotification(
             } catch {
               // Ignore JSON parse error
             }
-            console.error(`APNS push failed: ${errorMessage}`);
+            logger.error(`❌ APNS push failed`, {
+              status,
+              error: errorMessage,
+              host,
+              environment,
+              responseBody: responseData,
+            });
             resolve({success: false, error: errorMessage, statusCode: status});
           }
         });

@@ -53,7 +53,14 @@ class CallKitChannelHandler {
             handleUpdateCallInfo(call: call, result: result)
             
         case "getVoIPToken":
-            result(PushKitManager.shared.voipToken)
+            if let token = PushKitManager.shared.voipToken {
+                result([
+                    "token": token,
+                    "environment": PushKitManager.shared.apnsEnvironment
+                ])
+            } else {
+                result(nil)
+            }
             
         case "isCallKitSupported":
             result(true) // iOS always supports CallKit

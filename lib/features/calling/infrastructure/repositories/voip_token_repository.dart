@@ -56,10 +56,10 @@ class VoIPTokenRepository {
     // missing events on the broadcast stream during the await gap
     final capturedUserId = userId;
     _tokenSubscription = _callKitService.voipTokenUpdates.listen(
-      (token) async {
-        _log.debug('Received VoIP token update', tag: _tag);
+      (tokenInfo) async {
+        _log.debug('Received VoIP token update (env: ${tokenInfo.environment})', tag: _tag);
         try {
-          await _saveToken(capturedUserId, token);
+          await _saveToken(capturedUserId, tokenInfo.token, tokenInfo.environment);
         } catch (e, stackTrace) {
           _log.error(
             'Error saving token',
@@ -98,9 +98,9 @@ class VoIPTokenRepository {
     );
 
     // Now fetch current token as backup (in case event fired before subscription)
-    final token = await _callKitService.getVoIPToken();
-    if (token != null) {
-      await _saveToken(userId, token);
+    final tokenInfo = await _callKitService.getVoIPTokenInfo();
+    if (tokenInfo != null) {
+      await _saveToken(userId, tokenInfo.token, tokenInfo.environment);
     }
 
     _log.info('VoIP token repository initialized', tag: _tag);
@@ -115,11 +115,11 @@ class VoIPTokenRepository {
     if (userId == null || !_callKitService.isAvailable) return;
 
     try {
-      final token = await _callKitService.getVoIPToken();
-      if (token != null) {
-        if (token != _lastSavedToken) {
+      final tokenInfo = await _callKitService.getVoIPTokenInfo();
+      if (tokenInfo != null) {
+        if (tokenInfo.token != _lastSavedToken) {
           _log.debug('VoIP token changed, updating Firestore', tag: _tag);
-          await _saveToken(userId, token);
+          await _saveToken(userId, tokenInfo.token, tokenInfo.environment);
         }
       } else if (_lastSavedToken != null) {
         // Token was previously saved but is now null — clear from Firestore
@@ -137,12 +137,13 @@ class VoIPTokenRepository {
   }
 
   /// Save the VoIP token to Firestore
-  Future<void> _saveToken(String userId, String token) async {
+  Future<void> _saveToken(String userId, String token, String environment) async {
     try {
       final docRef = _firestore.collection('users').doc(userId);
 
       await docRef.set({
         'voipToken': token,
+        'voipTokenEnvironment': environment,
         'voipTokenUpdatedAt': FieldValue.serverTimestamp(),
         'platform': 'ios',
       }, SetOptions(merge: true));
@@ -164,6 +165,7 @@ class VoIPTokenRepository {
     try {
       await _firestore.collection('users').doc(userId).set({
         'voipToken': FieldValue.delete(),
+        'voipTokenEnvironment': FieldValue.delete(),
         'voipTokenUpdatedAt': FieldValue.delete(),
       }, SetOptions(merge: true));
       _lastSavedToken = null;
@@ -201,6 +203,7 @@ class VoIPTokenRepository {
     try {
       await _firestore.collection('users').doc(userIdToUse).set({
         'voipToken': FieldValue.delete(),
+        'voipTokenEnvironment': FieldValue.delete(),
         'voipTokenUpdatedAt': FieldValue.delete(),
       }, SetOptions(merge: true));
       _log.debug('VoIP token cleared', tag: _tag);

@@ -53,6 +53,7 @@ export async function sendVoIPPushInternal(
 
     const calleeData = calleeDoc.data();
     const voipToken = calleeData?.voipToken;
+    const voipTokenEnvironment = calleeData?.voipTokenEnvironment || "production";
 
     if (!voipToken) {
       logger.info(`No VoIP token for user ${data.calleeId}, trying FCM fallback`);
@@ -72,21 +73,40 @@ export async function sendVoIPPushInternal(
     };
 
     // Send VoIP push notification via APNS
-    const result = await sendVoIPNotification(voipToken, payload);
+    // Use the environment stored with the token to pick sandbox vs production endpoint
+    logger.info(`Sending VoIP push via APNS (${voipTokenEnvironment}) to ${data.calleeId}`);
+    const result = await sendVoIPNotification(voipToken, payload, voipTokenEnvironment);
 
     if (result.success) {
       logger.info(`✅ VoIP push sent successfully to ${data.calleeId}`);
       return {success: true};
     } else {
-      logger.error(`❌ VoIP push failed: ${result.error}`);
+      logger.error(`❌ VoIP push failed (${voipTokenEnvironment}): ${result.error}`);
 
-      // If token is invalid, remove it and try FCM fallback
-      if (result.error?.includes("BadDeviceToken") ||
+      // On BadDeviceToken, try the opposite APNS environment before giving up.
+      // This handles cases where the stored environment is stale or was guessed wrong.
+      const isBadToken = result.error?.includes("BadDeviceToken") ||
           result.error?.includes("Unregistered") ||
-          result.statusCode === 410) {
-        logger.info(`Removing invalid VoIP token for ${data.calleeId}`);
+          result.statusCode === 410;
+
+      if (isBadToken) {
+        const fallbackEnv = voipTokenEnvironment === "production" ? "sandbox" : "production";
+        logger.info(`Retrying VoIP push with fallback environment (${fallbackEnv})`);
+        const fallbackResult = await sendVoIPNotification(voipToken, payload, fallbackEnv);
+
+        if (fallbackResult.success) {
+          logger.info(`✅ VoIP push succeeded on fallback (${fallbackEnv}), updating stored environment`);
+          await db.collection("users").doc(data.calleeId).update({
+            voipTokenEnvironment: fallbackEnv,
+          });
+          return {success: true};
+        }
+
+        // Both environments failed — token is truly invalid
+        logger.info(`Removing invalid VoIP token for ${data.calleeId} (failed on both environments)`);
         await db.collection("users").doc(data.calleeId).update({
           voipToken: admin.firestore.FieldValue.delete(),
+          voipTokenEnvironment: admin.firestore.FieldValue.delete(),
           voipTokenUpdatedAt: admin.firestore.FieldValue.delete(),
         });
         return await sendFallbackFCMPush(data);

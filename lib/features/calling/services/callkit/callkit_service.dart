@@ -43,6 +43,16 @@ class CallKitAction {
   }
 }
 
+/// VoIP token with its APNS environment (sandbox or production)
+class VoIPTokenInfo {
+  final String token;
+
+  /// "sandbox" for Xcode debug builds, "production" for TestFlight/App Store
+  final String environment;
+
+  VoIPTokenInfo({required this.token, required this.environment});
+}
+
 /// Service for managing CallKit integration on iOS.
 ///
 /// This service handles:
@@ -62,9 +72,9 @@ class CallKitService {
   final StreamController<CallKitAction> _callActionController =
       StreamController<CallKitAction>.broadcast();
 
-  /// Stream controller for VoIP token updates
-  final StreamController<String> _voipTokenController =
-      StreamController<String>.broadcast();
+  /// Stream controller for VoIP token updates (token + APNS environment)
+  final StreamController<VoIPTokenInfo> _voipTokenController =
+      StreamController<VoIPTokenInfo>.broadcast();
 
   /// Stream controller for VoIP token invalidation
   final StreamController<void> _voipTokenInvalidatedController =
@@ -75,6 +85,9 @@ class CallKitService {
 
   /// Current VoIP push token
   String? _voipToken;
+
+  /// Current APNS environment ("sandbox" or "production")
+  String? _apnsEnvironment;
 
   CallKitService._internal() : _channel = const MethodChannel(_channelName) {
     sl<AppLogger>().debug('Service singleton created', tag: 'CallKit');
@@ -93,11 +106,14 @@ class CallKitService {
   /// Stream of call actions from native CallKit UI
   Stream<CallKitAction> get callActions => _callActionController.stream;
 
-  /// Stream of VoIP token updates
-  Stream<String> get voipTokenUpdates => _voipTokenController.stream;
+  /// Stream of VoIP token updates (includes APNS environment)
+  Stream<VoIPTokenInfo> get voipTokenUpdates => _voipTokenController.stream;
 
   /// Stream that fires when the VoIP token is invalidated by Apple
   Stream<void> get voipTokenInvalidated => _voipTokenInvalidatedController.stream;
+
+  /// Current APNS environment
+  String? get apnsEnvironment => _apnsEnvironment;
 
   /// Current active call UUID
   String? get activeCallUUID => _activeCallUUID;
@@ -144,11 +160,13 @@ class CallKitService {
       case 'onVoIPTokenReceived':
         final args = call.arguments as Map?;
         final token = args?['token'] as String?;
+        final environment = args?['environment'] as String? ?? 'production';
         if (token != null) {
           _voipToken = token;
-          _voipTokenController.add(token);
+          _apnsEnvironment = environment;
+          _voipTokenController.add(VoIPTokenInfo(token: token, environment: environment));
           sl<AppLogger>().debug(
-            'VoIP token received: ${token.substring(0, 20)}...',
+            'VoIP token received: ${token.substring(0, 20)}... (env: $environment)',
             tag: 'CallKit',
           );
         }
@@ -476,16 +494,28 @@ class CallKitService {
     }
   }
 
-  /// Get the current VoIP push token
-  Future<String?> getVoIPToken() async {
+  /// Get the current VoIP push token with APNS environment
+  Future<VoIPTokenInfo?> getVoIPTokenInfo() async {
     if (!isAvailable) return null;
 
     try {
-      final token = await _channel.invokeMethod<String>('getVoIPToken');
-      if (token != null) {
-        _voipToken = token;
+      final result = await _channel.invokeMethod('getVoIPToken');
+      if (result == null) return null;
+
+      if (result is Map) {
+        final token = result['token'] as String?;
+        final environment = result['environment'] as String? ?? 'production';
+        if (token != null) {
+          _voipToken = token;
+          _apnsEnvironment = environment;
+          return VoIPTokenInfo(token: token, environment: environment);
+        }
+      } else if (result is String) {
+        // Backward compatibility: old native code returns plain string
+        _voipToken = result;
+        return VoIPTokenInfo(token: result, environment: _apnsEnvironment ?? 'production');
       }
-      return token;
+      return null;
     } on PlatformException catch (e) {
       sl<AppLogger>().error('Error getting VoIP token: ${e.message}', tag: 'CallKit');
       return null;

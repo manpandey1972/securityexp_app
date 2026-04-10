@@ -10,6 +10,42 @@ class PushKitManager: NSObject {
     private var pushRegistry: PKPushRegistry?
     private(set) var voipToken: String?
     
+    /// APNS environment derived from the app's provisioning profile.
+    /// Development profiles → "sandbox", distribution profiles → "production".
+    /// App Store / TestFlight builds have no embedded.mobileprovision → "production".
+    lazy var apnsEnvironment: String = {
+        guard let provisioningURL = Bundle.main.url(forResource: "embedded", withExtension: "mobileprovision"),
+              let provisioningData = try? Data(contentsOf: provisioningURL) else {
+            // No provisioning profile = App Store / TestFlight → always production
+            debugPrint("flutter: 📱 [PushKit] No embedded provisioning profile, using production APNS")
+            return "production"
+        }
+        
+        // The provisioning profile is a binary CMS/PKCS7 container with an embedded XML plist.
+        // Search for the XML boundaries directly in the binary data to avoid encoding issues.
+        guard let xmlStartMarker = "<?xml".data(using: .utf8),
+              let xmlEndMarker = "</plist>".data(using: .utf8),
+              let startRange = provisioningData.range(of: xmlStartMarker),
+              let endRange = provisioningData.range(of: xmlEndMarker) else {
+            // File exists but can't parse → not App Store, assume sandbox
+            debugPrint("flutter: 📱 [PushKit] Could not find XML in provisioning profile, defaulting to sandbox")
+            return "sandbox"
+        }
+        
+        let xmlData = provisioningData.subdata(in: startRange.lowerBound..<endRange.upperBound)
+        
+        guard let plist = try? PropertyListSerialization.propertyList(from: xmlData, format: nil) as? [String: Any],
+              let entitlements = plist["Entitlements"] as? [String: Any],
+              let apsEnv = entitlements["aps-environment"] as? String else {
+            // Has profile but no aps-environment → assume sandbox
+            debugPrint("flutter: 📱 [PushKit] No aps-environment in provisioning profile, defaulting to sandbox")
+            return "sandbox"
+        }
+        
+        debugPrint("flutter: 📱 [PushKit] aps-environment from profile: \(apsEnv)")
+        return apsEnv == "production" ? "production" : "sandbox"
+    }()
+    
     // Flutter method channel for callbacks
     var flutterChannel: FlutterMethodChannel?
     
@@ -46,11 +82,12 @@ extension PushKitManager: PKPushRegistryDelegate {
         let token = pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined()
         voipToken = token
         
-        debugPrint("flutter: 📱 [PushKit] VoIP token received: \(token.prefix(20))...")
+        debugPrint("flutter: 📱 [PushKit] VoIP token received: \(token.prefix(20))... (env: \(apnsEnvironment))")
         
         // Send token to Flutter to store in backend
         flutterChannel?.invokeMethod("onVoIPTokenReceived", arguments: [
-            "token": token
+            "token": token,
+            "environment": apnsEnvironment
         ])
     }
     
