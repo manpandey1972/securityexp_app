@@ -24,9 +24,10 @@ const APNS_HOST_PRODUCTION = "api.push.apple.com";
 const APNS_HOST_SANDBOX = "api.sandbox.push.apple.com";
 const APNS_PORT = 443;
 
-// Use sandbox for development builds (apps installed via Xcode)
-// Set to false when your app is distributed via TestFlight or App Store
-const USE_SANDBOX = true;
+// Sandbox is for Xcode-installed development builds only.
+// TestFlight and App Store builds use production APNS.
+// Toggle to true ONLY when testing with a local Xcode build.
+const USE_SANDBOX = false;
 
 interface VoIPPayload {
   callId: string;

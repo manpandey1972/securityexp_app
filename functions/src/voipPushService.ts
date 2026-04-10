@@ -87,6 +87,7 @@ export async function sendVoIPPushInternal(
         logger.info(`Removing invalid VoIP token for ${data.calleeId}`);
         await db.collection("users").doc(data.calleeId).update({
           voipToken: admin.firestore.FieldValue.delete(),
+          voipTokenUpdatedAt: admin.firestore.FieldValue.delete(),
         });
         return await sendFallbackFCMPush(data);
       }
