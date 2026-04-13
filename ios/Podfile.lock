@@ -1291,7 +1291,6 @@ PODS:
     - firebase_core
     - FirebaseAnalytics (= 12.9.0)
     - Flutter
-<<<<<<< HEAD
   - firebase_app_check (0.4.1-4):
     - Firebase/CoreOnly (~> 12.8.0)
     - firebase_core
@@ -1299,10 +1298,6 @@ PODS:
     - Flutter
   - firebase_auth (6.1.2):
     - Firebase/Auth (= 12.8.0)
-=======
-  - firebase_auth (6.3.0):
-    - Firebase/Auth (= 12.9.0)
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
     - firebase_core
     - Flutter
   - firebase_core (4.6.0):
@@ -1352,7 +1347,6 @@ PODS:
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
-<<<<<<< HEAD
   - FirebaseAppCheck (12.8.0):
     - AppCheckCore (~> 11.0)
     - FirebaseAppCheckInterop (~> 12.8.0)
@@ -1365,14 +1359,6 @@ PODS:
     - FirebaseAuthInterop (~> 12.8.0)
     - FirebaseCore (~> 12.8.0)
     - FirebaseCoreExtension (~> 12.8.0)
-=======
-  - FirebaseAppCheckInterop (12.9.0)
-  - FirebaseAuth (12.9.0):
-    - FirebaseAppCheckInterop (~> 12.9.0)
-    - FirebaseAuthInterop (~> 12.9.0)
-    - FirebaseCore (~> 12.9.0)
-    - FirebaseCoreExtension (~> 12.9.0)
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/Environment (~> 8.1)
     - GTMSessionFetcher/Core (< 6.0, >= 3.4)
@@ -1488,7 +1474,6 @@ PODS:
     - SDWebImageWebPCoder
   - flutter_local_notifications (0.0.1):
     - Flutter
-<<<<<<< HEAD
   - flutter_secure_storage (6.0.0):
     - Flutter
   - flutter_webrtc (1.2.0):
@@ -1499,11 +1484,6 @@ PODS:
     - FlutterMacOS
     - GoogleSignIn (~> 9.0)
     - GTMSessionFetcher (>= 3.4.0)
-=======
-  - flutter_webrtc (1.4.0):
-    - Flutter
-    - WebRTC-SDK (= 144.7559.01)
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   - GoogleAdsOnDeviceConversion (3.2.0):
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/Logger (~> 8.1)
@@ -1658,7 +1638,6 @@ PODS:
     - gRPC-Core/Privacy (= 1.69.0)
   - gRPC-Core/Interface (1.69.0)
   - gRPC-Core/Privacy (1.69.0)
-<<<<<<< HEAD
   - GTMAppAuth (5.0.0):
     - AppAuth/Core (~> 2.0)
     - GTMSessionFetcher/Core (< 4.0, >= 3.3)
@@ -1667,9 +1646,6 @@ PODS:
   - GTMSessionFetcher/Core (3.5.0)
   - GTMSessionFetcher/Full (3.5.0):
     - GTMSessionFetcher/Core
-=======
-  - GTMSessionFetcher/Core (5.2.0)
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   - image_picker_ios (0.0.1):
     - Flutter
   - leveldb-library (1.22.6)
@@ -1713,15 +1689,9 @@ PODS:
   - RecaptchaInterop (101.0.0)
   - record_darwin (1.0.0):
     - Flutter
-<<<<<<< HEAD
   - SDWebImage (5.21.6):
     - SDWebImage/Core (= 5.21.6)
   - SDWebImage/Core (5.21.6)
-=======
-  - SDWebImage (5.21.7):
-    - SDWebImage/Core (= 5.21.7)
-  - SDWebImage/Core (5.21.7)
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   - SDWebImageWebPCoder (0.15.0):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -1929,13 +1899,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: a05cc83bf02079535e17169a73c5be5ba47f714b
-<<<<<<< HEAD
   AppAuth: 1c1a8afa7e12f2ec3a294d9882dfa5ab7d3cb063
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
-=======
-  audioplayers_darwin: 835ced6edd4c9fc8ebb0a7cc9e294a91d99917d5
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
   camera_avfoundation: 5675ca25298b6f81fa0a325188e7df62cc217741
   cloud_firestore: 698d4d849c58da2ef2b3b8b9db27d2cd56614e7e
@@ -1945,7 +1911,6 @@ SPEC CHECKSUMS:
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
-<<<<<<< HEAD
   Firebase: 9a58fdbc9d8655ed7b79a19cf9690bb007d3d46d
   firebase_analytics: 14d62763b7f5315a4c74bb9c21b6421d72e75e76
   firebase_app_check: 21e404a225ce29ae2ec6dbad503e83fd1c4ac1fb
@@ -1986,44 +1951,6 @@ SPEC CHECKSUMS:
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
   flutter_webrtc: c3e21fc0dcd9d8eb246ae4d5256fcbeb2f5ecd22
   google_sign_in_ios: 000870aa06da9b28d1d0bf7ef70ff0213059dd28
-=======
-  Firebase: 065f2bb395062046623036d8e6dc857bc2521d56
-  firebase_analytics: 8288e2480a2b2a5eb2cc3c474e4a4327e8dc520b
-  firebase_auth: 323c64eedef33fc3fdf438d16c29d2624b2ce4f4
-  firebase_core: 8e6f58412ca227827c366b92e7cee047a2148c60
-  firebase_crashlytics: c399f9682c474beb06a89c11dfab04db537f3cd2
-  firebase_database: 907907fbf646c90fe16f189e1f29f3e7a6728332
-  firebase_messaging: c3aa897e0d40109cfb7927c40dc0dea799863f3b
-  firebase_performance: 0438d12b5bb7ec023e2dabef6f44889168696273
-  firebase_remote_config: cd42a29a61e8610230e7f74d5646d6392fd7368d
-  firebase_storage: 8d16922c017c49812f7bbe64a86f756f99a44c74
-  FirebaseABTesting: a399ffe546392a39b19a5c2fb28bd8ea178a6f47
-  FirebaseAnalytics: cd7d01d352f3c237c9a0e31552c257cd0b0c0352
-  FirebaseAppCheckInterop: 4bade10286cc977e516f75d2d8312cbdfa534789
-  FirebaseAuth: 3a39f6436c21ebfd7919b698228b4f89ff94c23b
-  FirebaseAuthInterop: f8f6ff72dc24621906497fbe5cf3c42ee815e59c
-  FirebaseCore: 428912f751178b06bef0a1793effeb4a5e09a9b8
-  FirebaseCoreExtension: e911052d59cd0da237a45d706fc0f81654f035c1
-  FirebaseCoreInternal: b321eafae5362113bc182956fafc9922cfc77b72
-  FirebaseCrashlytics: 43913d587ef07beaf5db703baa61eacf9554658c
-  FirebaseDatabase: e6a01d759052888cf02c7cc11f6d5d34f3337cb5
-  FirebaseFirestore: d8b76ca1feb4ca0b0f078c45f7d1bd8014a49ef1
-  FirebaseFirestoreInternal: 02341a9ba87f6309227b04685022a5e16307bbf7
-  FirebaseFunctions: 3312aea81319803c25b65de45343a004e6bb1221
-  FirebaseInstallations: 7b64ffd006032b2b019a59b803858df5112d9eaa
-  FirebaseMessaging: 7d6cdbff969127c4151c824fe432f0e301210f15
-  FirebaseMessagingInterop: 2aab0b11571c2e9f95e08bafa99facb4367641b1
-  FirebasePerformance: 94f614453614d8bb2a1a0177f3a1a6d2dbf4c504
-  FirebaseRemoteConfig: a2f6545e41551ffb520241d38b5d3d6776c9ebe8
-  FirebaseRemoteConfigInterop: 765ee19cd2bfa8e54937c8dae901eb634ad6787d
-  FirebaseSessions: a2d06fd980431fda934c7a543901aca05fc4edcc
-  FirebaseSharedSwift: 9d2fa84a46676302b89dbd5e6e62bce2fe376909
-  FirebaseStorage: 3ba2348d876c295236cdd9f408a62d3f9ff8e6b5
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_image_compress_common: 1697a328fd72bfb335507c6bca1a65fa5ad87df1
-  flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
-  flutter_webrtc: ec91d94b484ad49cf191ef93413f64a40ffd3b4c
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   GoogleAdsOnDeviceConversion: d68c69dd9581a0f5da02617b6f377e5be483970f
   GoogleAppMeasurement: fce7c1c90640d2f9f5c56771f71deacb2ba3f98c
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
@@ -2031,12 +1958,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   "gRPC-C++": cc207623316fb041a7a3e774c252cf68a058b9e8
   gRPC-Core: 860978b7db482de8b4f5e10677216309b5ff6330
-<<<<<<< HEAD
   GTMAppAuth: 217a876b249c3c585a54fd6f73e6b58c4f5c4238
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
-=======
-  GTMSessionFetcher: 904bdd2a82c635bcd6f44edf94cc8775c5d1d6e6
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
   leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
@@ -2051,11 +1974,7 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   record_darwin: fb1f375f1d9603714f55b8708a903bbb91ffdb0a
-<<<<<<< HEAD
   SDWebImage: 1bb6a1b84b6fe87b972a102bdc77dd589df33477
-=======
-  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
->>>>>>> 2dfd8cb (fixing cloud function call crash. And voip token handling.)
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   sensors_plus: 1c5f0a01ce21c609a4df404c4e6879d62bce287f
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
