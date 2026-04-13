@@ -45,6 +45,11 @@ class IncomingCallStrategy {
   /// This prevents Firestore listener from showing duplicate Flutter dialog
   final Map<String, DateTime> _callsHandledByCallKit = {};
 
+  /// Timestamp of last mute event processed — used to de-duplicate rapid
+  /// CXSetMutedCallAction echoes that arrive within a short window.
+  DateTime _lastMuteEventTime = DateTime.fromMillisecondsSinceEpoch(0);
+  bool? _lastMuteEventValue;
+
   /// Max age for tracked calls before automatic expiration (2 minutes)
   static const Duration _callTrackingExpiration = Duration(minutes: 2);
 
@@ -319,6 +324,19 @@ class IncomingCallStrategy {
     sl<AppLogger>().debug('CallKit end for $callUUID', tag: 'IncomingCallStrategy');
     sl<AppLogger>().debug('End data: $data', tag: 'IncomingCallStrategy');
 
+    // Check if there's an active connected call — end it via coordinator
+    final coordinator = CallNavigationCoordinator();
+    if (coordinator.activeController != null) {
+      sl<AppLogger>().debug(
+        'Active call found — ending via coordinator',
+        tag: 'IncomingCallStrategy',
+      );
+      await coordinator.endCall();
+      _pendingCallData = null;
+      return;
+    }
+
+    // No active call controller — this is a pre-answer reject
     // Get call data from pending data or from the action data
     final callData = _pendingCallData ?? data ?? {};
 
@@ -329,7 +347,7 @@ class IncomingCallStrategy {
           callData['callId'] as String? ??
           '';
 
-sl<AppLogger>().debug(
+      sl<AppLogger>().debug(
           'Rejecting call with roomId: $roomId',
           tag: 'IncomingCallStrategy',
       );
@@ -356,8 +374,8 @@ sl<AppLogger>().debug(
       _cleanupCallKitTracking(callData['roomName'] as String?);
       _pendingCallData = null;
     } else {
-      // Active call being ended - just dismiss any Flutter UI
-      sl<AppLogger>().debug('No call data, just dismissing UI', tag: 'IncomingCallStrategy');
+      // No active call and no pending data — just dismiss any Flutter UI
+      sl<AppLogger>().debug('No active call or pending data, just dismissing UI', tag: 'IncomingCallStrategy');
       _incomingCallManager.dismissIncomingCall();
     }
   }
@@ -368,19 +386,36 @@ sl<AppLogger>().debug(
         data?['muted'] as bool? ?? data?['isMuted'] as bool? ?? false;
     sl<AppLogger>().debug('CallKit mute: $isMuted', tag: 'IncomingCallStrategy');
 
-    // Get the active call controller and toggle mute
+    // De-duplicate rapid mute events (CXSetMutedCallAction can echo multiple
+    // times for a single mute press, especially from car displays)
+    final now = DateTime.now();
+    if (_lastMuteEventValue == isMuted &&
+        now.difference(_lastMuteEventTime).inMilliseconds < 500) {
+      sl<AppLogger>().debug(
+        'Ignoring duplicate mute event (within 500ms)',
+        tag: 'IncomingCallStrategy',
+      );
+      return;
+    }
+    _lastMuteEventTime = now;
+    _lastMuteEventValue = isMuted;
+
+    // Get the active call controller and set mute state explicitly
     final coordinator = CallNavigationCoordinator();
     final controller = coordinator.activeController;
 
     if (controller != null) {
-      // Only toggle if the state differs from current
       final currentMuted = controller.mediaManager?.isMuted.value ?? false;
       if (currentMuted != isMuted) {
         sl<AppLogger>().debug(
           'Syncing mute state: $currentMuted -> $isMuted',
           tag: 'IncomingCallStrategy',
         );
-        controller.toggleMute();
+        // Use explicit setMicrophoneMuted instead of toggleMute to avoid
+        // race conditions from toggle-based approach with remote commands.
+        // syncToCallKit: false prevents a feedback loop — CallKit already
+        // knows the mute state since the action originated from it.
+        controller.setMicrophoneMuted(isMuted, syncToCallKit: false);
       } else {
         sl<AppLogger>().debug('Mute already in sync: $isMuted', tag: 'IncomingCallStrategy');
       }

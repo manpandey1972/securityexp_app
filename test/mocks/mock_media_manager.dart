@@ -111,6 +111,14 @@ class MockMediaManager implements MediaManager {
   }
 
   @override
+  Future<void> setMicrophoneMuted(bool muted) async {
+    if (isMuted.value != muted) {
+      toggleMuteCount++;
+      isMuted.value = muted;
+    }
+  }
+
+  @override
   Future<void> toggleVideo() async {
     toggleVideoCount++;
     isVideoEnabled.value = !isVideoEnabled.value;

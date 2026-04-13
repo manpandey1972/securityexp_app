@@ -8,6 +8,7 @@ import FirebaseAuth
 class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     private var eventSink: FlutterEventSink?
     private var portObserver: NSObjectProtocol?
+    private var isRevertingAutoSwitch = false
     
     func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         self.eventSink = events
@@ -24,6 +25,27 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
             object: AVAudioSession.sharedInstance(),
             queue: .main
         ) { [weak self] notification in
+            // Handle route change from our own auto-switch revert
+            if self?.isRevertingAutoSwitch == true {
+                self?.isRevertingAutoSwitch = false
+                debugPrint("flutter: ⏭️ [AudioRoute] Route change from auto-switch revert - sending current device")
+                // Send current device to Flutter to trigger available devices refresh
+                let currentDevice = self?.getCurrentDevice() ?? "speaker"
+                if currentDevice != lastReportedDevice {
+                    lastReportedDevice = currentDevice
+                }
+                // Clear preferredInput so it doesn't block future transfers.
+                // The revert already routed audio back to phone — clearing the
+                // preference means the car's "Transfer Call" button (HFP SCO)
+                // can override routing without iOS fighting it.
+                try? AVAudioSession.sharedInstance().setPreferredInput(nil)
+                debugPrint("flutter: 🔓 [AudioRoute] Cleared preferredInput after revert — car transfer enabled")
+                // Always send event so Flutter refreshes available devices list
+                // (Bluetooth is now available for manual selection even though we didn't auto-switch)
+                events(currentDevice)
+                return
+            }
+            
             // Log the actual current route BEFORE processing
             let sessionBefore = AVAudioSession.sharedInstance().currentRoute
             let outputsBefore = sessionBefore.outputs.map { "\($0.portType.rawValue)" }.joined(separator: ", ")
@@ -50,10 +72,30 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
                 case .newDeviceAvailable:
                     reasonString = "NewDeviceAvailable (e.g., Bluetooth/headset connected)"
                     // Check if the route ACTUALLY changed to the new device
-                    // If it did, iOS auto-switched (no user prompt), so we should notify
                     let currentDevice = self?.getCurrentDevice() ?? "speaker"
-                    if currentDevice == "bluetooth" || currentDevice == "headset" {
-                        debugPrint("flutter: ⚡ [AudioRoute] iOS auto-switched to \(currentDevice) without prompt")
+                    if currentDevice == "bluetooth" && AudioSessionManager.shared.currentContext == .activeCall {
+                        // During an active call, prevent auto-switch to Bluetooth.
+                        // User must explicitly transfer via car's "Transfer Call" dialog or app UI.
+                        // Car's Transfer button works through HFP SCO protocol, which overrides preferredInput.
+                        debugPrint("flutter: ⏮️ [AudioRoute] Preventing Bluetooth auto-switch during active call")
+                        self?.isRevertingAutoSwitch = true
+                        do {
+                            let session = AVAudioSession.sharedInstance()
+                            if let inputs = session.availableInputs {
+                                let builtInMic = inputs.first(where: { $0.portType == .builtInMic })
+                                if let mic = builtInMic {
+                                    try session.setPreferredInput(mic)
+                                    debugPrint("flutter: ✅ [AudioRoute] Reverted to built-in mic — user must transfer manually")
+                                }
+                            }
+                        } catch {
+                            debugPrint("flutter: ❌ [AudioRoute] Failed to revert auto-switch: \(error)")
+                            self?.isRevertingAutoSwitch = false
+                        }
+                        shouldNotify = false
+                        shouldRefresh = false
+                    } else if currentDevice == "bluetooth" || currentDevice == "headset" {
+                        debugPrint("flutter: ⚡ [AudioRoute] iOS auto-switched to \(currentDevice)")
                         shouldNotify = true
                         shouldRefresh = true
                     } else {
@@ -64,12 +106,20 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
                     reasonString = "OldDeviceUnavailable (e.g., Bluetooth/headset disconnected)"
                     // Device disconnected, iOS auto-switches - refresh to ensure WebRTC picks it up
                     shouldRefresh = true
+                    // Clear any preferredInput lock so next BT connection starts fresh
+                    try? AVAudioSession.sharedInstance().setPreferredInput(nil)
                 case .categoryChange:
                     reasonString = "CategoryChange"
                     shouldRefresh = true
                 case .override:
                     reasonString = "Override (manual user selection)"
-                    // User selected device from iOS dialog - refresh WebRTC routing
+                    // User selected device from iOS dialog or car's "Transfer Call" button.
+                    // Clear any preferredInput lock from auto-switch prevention so the
+                    // new routing (e.g., Bluetooth SCO from car transfer) sticks.
+                    if AudioSessionManager.shared.currentContext == .activeCall {
+                        try? AVAudioSession.sharedInstance().setPreferredInput(nil)
+                        debugPrint("flutter: 🔓 [AudioRoute] Cleared preferredInput lock for override routing")
+                    }
                     shouldRefresh = true
                 case .wakeFromSleep:
                     reasonString = "WakeFromSleep"
@@ -77,6 +127,12 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
                     reasonString = "NoSuitableRouteForCategory"
                 case .routeConfigurationChange:
                     reasonString = "RouteConfigurationChange"
+                    // Route config changed externally (e.g., car HFP SCO link established).
+                    // Clear preferredInput lock so the new routing sticks.
+                    if AudioSessionManager.shared.currentContext == .activeCall {
+                        try? AVAudioSession.sharedInstance().setPreferredInput(nil)
+                        debugPrint("flutter: 🔓 [AudioRoute] Cleared preferredInput lock for route config change")
+                    }
                     shouldRefresh = true
                 default:
                     reasonString = "Unknown (\(reasonValue))"
@@ -300,9 +356,6 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     
     // Initialize HFP device detection
     initializeHFPDetection()
-    
-    // Initialize HFP call control (for car buttons)
-    initializeHFPCallControl()
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

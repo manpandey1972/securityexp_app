@@ -273,6 +273,25 @@ class LiveKitMediaManager extends MediaManager {
   }
 
   @override
+  Future<void> setMicrophoneMuted(bool muted) async {
+    if (isMuted.value == muted) return; // Already in desired state
+    try {
+      // Set isMuted BEFORE the async call to prevent race conditions
+      // where concurrent events both see the old state.
+      if (!_isDisposed) {
+        isMuted.value = muted;
+      }
+      await _service.setMicrophoneEnabled(!muted); // enabled = !muted
+    } catch (e) {
+      // Revert on failure
+      if (!_isDisposed) {
+        isMuted.value = !muted;
+      }
+      _log.error('Mic unavailable or permission revoked', tag: _tag, error: e);
+    }
+  }
+
+  @override
   Future<void> toggleVideo() async {
     final newState = !isVideoEnabled.value;
     try {

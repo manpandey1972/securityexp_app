@@ -1,6 +1,9 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
+import 'package:securityexperts_app/features/calling/services/callkit/callkit_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
@@ -90,11 +93,38 @@ class CallNavigationCoordinator extends ChangeNotifier {
     _pendingIsVideo = isVideo;
     _pendingIsCaller = isCaller;
     _isMinimized = false;
+
+    // Report outgoing call to CallKit so car displays show caller name and timer
+    if (isCaller && !kIsWeb && Platform.isIOS) {
+      _reportOutgoingCallToCallKit(calleeId, calleeName, isVideo);
+    }
+
     _log.debug(
       'initiateCall() - hasActiveCall will be: $hasActiveCall',
       tag: _tag,
     );
     notifyListeners();
+  }
+
+  /// Report outgoing call to CallKit for car display integration
+  void _reportOutgoingCallToCallKit(
+    String calleeId,
+    String calleeName,
+    bool isVideo,
+  ) {
+    try {
+      final callKit = CallKitService();
+      if (callKit.isAvailable) {
+        callKit.reportOutgoingCall(
+          calleeId: calleeId,
+          calleeName: calleeName,
+          hasVideo: isVideo,
+        );
+        _log.debug('Reported outgoing call to CallKit', tag: _tag);
+      }
+    } catch (e) {
+      _log.warning('Failed to report outgoing call to CallKit: $e', tag: _tag);
+    }
   }
 
   /// Sets the room ID for a pending call

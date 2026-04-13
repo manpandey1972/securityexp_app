@@ -15,6 +15,20 @@ class CallKitManager: NSObject {
     // Store pending call data from VoIP push
     var pendingCallData: [String: Any]?
     
+    // Store the current call participant name so it can be re-applied
+    // at every CallKit state transition (Tesla/cars re-read the name)
+    private(set) var currentCallName: String?
+    
+    // Track whether the current call is video to preserve hasVideo
+    // in name-only CXCallUpdate pushes (default false resets video → audio)
+    private(set) var currentCallIsVideo: Bool = false
+    
+    // Suppress CXSetMutedCallAction echo-back when mute originated from Flutter.
+    // When Flutter calls setMuted → CXCallController.request(CXSetMutedCallAction),
+    // iOS triggers our CXProviderDelegate which would echo 'onMuteToggled' right
+    // back to Flutter creating a feedback loop.
+    private var muteSetByFlutter: Bool = false
+    
     // Flutter method channel for callbacks
     var flutterChannel: FlutterMethodChannel?
     
@@ -58,9 +72,11 @@ class CallKitManager: NSObject {
         completion: @escaping (Error?) -> Void
     ) {
         debugPrint("flutter: 📞 [CallKit] Reporting incoming call: \(callerName) (video: \(hasVideo))")
+        currentCallName = callerName
+        currentCallIsVideo = hasVideo
         
         let update = CXCallUpdate()
-        update.remoteHandle = CXHandle(type: .generic, value: callerId)
+        update.remoteHandle = CXHandle(type: .generic, value: callerName)
         update.localizedCallerName = callerName
         update.hasVideo = hasVideo
         update.supportsHolding = false
@@ -83,7 +99,10 @@ class CallKitManager: NSObject {
     func reportOutgoingCall(uuid: UUID, handle: String, calleeName: String?, hasVideo: Bool) {
         debugPrint("flutter: 📞 [CallKit] Starting outgoing call: \(calleeName ?? handle)")
         
-        let handle = CXHandle(type: .generic, value: handle)
+        let displayName = calleeName ?? "Unknown"
+        currentCallName = displayName
+        currentCallIsVideo = hasVideo
+        let handle = CXHandle(type: .generic, value: displayName)
         let startCallAction = CXStartCallAction(call: uuid, handle: handle)
         startCallAction.isVideo = hasVideo
         // Set contact identifier so car displays show the name
@@ -116,6 +135,18 @@ class CallKitManager: NSObject {
     /// Report that outgoing call has connected
     func reportOutgoingCallConnected(uuid: UUID) {
         debugPrint("flutter: ✅ [CallKit] Outgoing call connected")
+        
+        // Re-send localizedCallerName so car displays (Tesla) refresh the name
+        // when the call transitions to connected state
+        if let name = currentCallName {
+            let update = CXCallUpdate()
+            update.localizedCallerName = name
+            update.remoteHandle = CXHandle(type: .generic, value: name)
+            update.hasVideo = currentCallIsVideo
+            provider.reportCall(with: uuid, updated: update)
+            debugPrint("flutter: ✅ [CallKit] Re-sent name on connect: \(name) (video: \(currentCallIsVideo))")
+        }
+        
         provider.reportOutgoingCall(with: uuid, connectedAt: Date())
     }
     
@@ -125,6 +156,8 @@ class CallKitManager: NSObject {
         provider.reportCall(with: uuid, endedAt: Date(), reason: reason)
         activeCallUUID = nil
         pendingCallData = nil
+        currentCallName = nil
+        currentCallIsVideo = false
         
         // Deactivate audio session
         deactivateAudioSession()
@@ -143,6 +176,8 @@ class CallKitManager: NSObject {
                 // Even if the request fails, try to clean up
                 self?.activeCallUUID = nil
                 self?.pendingCallData = nil
+                self?.currentCallName = nil
+                self?.currentCallIsVideo = false
                 self?.deactivateAudioSession()
             } else {
                 debugPrint("flutter: ✅ [CallKit] Call end requested successfully")
@@ -162,14 +197,20 @@ class CallKitManager: NSObject {
         }
     }
     
-    /// Mute/unmute the call
+    /// Mute/unmute the call (called from Flutter)
     func setMuted(uuid: UUID, muted: Bool) {
+        // Mark that this mute change originated from Flutter so the
+        // CXProviderDelegate callback (CXSetMutedCallAction) won't echo
+        // it back to Flutter, preventing a feedback loop.
+        muteSetByFlutter = true
+        
         let setMutedAction = CXSetMutedCallAction(call: uuid, muted: muted)
         let transaction = CXTransaction(action: setMutedAction)
         
-        callController.request(transaction) { error in
+        callController.request(transaction) { [weak self] error in
             if let error = error {
                 debugPrint("flutter: ❌ [CallKit] Failed to set mute: \(error.localizedDescription)")
+                self?.muteSetByFlutter = false
             }
         }
     }
@@ -217,6 +258,8 @@ extension CallKitManager: CXProviderDelegate {
         // End all calls and reset state
         activeCallUUID = nil
         pendingCallData = nil
+        currentCallName = nil
+        currentCallIsVideo = false
         
         // Notify Flutter
         flutterChannel?.invokeMethod("onCallKitReset", arguments: nil)
@@ -227,10 +270,22 @@ extension CallKitManager: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        debugPrint("flutter: 📞 [CallKit] Starting call action")
+        debugPrint("flutter: 📞 [CallKit] Starting call action: \(currentCallName ?? action.handle.value)")
         
         // Configure audio session
         configureAudioSession()
+        
+        // Update localizedCallerName BEFORE fulfilling the action
+        // so car displays (Tesla) get the name during initial HFP negotiation.
+        // Without this, Tesla shows the call UUID instead of the name.
+        if let name = currentCallName {
+            let update = CXCallUpdate()
+            update.localizedCallerName = name
+            update.remoteHandle = CXHandle(type: .generic, value: name)
+            update.hasVideo = currentCallIsVideo
+            provider.reportCall(with: action.callUUID, updated: update)
+            debugPrint("flutter: ✅ [CallKit] Set localizedCallerName before fulfill: \(name) (video: \(currentCallIsVideo))")
+        }
         
         // Signal to the provider that the action has been fulfilled
         action.fulfill()
@@ -269,6 +324,19 @@ extension CallKitManager: CXProviderDelegate {
         
         // Fulfill the action
         action.fulfill()
+        
+        // Re-apply localizedCallerName AFTER fulfill so car displays
+        // (Tesla, CarPlay) refresh the name during the connected state.
+        // Some car systems only read the name after the call transitions.
+        let callerName = pendingCallData?["callerName"] as? String ?? currentCallName
+        if let name = callerName {
+            let nameUpdate = CXCallUpdate()
+            nameUpdate.localizedCallerName = name
+            nameUpdate.remoteHandle = CXHandle(type: .generic, value: name)
+            nameUpdate.hasVideo = currentCallIsVideo
+            provider.reportCall(with: action.callUUID, updated: nameUpdate)
+            debugPrint("flutter: ✅ [CallKit] Updated answered call with name: \(name) (video: \(currentCallIsVideo))")
+        }
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
@@ -293,6 +361,8 @@ extension CallKitManager: CXProviderDelegate {
         // Clean up
         activeCallUUID = nil
         pendingCallData = nil
+        currentCallName = nil
+        currentCallIsVideo = false
         
         // Deactivate audio session
         deactivateAudioSession()
@@ -314,9 +384,20 @@ extension CallKitManager: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
-        debugPrint("flutter: 🔇 [CallKit] Mute toggled: \(action.isMuted)")
+        debugPrint("flutter: 🔇 [CallKit] Mute action received: isMuted=\(action.isMuted), uuid=\(action.callUUID.uuidString), fromFlutter=\(muteSetByFlutter)")
         
-        // Notify Flutter
+        if muteSetByFlutter {
+            // This CXSetMutedCallAction was triggered by Flutter calling setMuted.
+            // Do NOT echo it back — Flutter already knows the mute state.
+            debugPrint("flutter: 🔇 [CallKit] Suppressing echo-back (mute originated from Flutter)")
+            muteSetByFlutter = false
+            action.fulfill()
+            return
+        }
+        
+        // This mute came from the system, car display (Tesla), or iOS Control Center.
+        // Forward it to Flutter so the app can update its state.
+        debugPrint("flutter: 🔇 [CallKit] Forwarding external mute to Flutter: \(action.isMuted)")
         flutterChannel?.invokeMethod("onMuteToggled", arguments: [
             "callId": action.callUUID.uuidString,
             "isMuted": action.isMuted
@@ -344,6 +425,23 @@ extension CallKitManager: CXProviderDelegate {
         // Notify AudioSessionManager of activation
         AudioSessionManager.shared.didActivateAudioSession(audioSession)
         isAudioSessionActive = true
+        
+        // Delayed name re-push for car displays (Tesla, CarPlay).
+        // HFP connection may not be fully negotiated when the call is first reported.
+        // By the time didActivate fires, Bluetooth SCO link is up and the car
+        // may re-query call info. Push the name again after a short delay so
+        // the car picks it up during the active HFP session.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            guard let self = self,
+                  let uuid = self.activeCallUUID,
+                  let name = self.currentCallName else { return }
+            let delayedUpdate = CXCallUpdate()
+            delayedUpdate.localizedCallerName = name
+            delayedUpdate.remoteHandle = CXHandle(type: .generic, value: name)
+            delayedUpdate.hasVideo = self.currentCallIsVideo
+            self.provider.reportCall(with: uuid, updated: delayedUpdate)
+            debugPrint("flutter: ✅ [CallKit] Delayed name re-push (1.5s post-activate): \(name)")
+        }
         
         // IMPORTANT: This is the safe point to start WebRTC media capture
         // Notify Flutter that audio is ready - WebRTC should wait for this before starting

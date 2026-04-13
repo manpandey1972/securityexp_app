@@ -54,6 +54,10 @@ class HFPCallControlService {
         sl<AppLogger>().debug('Car button pressed to answer call', tag: 'HFP');
         await _answerCall();
         return true;
+      } else if (action == 'toggleMute') {
+        sl<AppLogger>().debug('Car button pressed to toggle mute', tag: 'HFP');
+        await _toggleMute();
+        return true;
       }
     }
 
@@ -90,6 +94,22 @@ class HFPCallControlService {
       SnackbarService.show('Call answered from car system');
     } else {
       sl<AppLogger>().warning('No incoming call to answer', tag: 'HFP');
+    }
+  }
+
+  Future<void> _toggleMute() async {
+    sl<AppLogger>().debug('Toggling mute from HFP device (car button)', tag: 'HFP');
+
+    final coordinator = CallNavigationCoordinator();
+    final controller = coordinator.activeController;
+    if (controller != null) {
+      // Toggle current mute state explicitly using setMicrophoneMuted
+      final currentMuted = controller.mediaManager?.isMuted.value ?? false;
+      await controller.setMicrophoneMuted(!currentMuted);
+      final isMuted = controller.mediaManager?.isMuted.value ?? false;
+      sl<AppLogger>().debug('Mute toggled from HFP: isMuted=$isMuted', tag: 'HFP');
+    } else {
+      sl<AppLogger>().warning('No active call to toggle mute', tag: 'HFP');
     }
   }
 

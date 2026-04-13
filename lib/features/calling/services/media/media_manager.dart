@@ -43,6 +43,7 @@ abstract class MediaManager {
 
   // Actions
   Future<void> toggleMute();
+  Future<void> setMicrophoneMuted(bool muted);
   Future<void> toggleVideo();
   Future<void> switchCamera();
   Future<void> toggleSpeaker();

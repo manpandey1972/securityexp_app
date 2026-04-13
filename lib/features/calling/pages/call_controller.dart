@@ -541,6 +541,11 @@ class CallController extends ChangeNotifier {
   Future<void> toggleMute() async {
     try {
       await _mediaManager?.toggleMute();
+      // Sync mute state to CallKit so car displays reflect the change
+      final callKit = CallKitService();
+      if (callKit.isAvailable && callKit.hasActiveCall) {
+        callKit.setMuted(isMuted);
+      }
       if (_session != null) {
         _analytics?.trackUserAction(
           callId: _session!.callId,
@@ -551,6 +556,34 @@ class CallController extends ChangeNotifier {
       }
     } catch (e, stackTrace) {
       _logger.error('Failed to toggle mute', e, stackTrace);
+    }
+  }
+
+  /// Explicitly set mute state (used by car/CallKit remote commands)
+  /// Unlike toggleMute(), this sets an absolute state to avoid race conditions.
+  /// Set [syncToCallKit] to false when the mute originated from CallKit/car
+  /// to prevent a redundant CXSetMutedCallAction feedback loop.
+  Future<void> setMicrophoneMuted(bool muted, {bool syncToCallKit = true}) async {
+    try {
+      await _mediaManager?.setMicrophoneMuted(muted);
+      // Only sync back to CallKit when the change did NOT originate from CallKit
+      if (syncToCallKit) {
+        final callKit = CallKitService();
+        if (callKit.isAvailable && callKit.hasActiveCall) {
+          callKit.setMuted(muted);
+        }
+      }
+      notifyListeners();
+      if (_session != null) {
+        _analytics?.trackUserAction(
+          callId: _session!.callId,
+          action: muted
+              ? CallAnalyticsEvent.audioMuted
+              : CallAnalyticsEvent.audioUnmuted,
+        );
+      }
+    } catch (e, stackTrace) {
+      _logger.error('Failed to set mute state', e, stackTrace);
     }
   }
 
@@ -740,6 +773,26 @@ class CallController extends ChangeNotifier {
     _callState = state;
     _logger.debug('State transition: $oldState → $state');
     _logger.debug('State changed to: $state');
+
+    // Report connected state to CallKit so car displays start the duration timer
+    // Only for outgoing calls — incoming calls get their timer started
+    // automatically when CXAnswerCallAction is fulfilled
+    if (state == CallState.connected && isCaller) {
+      try {
+        final callKit = CallKitService();
+        if (callKit.isAvailable && callKit.hasActiveCall) {
+          callKit.reportOutgoingCallConnected();
+          _logger.debug('Reported outgoing call connected to CallKit');
+        } else {
+          _logger.debug(
+            'Skipped reportOutgoingCallConnected: '
+            'available=${callKit.isAvailable}, hasActive=${callKit.hasActiveCall}',
+          );
+        }
+      } catch (e, _) {
+        _logger.warning('Failed to report call connected to CallKit: $e');
+      }
+    }
 
     // Stop ringback tone when call connects or ends (for caller)
     if (isCaller &&

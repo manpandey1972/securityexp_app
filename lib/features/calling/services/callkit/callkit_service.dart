@@ -249,7 +249,10 @@ class CallKitService {
         final args = call.arguments as Map?;
         final callUUID = args?['callUUID'] as String?;
         sl<AppLogger>().debug('Call ended via CallKit UI: $callUUID', tag: 'CallKit');
-        if (callUUID != null && _activeCallUUID == callUUID) {
+        // Use case-insensitive comparison because Dart generates lowercase UUIDs
+        // but Swift UUID.uuidString returns uppercase
+        if (callUUID != null &&
+            _activeCallUUID?.toLowerCase() == callUUID.toLowerCase()) {
           _activeCallUUID = null;
         }
         if (callUUID != null) {
@@ -296,6 +299,50 @@ class CallKitService {
         }
         break;
 
+      case 'onOutgoingCallStarted':
+        // Native CXStartCallAction fulfilled — CallKit has started the outgoing call
+        final args = call.arguments as Map?;
+        final callId = args?['callId'] as String?;
+        if (callId != null) {
+          _activeCallUUID = callId;
+        }
+        sl<AppLogger>().debug(
+          'Outgoing call started in CallKit: $callId',
+          tag: 'CallKit',
+        );
+        break;
+
+      case 'onAudioSessionActivated':
+        // Native audio session activated — safe to start WebRTC media capture
+        sl<AppLogger>().debug(
+          'Audio session activated by system',
+          tag: 'CallKit',
+        );
+        break;
+
+      case 'onAudioSessionDeactivated':
+        // Native audio session deactivated — call audio torn down
+        sl<AppLogger>().debug(
+          'Audio session deactivated by system',
+          tag: 'CallKit',
+        );
+        break;
+
+      case 'onCallKitReset':
+        // CXProvider reset — all calls dropped
+        _activeCallUUID = null;
+        sl<AppLogger>().debug('CallKit provider reset', tag: 'CallKit');
+        break;
+
+      case 'onCallHoldToggled':
+        // Hold toggled — not currently used but prevents unknown method log
+        final args = call.arguments as Map?;
+        sl<AppLogger>().debug(
+          'Call hold toggled: ${args?['isOnHold']}',
+          tag: 'CallKit',
+        );
+        break;
+
       default:
         sl<AppLogger>().debug('Unknown method from native: ${call.method}', tag: 'CallKit');
     }
@@ -314,7 +361,7 @@ class CallKitService {
         break;
 
       case 'endCall':
-        if (_activeCallUUID == action.callUUID) {
+        if (_activeCallUUID?.toLowerCase() == action.callUUID.toLowerCase()) {
           _activeCallUUID = null;
         }
         break;
@@ -396,19 +443,16 @@ class CallKitService {
         tag: 'CallKit',
       );
 
-      final result = await _channel.invokeMethod<bool>('reportOutgoingCall', {
+      await _channel.invokeMethod('reportOutgoingCall', {
         'callUUID': uuid,
         'calleeName': calleeName,
         'calleeId': calleeId,
         'hasVideo': hasVideo,
       });
 
-      if (result == true) {
-        _activeCallUUID = uuid;
-        sl<AppLogger>().debug('Outgoing call reported successfully', tag: 'CallKit');
-        return uuid;
-      }
-      return null;
+      _activeCallUUID = uuid;
+      sl<AppLogger>().debug('Outgoing call reported successfully (UUID: $uuid)', tag: 'CallKit');
+      return uuid;
     } on PlatformException catch (e) {
       sl<AppLogger>().error(
         'Platform error reporting outgoing call: ${e.message}',

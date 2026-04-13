@@ -131,7 +131,7 @@ class CallKitChannelHandler {
             hasVideo: hasVideo
         )
         
-        result(uuid.uuidString)
+        result(true)
     }
     
     private func handleReportOutgoingCallConnected(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -237,28 +237,29 @@ class CallKitChannelHandler {
     
     private func handleSetMuted(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-              let callId = args["callId"] as? String,
-              let uuid = UUID(uuidString: callId),
+              let callIdStr = args["callUUID"] as? String ?? args["callId"] as? String,
               let muted = args["muted"] as? Bool else {
             result(FlutterError(
                 code: "INVALID_ARGS",
-                message: "callId and muted are required",
+                message: "callUUID/callId and muted are required",
                 details: nil
             ))
             return
         }
         
+        let uuid = UUID(uuidString: callIdStr) ?? CallKitManager.shared.activeCallUUID ?? UUID()
+        debugPrint("flutter: 🔇 [CallKitChannel] setMuted: uuid=\(uuid.uuidString), muted=\(muted)")
         CallKitManager.shared.setMuted(uuid: uuid, muted: muted)
         result(nil)
     }
     
     private func handleUpdateCallInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
-              let callId = args["callId"] as? String,
-              let uuid = UUID(uuidString: callId) else {
+              let callIdStr = args["callUUID"] as? String ?? args["callId"] as? String,
+              let uuid = UUID(uuidString: callIdStr) else {
             result(FlutterError(
                 code: "INVALID_ARGS",
-                message: "Valid callId UUID is required",
+                message: "Valid callUUID/callId is required",
                 details: nil
             ))
             return
