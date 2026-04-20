@@ -31,8 +31,8 @@
 			<string>com.example.securityexpertsApp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>app-1-1015827376061-ios-23864d39adb5e70cca54d4</string>
-			</array>
+			<string>app-1-1015827376061-ios-23864d39adb5e70cca54d4</string>
+		</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>

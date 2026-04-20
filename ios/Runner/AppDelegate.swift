@@ -625,4 +625,41 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
       }
     }
   }
+
+  // MARK: - Firebase Phone Auth Support
+  // Required because FirebaseAppDelegateProxyEnabled = false in Info.plist.
+  // Without these, phone auth (APNs silent push + reCAPTCHA fallback) won't work,
+  // especially on iPad which has no SIM and always needs these paths.
+  
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    // Forward APNs token to Firebase Auth for phone verification
+    Auth.auth().setAPNSToken(deviceToken, type: .unknown)
+    debugPrint("flutter: 📱 [AppDelegate] Forwarded APNs token to Firebase Auth")
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+  
+  override func application(_ application: UIApplication,
+                            didReceiveRemoteNotification notification: [AnyHashable : Any],
+                            fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    // Let Firebase Auth handle silent push for phone verification
+    if Auth.auth().canHandleNotification(notification) {
+      debugPrint("flutter: 📱 [AppDelegate] Firebase Auth handled silent push notification")
+      completionHandler(.noData)
+      return
+    }
+    super.application(application, didReceiveRemoteNotification: notification,
+                      fetchCompletionHandler: completionHandler)
+  }
+  
+  override func application(_ app: UIApplication,
+                            open url: URL,
+                            options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    // Let Firebase Auth handle reCAPTCHA redirect
+    if Auth.auth().canHandle(url) {
+      debugPrint("flutter: 📱 [AppDelegate] Firebase Auth handled reCAPTCHA URL redirect")
+      return true
+    }
+    return super.application(app, open: url, options: options)
+  }
 }
