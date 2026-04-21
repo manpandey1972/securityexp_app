@@ -155,16 +155,21 @@ class MainActivity : FlutterActivity() {
 
     /**
      * Release VoIP call audio configuration
-     * Stops Bluetooth SCO, resets mode, and abandons audio focus
+     * Stops Bluetooth SCO / clears communication device, resets mode, and abandons audio focus
      */
     private fun releaseVoIPCall() {
         Log.d(TAG, "Releasing VoIP call audio")
-        
-        // Stop Bluetooth SCO if it was started
-        if (isBluetoothScoStarted) {
-            Log.d(TAG, "Stopping Bluetooth SCO")
-            audioManager.stopBluetoothSco()
-            isBluetoothScoStarted = false
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            audioManager.clearCommunicationDevice()
+        } else {
+            // Stop Bluetooth SCO if it was started (legacy path)
+            if (isBluetoothScoStarted) {
+                Log.d(TAG, "Stopping Bluetooth SCO")
+                @Suppress("DEPRECATION")
+                audioManager.stopBluetoothSco()
+                isBluetoothScoStarted = false
+            }
         }
         
         // Reset audio mode
@@ -189,61 +194,125 @@ class MainActivity : FlutterActivity() {
 
     private fun getAvailableAudioDevices(): List<String> {
         val devices = mutableListOf<String>()
-        devices.add("speaker") // Speaker always available
+        devices.add("speaker")
+        devices.add("earpiece")
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // API 31+: Use communication device APIs designed specifically for VoIP.
+            // These correctly enumerate car Bluetooth (HFP/SCO) even before SCO is started.
+            val commDevices = audioManager.availableCommunicationDevices
+            Log.d(TAG, "Available communication devices (API31+): ${commDevices.map { it.type }}")
+            for (device in commDevices) {
+                when (device.type) {
+                    AudioDeviceInfo.TYPE_BUILTIN_SPEAKER ->
+                        if (!devices.contains("speaker")) devices.add("speaker")
+                    AudioDeviceInfo.TYPE_BUILTIN_EARPIECE ->
+                        if (!devices.contains("earpiece")) devices.add("earpiece")
+                    AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+                    AudioDeviceInfo.TYPE_BLE_HEADSET ->
+                        if (!devices.contains("bluetooth")) devices.add("bluetooth")
+                    AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                    AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                    AudioDeviceInfo.TYPE_USB_HEADSET ->
+                        if (!devices.contains("headset")) devices.add("headset")
+                }
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Check both inputs and outputs — Bluetooth SCO (HFP/car) may only
+            // appear in inputs before the SCO audio channel is established.
+            val audioDevices = audioManager.getDevices(
+                AudioManager.GET_DEVICES_OUTPUTS or AudioManager.GET_DEVICES_INPUTS
+            )
             for (device in audioDevices) {
                 when (device.type) {
-                    AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> if (!devices.contains("speaker")) devices.add("speaker")
                     AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
-                    AudioDeviceInfo.TYPE_BLUETOOTH_SCO -> if (!devices.contains("bluetooth")) devices.add("bluetooth")
+                    AudioDeviceInfo.TYPE_BLUETOOTH_SCO ->
+                        if (!devices.contains("bluetooth")) devices.add("bluetooth")
                     AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
-                    AudioDeviceInfo.TYPE_WIRED_HEADSET -> if (!devices.contains("headset")) devices.add("headset")
-                    AudioDeviceInfo.TYPE_BUILTIN_EARPIECE -> if (!devices.contains("earpiece")) devices.add("earpiece")
+                    AudioDeviceInfo.TYPE_WIRED_HEADSET ->
+                        if (!devices.contains("headset")) devices.add("headset")
                 }
             }
         } else {
-            // Fallback for older Android versions
-            if (audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn) {
-                devices.add("bluetooth")
-            }
-            if (audioManager.isWiredHeadsetOn) {
-                devices.add("headset")
-            }
+            @Suppress("DEPRECATION")
+            if (audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn) devices.add("bluetooth")
+            @Suppress("DEPRECATION")
+            if (audioManager.isWiredHeadsetOn) devices.add("headset")
         }
 
         return devices
     }
 
     /**
-     * Set audio device with proper Bluetooth SCO lifecycle management
+     * Set audio device with proper Bluetooth lifecycle management.
+     * Uses setCommunicationDevice() on API 31+ (designed for VoIP),
+     * falls back to startBluetoothSco() on older Android.
      */
     private fun setAudioDevice(device: String) {
-        Log.d(TAG, "Setting audio device: $device (SCO active: $isBluetoothScoStarted)")
-        
-        // Stop Bluetooth SCO if switching away from Bluetooth
-        if (isBluetoothScoStarted && device.lowercase() != "bluetooth") {
-            Log.d(TAG, "Stopping Bluetooth SCO before switching to $device")
-            audioManager.stopBluetoothSco()
-            isBluetoothScoStarted = false
-        }
-        
-        when (device.lowercase()) {
-            "speaker" -> {
-                audioManager.isSpeakerphoneOn = true
-                Log.d(TAG, "Audio set to speaker")
+        Log.d(TAG, "Setting audio device: $device")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            when (device.lowercase()) {
+                "bluetooth" -> {
+                    val btDevice = audioManager.availableCommunicationDevices.firstOrNull {
+                        it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO ||
+                        it.type == AudioDeviceInfo.TYPE_BLE_HEADSET
+                    }
+                    if (btDevice != null) {
+                        val success = audioManager.setCommunicationDevice(btDevice)
+                        Log.d(TAG, "setCommunicationDevice(bluetooth) success=$success, type=${btDevice.type}")
+                    } else {
+                        Log.w(TAG, "No Bluetooth SCO device available for setCommunicationDevice")
+                    }
+                }
+                "speaker" -> {
+                    val speakerDevice = audioManager.availableCommunicationDevices.firstOrNull {
+                        it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                    }
+                    if (speakerDevice != null) {
+                        audioManager.setCommunicationDevice(speakerDevice)
+                    } else {
+                        audioManager.clearCommunicationDevice()
+                        @Suppress("DEPRECATION")
+                        audioManager.isSpeakerphoneOn = true
+                    }
+                    Log.d(TAG, "Audio set to speaker")
+                }
+                "headset", "earpiece" -> {
+                    // Clear any override — system will route to the best wired/earpiece device
+                    audioManager.clearCommunicationDevice()
+                    Log.d(TAG, "Audio set to $device (cleared communication device)")
+                }
             }
-            "headset", "earpiece" -> {
-                audioManager.isSpeakerphoneOn = false
-                Log.d(TAG, "Audio set to $device")
+            isBluetoothScoStarted = false // not used in API 31+ path
+        } else {
+            // Legacy path for API < 31
+            if (isBluetoothScoStarted && device.lowercase() != "bluetooth") {
+                Log.d(TAG, "Stopping Bluetooth SCO before switching to $device")
+                @Suppress("DEPRECATION")
+                audioManager.stopBluetoothSco()
+                isBluetoothScoStarted = false
             }
-            "bluetooth" -> {
-                audioManager.isSpeakerphoneOn = false
-                if (!isBluetoothScoStarted) {
-                    Log.d(TAG, "Starting Bluetooth SCO")
-                    audioManager.startBluetoothSco()
-                    isBluetoothScoStarted = true
+            when (device.lowercase()) {
+                "speaker" -> {
+                    @Suppress("DEPRECATION")
+                    audioManager.isSpeakerphoneOn = true
+                    Log.d(TAG, "Audio set to speaker")
+                }
+                "headset", "earpiece" -> {
+                    @Suppress("DEPRECATION")
+                    audioManager.isSpeakerphoneOn = false
+                    Log.d(TAG, "Audio set to $device")
+                }
+                "bluetooth" -> {
+                    @Suppress("DEPRECATION")
+                    audioManager.isSpeakerphoneOn = false
+                    if (!isBluetoothScoStarted) {
+                        Log.d(TAG, "Starting Bluetooth SCO")
+                        @Suppress("DEPRECATION")
+                        audioManager.startBluetoothSco()
+                        isBluetoothScoStarted = true
+                    }
                 }
             }
         }
@@ -254,17 +323,33 @@ class MainActivity : FlutterActivity() {
      */
     private fun resetToDefault() {
         Log.d(TAG, "Resetting audio to default")
-        
-        // Stop SCO if active
-        if (isBluetoothScoStarted) {
-            audioManager.stopBluetoothSco()
-            isBluetoothScoStarted = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            audioManager.clearCommunicationDevice()
+        } else {
+            if (isBluetoothScoStarted) {
+                @Suppress("DEPRECATION")
+                audioManager.stopBluetoothSco()
+                isBluetoothScoStarted = false
+            }
+            @Suppress("DEPRECATION")
+            audioManager.isSpeakerphoneOn = false
         }
-        
-        audioManager.isSpeakerphoneOn = false
     }
 
     private fun getCurrentAudioDevice(): String {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val device = audioManager.communicationDevice ?: return "earpiece"
+            return when (device.type) {
+                AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+                AudioDeviceInfo.TYPE_BLE_HEADSET -> "bluetooth"
+                AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "speaker"
+                AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                AudioDeviceInfo.TYPE_USB_HEADSET -> "headset"
+                else -> "earpiece"
+            }
+        }
+        @Suppress("DEPRECATION")
         return when {
             audioManager.isSpeakerphoneOn -> "speaker"
             audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn -> "bluetooth"
@@ -300,19 +385,48 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        // API 31+: OnCommunicationDeviceChangedListener fires whenever the active
+        // communication device changes (Bluetooth connects/disconnects, user switches, etc.).
+        // This is far more reliable for VoIP than AudioDeviceCallback.
+        private val communicationDeviceChangedListener =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                AudioManager.OnCommunicationDeviceChangedListener { device ->
+                    val type = device?.type ?: return@OnCommunicationDeviceChangedListener
+                    Log.d(TAG, "Communication device changed: type=$type")
+                    val deviceStr = when (type) {
+                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+                        AudioDeviceInfo.TYPE_BLE_HEADSET -> "bluetooth"
+                        AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "speaker"
+                        AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                        AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                        AudioDeviceInfo.TYPE_USB_HEADSET -> "headset"
+                        else -> "earpiece"
+                    }
+                    eventSink?.success(deviceStr)
+                }
+            } else null
+
         override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
             eventSink = events
             // Send current device immediately
             events?.success(getCurrentAudioDevice())
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                communicationDeviceChangedListener?.let {
+                    audioManager.addOnCommunicationDeviceChangedListener(mainExecutor, it)
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 audioManager.registerAudioDeviceCallback(audioDeviceCallback, null)
             }
         }
 
         override fun onCancel(arguments: Any?) {
             eventSink = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                communicationDeviceChangedListener?.let {
+                    audioManager.removeOnCommunicationDeviceChangedListener(it)
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
             }
         }

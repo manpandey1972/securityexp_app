@@ -56,6 +56,21 @@
       "program": "lib/main.dart",
       "flutterMode": "release",
       "args": ["-d", "emulator-5554"]
+    },
+    {
+      "name": "Flutter Android Device (Pixel 8)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "38150DLJH003W5"]
+    },
+    {
+      "name": "Flutter Android Device (Pixel 8 Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "args": ["-d", "38150DLJH003W5"]
     }
   ]
 }
