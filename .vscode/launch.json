@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+  
     {
       "name": "Chrome - WebRTC Testing",
       "request": "launch",
@@ -71,6 +72,57 @@
       "program": "lib/main.dart",
       "flutterMode": "release",
       "args": ["-d", "38150DLJH003W5"]
+    },
+    {
+      "name": "Flutter Android - Pixel 9 Pro",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "preLaunchTask": "Launch Pixel 9 Pro Emulator",
+      "args": ["-d", "sdk gphone16k arm64"]
+    },
+    {
+      "name": "Flutter Android - Pixel 9 Pro (Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "preLaunchTask": "Launch Pixel 9 Pro Emulator",
+      "args": ["-d", "sdk gphone16k arm64"]
+    },
+    {
+      "name": "Flutter Android - Pixel Tablet",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "preLaunchTask": "Launch Pixel Tablet Emulator",
+      "args": ["-d", "Pixel Tablet"]
+    },
+    {
+      "name": "Flutter Android - Pixel Tablet (Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "preLaunchTask": "Launch Pixel Tablet Emulator",
+      "args": ["-d", "Pixel Tablet"]
+    },
+    {
+      "name": "Flutter Android - Mini Tablet 7",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "preLaunchTask": "Launch Mini Tablet 7 Emulator",
+      "args": ["-d", "Pixel Tablet"]
+    },
+    {
+      "name": "Flutter Android - Mini Tablet 7 (Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "preLaunchTask": "Launch Mini Tablet 7 Emulator",
+      "args": ["-d", "Pixel Tablet"]
     }
   ]
 }

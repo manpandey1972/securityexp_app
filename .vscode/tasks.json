@@ -164,6 +164,42 @@
         "reveal": "always",
         "panel": "dedicated"
       }
+    },
+    {
+      "label": "Launch Pixel 9 Pro Emulator",
+      "type": "shell",
+      "command": "export ANDROID_HOME=$HOME/Library/Android/sdk && export PATH=$PATH:$ANDROID_HOME/platform-tools && ALREADY=$(for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); [ \"$avd\" = \"Pixel_9_Pro\" ] && echo $s; done) && [ -z \"$ALREADY\" ] && $ANDROID_HOME/emulator/emulator -avd Pixel_9_Pro -dns-server 8.8.8.8,8.8.4.4 -no-snapshot-load &; SERIAL='' && until [ -n \"$SERIAL\" ]; do for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); boot=$(adb -s $s shell getprop sys.boot_completed 2>/dev/null | tr -d '\r\n'); if [ \"$avd\" = \"Pixel_9_Pro\" ] && [ \"$boot\" = \"1\" ]; then SERIAL=$s; fi; done; [ -z \"$SERIAL\" ] && sleep 3; done && echo \"Pixel 9 Pro ready: $SERIAL\"",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
+      "label": "Launch Pixel Tablet Emulator",
+      "type": "shell",
+      "command": "export ANDROID_HOME=$HOME/Library/Android/sdk && export PATH=$PATH:$ANDROID_HOME/platform-tools && ALREADY=$(for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); [ \"$avd\" = \"Pixel_Tablet\" ] && echo $s; done) && [ -z \"$ALREADY\" ] && $ANDROID_HOME/emulator/emulator -avd Pixel_Tablet -dns-server 8.8.8.8,8.8.4.4 -no-snapshot-load &; SERIAL='' && until [ -n \"$SERIAL\" ]; do for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); boot=$(adb -s $s shell getprop sys.boot_completed 2>/dev/null | tr -d '\r\n'); if [ \"$avd\" = \"Pixel_Tablet\" ] && [ \"$boot\" = \"1\" ]; then SERIAL=$s; fi; done; [ -z \"$SERIAL\" ] && sleep 3; done && adb -s $SERIAL shell \"ndc resolver setnetdns 100 '' 8.8.8.8 8.8.4.4\" 2>/dev/null; echo \"Pixel Tablet ready: $SERIAL\"",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "close": true
+      }
+    },
+    {
+      "label": "Launch Mini Tablet 7 Emulator",
+      "type": "shell",
+      "command": "export ANDROID_HOME=$HOME/Library/Android/sdk && export PATH=$PATH:$ANDROID_HOME/platform-tools && ALREADY=$(for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); [ \"$avd\" = \"Mini_Tablet_7\" ] && echo $s; done) && [ -z \"$ALREADY\" ] && $ANDROID_HOME/emulator/emulator -avd Mini_Tablet_7 -dns-server 8.8.8.8,8.8.4.4 -no-snapshot-load &; SERIAL='' && until [ -n \"$SERIAL\" ]; do for s in $(adb devices | grep 'emulator.*device$' | awk '{print $1}'); do avd=$(adb -s $s emu avd name 2>/dev/null | head -1 | tr -d '\r\n '); boot=$(adb -s $s shell getprop sys.boot_completed 2>/dev/null | tr -d '\r\n'); if [ \"$avd\" = \"Mini_Tablet_7\" ] && [ \"$boot\" = \"1\" ]; then SERIAL=$s; fi; done; [ -z \"$SERIAL\" ] && sleep 3; done && echo \"Mini Tablet 7 ready: $SERIAL\"",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "close": true
+      }
     }
   ]
 }
