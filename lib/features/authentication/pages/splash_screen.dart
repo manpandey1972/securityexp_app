@@ -206,6 +206,7 @@ class _SplashPageState extends State<SplashPage>
         // onboarding so a profile cannot be created without acceptance.
         await EulaPage.showIfNeeded(
           context,
+          isNewUser: true,
           onAccepted: () {
             if (mounted) _navigateToOnboarding();
           },

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,11 +8,18 @@ import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
-import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
-import 'package:securityexperts_app/shared/services/error_handler.dart';
 
-/// Key used to store local EULA acceptance date in SharedPreferences.
-const String eulaAcceptedKey = 'eula_accepted_v1';
+/// Base prefix for the local EULA acceptance key. The full key is
+/// per-user: `${eulaAcceptedKeyPrefix}<uid>` (or `${eulaAcceptedKeyPrefix}anon`
+/// for unauthenticated acceptance). Per-user keys prevent acceptance state
+/// leaking across users that share a device/browser.
+const String eulaAcceptedKeyPrefix = 'eula_accepted_v1_';
+
+/// Returns the SharedPreferences key for the currently signed-in user.
+String eulaAcceptedKeyForCurrentUser() {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  return '$eulaAcceptedKeyPrefix${uid ?? 'anon'}';
+}
 
 /// Full-screen EULA / Terms of Service acceptance page.
 ///
@@ -20,37 +29,50 @@ class EulaPage extends StatefulWidget {
   /// Called when the user accepts the EULA and we should navigate forward.
   final VoidCallback onAccepted;
 
-  const EulaPage({super.key, required this.onAccepted});
+  /// True when the signed-in user has no Firestore profile document yet.
+  /// In that case we skip the inline Firestore mirror — the subsequent
+  /// onboarding flow's `createUser` write carries `terms_accepted_at` into
+  /// the initial user document. This avoids a Firestore web SDK stall that
+  /// occurs when issuing a `set(merge:true)` create-write to a not-yet-
+  /// existing document right after a fresh authentication.
+  final bool isNewUser;
+
+  const EulaPage({
+    super.key,
+    required this.onAccepted,
+    this.isNewUser = false,
+  });
 
   /// EULA gate: shows the EULA page only if the user hasn't accepted yet.
   ///
-  /// Acceptance check order:
-  /// 1. If [profileTermsAcceptedAt] is non-null (Firestore says accepted),
-  ///    sync local SharedPreferences and skip the page.
-  /// 2. Otherwise, if local SharedPreferences has the key, skip the page.
-  /// 3. Otherwise push the EULA page on top of the current route.
+  /// Source-of-truth order:
+  /// 1. If [profileTermsAcceptedAt] is non-null (Firestore), treat as accepted.
+  /// 2. Else if a per-user local cache key exists, treat as accepted.
+  /// 3. Otherwise push the EULA page.
   ///
-  /// [onAccepted] is invoked either immediately (already accepted) or after
-  /// the user accepts on the EULA page. The caller is responsible for
-  /// navigating to the next destination inside that callback.
+  /// The local key is scoped to the current Firebase UID so acceptance
+  /// does not leak across users sharing the same device or browser.
+  ///
+  /// Pass [isNewUser]=true when the caller knows the user has no Firestore
+  /// profile yet (e.g. immediately after first sign-in before onboarding).
   static Future<void> showIfNeeded(
     BuildContext context, {
     required VoidCallback onAccepted,
     Timestamp? profileTermsAcceptedAt,
+    bool isNewUser = false,
   }) async {
     final prefs = await SharedPreferences.getInstance();
+    final perUserKey = eulaAcceptedKeyForCurrentUser();
 
-    // If Firestore says terms are accepted, mirror to local prefs.
-    if (profileTermsAcceptedAt != null &&
-        !prefs.containsKey(eulaAcceptedKey)) {
+    // If Firestore says terms are accepted, mirror to local per-user prefs.
+    if (profileTermsAcceptedAt != null && !prefs.containsKey(perUserKey)) {
       await prefs.setString(
-        eulaAcceptedKey,
+        perUserKey,
         profileTermsAcceptedAt.toDate().toIso8601String(),
       );
     }
 
-    if (prefs.containsKey(eulaAcceptedKey) ||
-        profileTermsAcceptedAt != null) {
+    if (profileTermsAcceptedAt != null || prefs.containsKey(perUserKey)) {
       onAccepted();
       return;
     }
@@ -59,7 +81,12 @@ class EulaPage extends StatefulWidget {
     // push (not pushReplacement) so the caller route stays alive and can use
     // its own `mounted` flag inside `onAccepted`.
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => EulaPage(onAccepted: onAccepted)),
+      MaterialPageRoute(
+        builder: (_) => EulaPage(
+          onAccepted: onAccepted,
+          isNewUser: isNewUser,
+        ),
+      ),
     );
   }
 
@@ -78,24 +105,88 @@ class _EulaPageState extends State<EulaPage> {
     setState(() => _saving = true);
 
     try {
-      // 1. Store locally
+      // 1. Store locally — this is the immediate source of truth.
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(eulaAcceptedKey, DateTime.now().toIso8601String());
+      await prefs.setString(
+        eulaAcceptedKeyForCurrentUser(),
+        DateTime.now().toIso8601String(),
+      );
 
-      // 2. If the user already has a Firebase account, persist to Firestore
+      // 2. Persist to Firestore — only if the user already has a profile
+      //    document. For brand-new users (no profile yet), the upcoming
+      //    onboarding `createUser` write carries `terms_accepted_at` into
+      //    the initial user document. We deliberately skip the inline
+      //    Firestore write here because `set(merge:true)` against a
+      //    not-yet-existing document right after fresh auth is known to
+      //    stall the Firestore web SDK (WebChannel transport quirk).
+      //
+      //    A 10s timeout still guards the existing-user path against
+      //    indefinite network stalls.
       final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        await ErrorHandler.handle<void>(
-          operation: () => sl<UserRepository>().updateField(
-            'terms_accepted_at',
-            FieldValue.serverTimestamp(),
-          ),
-          onError: (e) =>
-              _log.warning('Could not persist termsAcceptedAt: $e', tag: _tag),
+      if (currentUser != null && !widget.isNewUser) {
+        final uid = currentUser.uid;
+        final acceptedAt = Timestamp.now();
+        _log.info('Persisting terms_accepted_at for uid=$uid', tag: _tag);
+        try {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .set(
+                {
+                  'terms_accepted_at': acceptedAt,
+                  'updated_at': acceptedAt,
+                },
+                SetOptions(merge: true),
+              )
+              .timeout(const Duration(seconds: 10));
+          _log.info('terms_accepted_at persisted for uid=$uid', tag: _tag);
+        } on TimeoutException catch (e) {
+          _log.warning(
+            'Timed out persisting terms_accepted_at for uid=$uid: $e',
+            tag: _tag,
+          );
+          if (mounted) {
+            setState(() => _saving = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Network is slow. Please check your connection and try again.',
+                ),
+              ),
+            );
+          }
+          return;
+        } catch (e) {
+          _log.warning(
+            'Could not persist terms_accepted_at for uid=$uid: $e',
+            tag: _tag,
+          );
+          if (mounted) {
+            setState(() => _saving = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Could not save acceptance. Please try again.',
+                ),
+              ),
+            );
+          }
+          return;
+        }
+      } else if (currentUser != null && widget.isNewUser) {
+        _log.info(
+          'Skipping inline terms_accepted_at write; will be set by '
+          'createUser during onboarding (uid=${currentUser.uid})',
+          tag: _tag,
         );
       }
 
-      if (mounted) widget.onAccepted();
+      // 3. Dismiss EULA page first so the caller's `mounted` checks resolve
+      //    against the underlying route (which is still alive). Then invoke
+      //    the caller's onAccepted to navigate to the destination.
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      widget.onAccepted();
     } catch (e) {
       _log.error('EULA acceptance error: $e', tag: _tag);
       if (mounted) setState(() => _saving = false);

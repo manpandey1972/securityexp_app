@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:securityexperts_app/features/onboarding/pages/eula_page.dart'
+    show eulaAcceptedKeyForCurrentUser;
 import 'package:securityexperts_app/core/validators/display_name_validator.dart';
 import 'package:securityexperts_app/shared/themes/app_colors.dart';
 import 'package:securityexperts_app/shared/themes/app_typography.dart';
@@ -291,6 +295,19 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
         // If neither Expert nor Merchant, assign 'User' role (consumer)
         if (!state.isExpert && !state.isMerchant) roles.add('User');
 
+        // Carry the EULA acceptance timestamp into the initial user
+        // document. This is a safety net for when the inline write from
+        // EulaPage stalls/times out on web (WebChannel quirk).
+        final eulaPrefs = await SharedPreferences.getInstance();
+        final eulaAcceptedIso = eulaPrefs.getString(
+          eulaAcceptedKeyForCurrentUser(),
+        );
+        final termsAcceptedAt = eulaAcceptedIso != null
+            ? Timestamp.fromDate(
+                DateTime.tryParse(eulaAcceptedIso) ?? DateTime.now(),
+              )
+            : null;
+
         final userModel = models.User(
           id: userId,
           name: name,
@@ -298,6 +315,7 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
           languages: state.selectedLanguages,
           expertises: state.selectedSkillIds,
           bio: state.bio.trim(),
+          termsAcceptedAt: termsAcceptedAt,
         );
 
         final createdUser = await _userRepository.createUser(userModel);

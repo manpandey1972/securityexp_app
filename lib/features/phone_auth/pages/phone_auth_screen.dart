@@ -99,6 +99,7 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
       await EulaPage.showIfNeeded(
         context,
         profileTermsAcceptedAt: profile?.termsAcceptedAt,
+        isNewUser: profile == null,
         onAccepted: () {
           if (!mounted) return;
           if (profile != null) {

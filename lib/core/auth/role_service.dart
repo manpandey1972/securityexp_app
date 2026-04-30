@@ -78,7 +78,26 @@ class RoleService {
             );
           },
           onError: (error) {
-            _log.error('Error in role cache subscription', error: error, tag: _tag);
+            // permission-denied is expected during sign-out: the snapshot
+            // stream may emit one final event after FirebaseAuth has cleared
+            // the user. Treat that case as benign so we don't log scary
+            // ERRORs on a normal logout.
+            final msg = error.toString();
+            final isExpectedSignOutError =
+                _auth.currentUser == null &&
+                msg.contains('permission-denied');
+            if (isExpectedSignOutError) {
+              _log.debug(
+                'Role cache subscription closed during sign-out',
+                tag: _tag,
+              );
+            } else {
+              _log.error(
+                'Error in role cache subscription',
+                error: error,
+                tag: _tag,
+              );
+            }
           },
         );
   }

@@ -174,6 +174,11 @@ Future<void> setupServiceLocator() async {
 
   // Firebase Auth - Authentication service
   // Register instance for dependency injection and easier testing
+
+  // AuthState - app-wide auth ChangeNotifier. Registered in GetIt so non-widget
+  // services (e.g. UserRepository) can access the same instance that the
+  // Provider tree exposes to widgets.
+  sl.registerLazySingleton<AuthState>(() => AuthState(sl<FirebaseAuth>()));
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 
   // Firebase Firestore - Database service
