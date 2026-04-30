@@ -27,6 +27,9 @@ class User extends Equatable {
   // Expert rating fields
   final double? averageRating;
   final int? totalRatings;
+  // Safety & compliance fields
+  final List<String> blockedUserIds;
+  final Timestamp? termsAcceptedAt;
 
   const User({
     required this.id,
@@ -48,6 +51,8 @@ class User extends Equatable {
     this.notificationsEnabled = true,
     this.averageRating,
     this.totalRatings,
+    this.blockedUserIds = const [],
+    this.termsAcceptedAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -98,6 +103,9 @@ class User extends Equatable {
               : null,
       totalRatings:
           (json['rating'] as Map<String, dynamic>?)?['totalRatings'] as int?,
+      blockedUserIds: List<String>.from(
+          json['blocked_user_ids'] as List<dynamic>? ?? []),
+      termsAcceptedAt: parseTimestamp(json['terms_accepted_at']),
     );
   }
 
@@ -127,6 +135,8 @@ class User extends Equatable {
           if (averageRating != null) 'averageRating': averageRating,
           if (totalRatings != null) 'totalRatings': totalRatings,
         },
+      if (blockedUserIds.isNotEmpty) 'blocked_user_ids': blockedUserIds,
+      if (termsAcceptedAt != null) 'terms_accepted_at': termsAcceptedAt,
     };
   }
 
@@ -151,6 +161,8 @@ class User extends Equatable {
     bool? notificationsEnabled,
     double? averageRating,
     int? totalRatings,
+    List<String>? blockedUserIds,
+    Timestamp? termsAcceptedAt,
   }) {
     return User(
       id: id ?? this.id,
@@ -173,6 +185,8 @@ class User extends Equatable {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       averageRating: averageRating ?? this.averageRating,
       totalRatings: totalRatings ?? this.totalRatings,
+      blockedUserIds: blockedUserIds ?? this.blockedUserIds,
+      termsAcceptedAt: termsAcceptedAt ?? this.termsAcceptedAt,
     );
   }
 
@@ -219,5 +233,7 @@ class User extends Equatable {
     notificationsEnabled,
     averageRating,
     totalRatings,
+    blockedUserIds,
+    termsAcceptedAt,
   ];
 }

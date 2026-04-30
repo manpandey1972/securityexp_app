@@ -351,6 +351,10 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
         return Icons.person_outline;
       case TicketType.payment:
         return Icons.payment;
+      case TicketType.reportUser:
+        return Icons.person_off_outlined;
+      case TicketType.reportContent:
+        return Icons.flag_outlined;
     }
   }
 
@@ -368,6 +372,9 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
         return AppColors.purple;
       case TicketType.payment:
         return AppColors.teal;
+      case TicketType.reportUser:
+      case TicketType.reportContent:
+        return AppColors.error;
     }
   }
 

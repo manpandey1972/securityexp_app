@@ -73,6 +73,9 @@ class SupportValidator {
     switch (type) {
       case TicketType.bug:
         return TicketPriority.high;
+      case TicketType.reportUser:
+      case TicketType.reportContent:
+        return TicketPriority.high;
       case TicketType.account:
       case TicketType.payment:
         return TicketPriority.medium;

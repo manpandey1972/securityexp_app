@@ -38,6 +38,9 @@ class MessageBubble extends StatefulWidget {
   final Widget? replyVideoWidget;
   final VoidCallback? onCopy;
   final VoidCallback? onDownload;
+  final VoidCallback? onReport;
+  final VoidCallback? onBlock;
+  final bool isUserBlocked;
   final CacheManager? cacheManager;
   final String? roomId;
 
@@ -62,6 +65,9 @@ class MessageBubble extends StatefulWidget {
     this.replyVideoWidget,
     this.onCopy,
     this.onDownload,
+    this.onReport,
+    this.onBlock,
+    this.isUserBlocked = false,
     this.cacheManager,
     this.roomId,
   });
@@ -239,6 +245,9 @@ class _MessageBubbleState extends State<MessageBubble> {
         onCopy: widget.onCopy,
         onEdit: widget.onEdit,
         onDelete: widget.onDelete,
+        onReport: widget.onReport,
+        onBlock: widget.onBlock,
+        isUserBlocked: widget.isUserBlocked,
         messageContentWidget: contentWidget,
       ),
     );

@@ -9,6 +9,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 // App - Core
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/block_user_service.dart';
 
 // App - Models
 import 'package:securityexperts_app/data/models/models.dart';
@@ -335,6 +336,11 @@ class _ChatConversationPageContentState
         ? state.messages[reversedIndex - 1]
         : null;
     final fromMe = m.senderId == state.currentUserId;
+
+    // Hide messages from blocked users instantly (Apple 1.2 compliance)
+    if (!fromMe && sl<BlockUserService>().isBlocked(m.senderId)) {
+      return const SizedBox.shrink();
+    }
 
     return ChatMessageListItem(
       key: ValueKey('msg_${m.id}'),

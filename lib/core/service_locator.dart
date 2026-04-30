@@ -52,7 +52,9 @@ import 'package:securityexperts_app/data/repositories/product/product_repository
 
 // Feature Services - Notifications
 import 'package:securityexperts_app/shared/services/notification_service.dart';
+import 'package:securityexperts_app/shared/services/block_user_service.dart';
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
+import 'package:securityexperts_app/features/support/services/support_service.dart';
 
 // Utility Services
 import 'package:securityexperts_app/shared/services/error_handler.dart';
@@ -312,6 +314,15 @@ Future<void> setupServiceLocator() async {
 
   // User Repository - Firestore CRUD for user profiles
   sl.registerLazySingleton<UserRepository>(() => UserRepository());
+
+  // Block User Service - manages user blocking
+  sl.registerLazySingleton<BlockUserService>(
+    () => BlockUserService(
+      userRepository: sl<UserRepository>(),
+      supportService: sl<SupportService>(),
+      log: sl<AppLogger>(),
+    ),
+  );
 
   // Expert Repository - Firestore CRUD for experts
   sl.registerLazySingleton<ExpertRepository>(() => ExpertRepository());

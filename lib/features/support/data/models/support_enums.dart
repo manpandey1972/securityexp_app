@@ -8,7 +8,9 @@ enum TicketType {
   feedback,
   support,
   account,
-  payment;
+  payment,
+  reportUser,
+  reportContent;
 
   /// Human-readable display name
   String get displayName {
@@ -25,6 +27,10 @@ enum TicketType {
         return 'Account Issue';
       case TicketType.payment:
         return 'Payment Issue';
+      case TicketType.reportUser:
+        return 'Report User';
+      case TicketType.reportContent:
+        return 'Report Content';
     }
   }
 
@@ -43,6 +49,10 @@ enum TicketType {
         return '👤';
       case TicketType.payment:
         return '💳';
+      case TicketType.reportUser:
+        return '🚫';
+      case TicketType.reportContent:
+        return '🚩';
     }
   }
 
@@ -61,6 +71,10 @@ enum TicketType {
         return 'Issues with your account or profile';
       case TicketType.payment:
         return 'Billing or payment related issues';
+      case TicketType.reportUser:
+        return 'Report a user for harassment or abusive behavior';
+      case TicketType.reportContent:
+        return 'Report inappropriate or harmful content';
     }
   }
 
@@ -84,6 +98,7 @@ enum TicketCategory {
   notifications,
   experts,
   performance,
+  safety,
   other;
 
   /// Human-readable display name
@@ -101,6 +116,8 @@ enum TicketCategory {
         return 'Experts';
       case TicketCategory.performance:
         return 'Performance';
+      case TicketCategory.safety:
+        return 'Safety & Reports';
       case TicketCategory.other:
         return 'Other';
     }
@@ -121,6 +138,8 @@ enum TicketCategory {
         return Icons.school;
       case TicketCategory.performance:
         return Icons.speed;
+      case TicketCategory.safety:
+        return Icons.shield;
       case TicketCategory.other:
         return Icons.help_outline;
     }
@@ -246,6 +265,9 @@ enum TicketPriority {
     switch (type) {
       case TicketType.payment:
         return TicketPriority.critical;
+      case TicketType.reportUser:
+      case TicketType.reportContent:
+        return TicketPriority.high;
       case TicketType.bug:
       case TicketType.account:
         return TicketPriority.high;

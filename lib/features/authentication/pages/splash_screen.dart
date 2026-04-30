@@ -9,6 +9,7 @@ import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/features/phone_auth/pages/phone_auth_screen.dart';
 import 'package:securityexperts_app/features/home/pages/home_page.dart';
 import 'package:securityexperts_app/features/onboarding/pages/user_onboarding_page.dart';
+import 'package:securityexperts_app/features/onboarding/pages/eula_page.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import 'package:securityexperts_app/features/profile/services/biometric_auth_service.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
@@ -104,8 +105,9 @@ class _SplashPageState extends State<SplashPage>
     final user = _auth.currentUser;
 
     if (user == null) {
-      // Not logged in → Phone Auth
-      _navigateToPhoneAuth();
+      // Not logged in → go straight to phone auth.
+      // EULA is gated AFTER successful authentication, not before login.
+      if (mounted) _navigateToPhoneAuth();
       return;
     }
 
@@ -183,13 +185,31 @@ class _SplashPageState extends State<SplashPage>
       // No need to initialize here anymore
 
       if (mounted) {
-        _navigateToHome();
+        await EulaPage.showIfNeeded(
+          context,
+          profileTermsAcceptedAt: profile.termsAcceptedAt,
+          onAccepted: () {
+            if (mounted) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const HomePage()),
+                (route) => false,
+              );
+            }
+          },
+        );
       }
     } else {
       _log.warning('No user profile found', tag: _tag);
       UserProfileService().clearUserProfile();
       if (mounted) {
-        _navigateToOnboarding();
+        // Signed in but no profile yet (mid-onboarding) → gate EULA before
+        // onboarding so a profile cannot be created without acceptance.
+        await EulaPage.showIfNeeded(
+          context,
+          onAccepted: () {
+            if (mounted) _navigateToOnboarding();
+          },
+        );
       }
     }
   }
@@ -257,12 +277,6 @@ class _SplashPageState extends State<SplashPage>
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const UserOnboardingPage()),
     );
-  }
-
-  void _navigateToHome() {
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
   }
 
   @override

@@ -13,6 +13,9 @@ class MessageBubbleMenu extends StatelessWidget {
   final VoidCallback? onCopy;
   final Function(Message, String)? onEdit;
   final VoidCallback? onDelete;
+  final VoidCallback? onReport;
+  final VoidCallback? onBlock;
+  final bool isUserBlocked;
   final Widget messageContentWidget;
 
   const MessageBubbleMenu({
@@ -24,6 +27,9 @@ class MessageBubbleMenu extends StatelessWidget {
     this.onCopy,
     this.onEdit,
     this.onDelete,
+    this.onReport,
+    this.onBlock,
+    this.isUserBlocked = false,
     required this.messageContentWidget,
   });
 
@@ -141,6 +147,28 @@ class MessageBubbleMenu extends StatelessWidget {
           onTap: () {
             Navigator.pop(context);
             onDelete?.call();
+          },
+        ),
+      ],
+      if (!fromMe) ...[
+        Container(height: 1, color: AppColors.divider),
+        _buildMenuItem(
+          icon: Icons.flag_outlined,
+          label: 'Report',
+          isDestructive: true,
+          onTap: () {
+            Navigator.pop(context);
+            onReport?.call();
+          },
+        ),
+        Container(height: 1, color: AppColors.divider),
+        _buildMenuItem(
+          icon: isUserBlocked ? Icons.block_flipped : Icons.block,
+          label: isUserBlocked ? 'Unblock User' : 'Block User',
+          isDestructive: !isUserBlocked,
+          onTap: () {
+            Navigator.pop(context);
+            onBlock?.call();
           },
         ),
       ],

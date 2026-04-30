@@ -136,6 +136,10 @@ class _TicketTypeCard extends StatelessWidget {
         return Icons.person_outline;
       case TicketType.payment:
         return Icons.payment;
+      case TicketType.reportUser:
+        return Icons.person_off_outlined;
+      case TicketType.reportContent:
+        return Icons.flag_outlined;
     }
   }
 }

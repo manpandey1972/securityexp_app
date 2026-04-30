@@ -106,6 +106,14 @@ class SupportTicket {
   /// User's feedback on support experience
   final String? userSatisfactionComment;
 
+  // ============= Report Fields =============
+
+  /// User ID being reported (for reportUser/reportContent ticket types)
+  final String? reportedUserId;
+
+  /// Message ID being reported (for reportContent ticket types)
+  final String? reportedMessageId;
+
   const SupportTicket({
     required this.id,
     required this.ticketNumber,
@@ -134,6 +142,8 @@ class SupportTicket {
     this.resolutionType,
     this.userSatisfactionRating,
     this.userSatisfactionComment,
+    this.reportedUserId,
+    this.reportedMessageId,
   });
 
   // ============= Computed Properties =============
@@ -207,6 +217,8 @@ class SupportTicket {
       ),
       userSatisfactionRating: json['userSatisfactionRating'] as int?,
       userSatisfactionComment: json['userSatisfactionComment'] as String?,
+      reportedUserId: json['reportedUserId'] as String?,
+      reportedMessageId: json['reportedMessageId'] as String?,
     );
   }
 
@@ -240,6 +252,8 @@ class SupportTicket {
       'resolutionType': resolutionType?.toJson(),
       'userSatisfactionRating': userSatisfactionRating,
       'userSatisfactionComment': userSatisfactionComment,
+      if (reportedUserId != null) 'reportedUserId': reportedUserId,
+      if (reportedMessageId != null) 'reportedMessageId': reportedMessageId,
     };
   }
 
@@ -272,6 +286,8 @@ class SupportTicket {
     ResolutionType? resolutionType,
     int? userSatisfactionRating,
     String? userSatisfactionComment,
+    String? reportedUserId,
+    String? reportedMessageId,
   }) {
     return SupportTicket(
       id: id ?? this.id,
@@ -304,6 +320,8 @@ class SupportTicket {
           userSatisfactionRating ?? this.userSatisfactionRating,
       userSatisfactionComment:
           userSatisfactionComment ?? this.userSatisfactionComment,
+      reportedUserId: reportedUserId ?? this.reportedUserId,
+      reportedMessageId: reportedMessageId ?? this.reportedMessageId,
     );
   }
 

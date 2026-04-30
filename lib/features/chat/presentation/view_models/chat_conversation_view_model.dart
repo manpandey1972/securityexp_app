@@ -28,6 +28,7 @@ import 'package:securityexperts_app/features/chat/services/chat_media_handler.da
 import 'package:securityexperts_app/features/chat/services/message_send_handler.dart';
 import 'package:securityexperts_app/features/chat/services/chat_recording_handler.dart';
 import 'package:securityexperts_app/features/chat/services/user_presence_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import 'package:securityexperts_app/features/calling/services/call_logger.dart';
 
 /// ViewModel for ChatConversationPage
@@ -108,7 +109,15 @@ class ChatConversationViewModel extends ChangeNotifier {
     textController.addListener(_onTextChanged);
     // Listen to upload manager for progress updates
     _uploadManager.addListener(_onUploadStateChanged);
+    // Rebuild when blocked-user list changes (Apple 1.2 compliance)
+    UserProfileService().addListener(_onProfileChanged);
   }
+
+  void _onProfileChanged() {
+    if (!_isDisposed) notifyListeners();
+  }
+
+  bool _isDisposed = false;
 
   // Getters for services (for UI access)
   ReplyManagementService? get replyManagementService => _replyManagementService;
@@ -529,6 +538,8 @@ class ChatConversationViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _logger.debug('Disposing ChatConversationViewModel');
+    _isDisposed = true;
+    UserProfileService().removeListener(_onProfileChanged);
     
     // Update presence to indicate user left the chat room
     sl<UserPresenceService>().leaveChatRoom();

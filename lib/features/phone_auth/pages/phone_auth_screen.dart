@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:securityexperts_app/features/onboarding/pages/user_onboarding_page.dart';
+import 'package:securityexperts_app/features/onboarding/pages/eula_page.dart';
 import 'package:securityexperts_app/features/home/pages/home_page.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
@@ -93,19 +94,28 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
 
     final newState = viewModel.state;
     if (!newState.isLoading && newState.error == null) {
-      // Successfully verified - check if profile exists
+      // Successfully verified - gate EULA acceptance, then route based on profile.
       final profile = UserProfileService().userProfile;
-      if (profile != null) {
-        // Profile exists - navigate to home
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
-      } else {
-        // No profile - navigate to onboarding
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const UserOnboardingPage()),
-        );
-      }
+      await EulaPage.showIfNeeded(
+        context,
+        profileTermsAcceptedAt: profile?.termsAcceptedAt,
+        onAccepted: () {
+          if (!mounted) return;
+          if (profile != null) {
+            // Profile exists - navigate to home
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const HomePage()),
+              (route) => false,
+            );
+          } else {
+            // No profile - navigate to onboarding
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const UserOnboardingPage()),
+              (route) => false,
+            );
+          }
+        },
+      );
     }
   }
 

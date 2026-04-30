@@ -5,8 +5,10 @@ import 'package:securityexperts_app/data/models/models.dart' as models;
 import 'package:securityexperts_app/data/repositories/chat/chat_repositories.dart';
 import 'package:securityexperts_app/features/chat/services/unread_messages_service.dart';
 import 'package:securityexperts_app/features/chat_list/presentation/state/chat_list_state.dart';
+import 'package:securityexperts_app/shared/services/block_user_service.dart';
 import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 import 'package:securityexperts_app/shared/services/user_cache_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
@@ -49,7 +51,27 @@ class ChatListViewModel extends ChangeNotifier {
     required UnreadMessagesService unreadMessagesService,
   }) : _roomRepository = roomRepository,
        _unreadMessagesService = unreadMessagesService,
-       _instanceId = ++_instanceCounter;
+       _instanceId = ++_instanceCounter {
+    // Re-filter rooms when the blocked-user list changes (Apple 1.2)
+    UserProfileService().addListener(_onUserProfileChanged);
+  }
+
+  /// Last known blocked-user set, used to avoid redundant rebuilds.
+  Set<String> _lastBlockedSnapshot = <String>{};
+
+  void _onUserProfileChanged() {
+    final blocked = sl<BlockUserService>().blockedUserIds.toSet();
+    if (blocked.length == _lastBlockedSnapshot.length &&
+        blocked.containsAll(_lastBlockedSnapshot)) {
+      return;
+    }
+    _lastBlockedSnapshot = blocked;
+    final user = sl<FirebaseAuth>().currentUser;
+    if (user == null || _isDisposed) return;
+    final filtered = _filterBlockedRooms(_state.rooms, user.uid);
+    _state = _state.copyWith(rooms: filtered);
+    notifyListeners();
+  }
 
   // Getters for service access (for UI)
   UnreadMessagesService get unreadMessagesService => _unreadMessagesService;
@@ -109,8 +131,20 @@ class ChatListViewModel extends ChangeNotifier {
         throw Exception('User not authenticated');
       }
 
-      // Fetch rooms from Firestore (pre-sorted by repository)
-      final rooms = await _roomRepository.getUserRooms(user.uid);
+      // Fetch rooms from Firestore
+      var rooms = await _roomRepository.getUserRooms(user.uid);
+
+      // Filter out rooms with blocked users (Apple 1.2 compliance)
+      rooms = _filterBlockedRooms(rooms, user.uid);
+
+      // Sort rooms by lastMessageDateTime in descending order (most recent first)
+      rooms.sort((a, b) {
+        final aTime =
+            a.lastMessageDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final bTime =
+            b.lastMessageDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return bTime.compareTo(aTime); // Descending order
+      });
 
       if (_isDisposed) return;
 
@@ -140,7 +174,20 @@ class ChatListViewModel extends ChangeNotifier {
           (updatedRooms) async {
             if (_isDisposed) return;
 
-            // Rooms are already sorted by the repository stream
+            // Filter out rooms with blocked users (Apple 1.2 compliance)
+            final filteredRooms = _filterBlockedRooms(updatedRooms, userId);
+
+            // Sort rooms by lastMessageDateTime in descending order (most recent first)
+            final sortedRooms = List<models.Room>.from(filteredRooms);
+            sortedRooms.sort((a, b) {
+              final aTime =
+                  a.lastMessageDateTime ??
+                  DateTime.fromMillisecondsSinceEpoch(0);
+              final bTime =
+                  b.lastMessageDateTime ??
+                  DateTime.fromMillisecondsSinceEpoch(0);
+              return bTime.compareTo(aTime); // Descending order
+            });
 
             // Prefetch participant profiles BEFORE notifying the UI.
             // This ensures the cache is warm so names/avatars render instantly
@@ -308,9 +355,26 @@ class ChatListViewModel extends ChangeNotifier {
     }
   }
 
+  /// Filter out rooms whose other participant is blocked by the current user.
+  /// Required by Apple App Store Guideline 1.2 (block must remove content from feed).
+  List<models.Room> _filterBlockedRooms(
+    List<models.Room> rooms,
+    String currentUserId,
+  ) {
+    final blocked = sl<BlockUserService>().blockedUserIds;
+    if (blocked.isEmpty) return rooms;
+    return rooms.where((room) {
+      final otherIds =
+          room.participants.where((id) => id != currentUserId).toList();
+      // Hide a room if any non-self participant is blocked.
+      return !otherIds.any(blocked.contains);
+    }).toList();
+  }
+
   @override
   void dispose() {
     _isDisposed = true;
+    UserProfileService().removeListener(_onUserProfileChanged);
     _roomsSubscription?.cancel();
     super.dispose();
   }
