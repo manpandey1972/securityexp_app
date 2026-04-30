@@ -114,22 +114,28 @@ class _EulaPageState extends State<EulaPage> {
       );
 
       // 2. Persist to Firestore. Uses the named `green-hive-db` database
-      //    (via FirestoreInstance) — NOT the default DB. Writing through
-      //    `FirebaseFirestore.instance` would hit the wrong database and
-      //    hang indefinitely.
+      //    (via FirestoreInstance) — NOT the default DB.
       //
-      //    Uses a client-side `Timestamp.now()` rather than
-      //    `FieldValue.serverTimestamp()` to avoid stalling the Firestore
-      //    web SDK on first writes to a not-yet-existing user document.
+      //    For brand-new users (no Firestore profile yet) we deliberately
+      //    SKIP this write. Reasons:
+      //      - The user document doesn't exist; a partial write here
+      //        creates it with only {terms_accepted_at, updated_at}, no
+      //        `roles` field. Firestore rules' `isChangingAdminRoles()`
+      //        helper then crashes on undefined `resource.data.roles`
+      //        when onboarding's `createUser` runs, returning
+      //        permission-denied for the actual profile creation.
+      //      - The onboarding `createUser` flow already carries
+      //        `terms_accepted_at` (loaded from SharedPreferences) into
+      //        the initial profile document, so the field still lands.
       //
-      //    `set(merge: true)` covers both create (new user) and update
-      //    (existing user accepting newer terms). A 10s timeout guards
-      //    against indefinite network stalls. As a defense-in-depth, the
-      //    onboarding `createUser` flow also includes `terms_accepted_at`
-      //    sourced from SharedPreferences, so the field still lands even
-      //    if this write fails for a new user.
+      //    For existing users (profile already exists), we await the
+      //    write so the user sees a clear success/failure outcome before
+      //    navigation. Uses a client-side `Timestamp.now()` rather than
+      //    `FieldValue.serverTimestamp()` (which can stall the Firestore
+      //    web SDK on certain transitions). A 10s timeout guards against
+      //    indefinite network stalls.
       final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
+      if (currentUser != null && !widget.isNewUser) {
         final uid = currentUser.uid;
         final acceptedAt = Timestamp.now();
         _log.info('Persisting terms_accepted_at for uid=$uid', tag: _tag);
@@ -178,6 +184,12 @@ class _EulaPageState extends State<EulaPage> {
           }
           return;
         }
+      } else if (currentUser != null && widget.isNewUser) {
+        _log.info(
+          'Skipping inline terms_accepted_at write; will be set by '
+          'createUser during onboarding (uid=${currentUser.uid})',
+          tag: _tag,
+        );
       }
 
       // 3. Dismiss EULA page first so the caller's `mounted` checks resolve

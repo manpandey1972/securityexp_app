@@ -87,9 +87,9 @@ class MockHomeDataLoader extends _i1.Mock implements _i4.HomeDataLoader {
           as _i5.Future<void>);
 
   @override
-  _i5.Future<List<_i6.User>?> loadExperts() =>
+  _i5.Future<List<_i6.User>?> loadExperts({bool? forceRefresh = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#loadExperts, []),
+            Invocation.method(#loadExperts, [], {#forceRefresh: forceRefresh}),
             returnValue: _i5.Future<List<_i6.User>?>.value(),
           )
           as _i5.Future<List<_i6.User>?>);

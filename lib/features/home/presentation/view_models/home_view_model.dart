@@ -21,6 +21,7 @@ class HomeViewModel extends ChangeNotifier {
 
   // Stream subscriptions
   StreamSubscription? _profileUpdatedSubscription;
+  StreamSubscription? _appResumedSubscription;
   StreamSubscription? _unreadCountSubscription;
 
   // Callback for ChatsTab load triggering
@@ -58,6 +59,13 @@ class HomeViewModel extends ChangeNotifier {
     _profileUpdatedSubscription = EventBus().onProfileUpdated.listen((_) {
       loadProducts();
     });
+    // When the app returns from background, refresh the experts list so
+    // newly-added experts (e.g. while the app was backgrounded) appear
+    // without requiring a logout/login. Force a refresh to bypass the
+    // 5-minute repository cache.
+    _appResumedSubscription = EventBus().onAppResumed.listen((_) {
+      loadExperts(forceRefresh: true);
+    });
   }
 
   /// Initialize unread messages stream
@@ -75,12 +83,14 @@ class HomeViewModel extends ChangeNotifier {
     );
   }
 
-  /// Load experts from data loader
-  Future<void> loadExperts() async {
+  /// Load experts from data loader.
+  /// Pass [forceRefresh] to bypass the repository cache (used by
+  /// pull-to-refresh, tab re-selection, and app-resume).
+  Future<void> loadExperts({bool forceRefresh = false}) async {
     _updateState(_state.copyWith(isLoadingExperts: true, expertsError: null));
 
     final result = await ErrorHandler.handle<List<User>?>(
-      operation: () => _dataLoader.loadExperts(),
+      operation: () => _dataLoader.loadExperts(forceRefresh: forceRefresh),
       fallback: null,
       onError: (error) {
         _updateState(
@@ -134,9 +144,11 @@ class HomeViewModel extends ChangeNotifier {
       _updateState(_state.copyWith(selectedTabIndex: index));
     }
 
-    // Load experts when user selects the Experts tab
+    // Load experts when user selects the Experts tab. Force a refresh so
+    // a tab tap always shows the latest list (e.g. when a new expert was
+    // just added) instead of stale cached data.
     if (index == 0) {
-      loadExperts();
+      loadExperts(forceRefresh: true);
     }
 
     // Load products when user selects the Products tab
@@ -186,6 +198,7 @@ class HomeViewModel extends ChangeNotifier {
       _log.debug('Disposing', tag: _tag, data: {'instanceId': _instanceId});
     } catch (_) {}
     _profileUpdatedSubscription?.cancel();
+    _appResumedSubscription?.cancel();
     _unreadCountSubscription?.cancel();
     super.dispose();
   }

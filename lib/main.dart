@@ -12,6 +12,7 @@ import 'firebase_options.dart'; // generated via flutterfire CLI
 import 'features/authentication/pages/splash_screen.dart';
 import 'package:securityexperts_app/shared/services/snackbar_service.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
+import 'package:securityexperts_app/shared/services/event_bus.dart';
 import 'package:securityexperts_app/shared/services/notification_service.dart';
 import 'package:securityexperts_app/core/config/remote_config_service.dart';
 import 'package:securityexperts_app/shared/themes/app_theme.dart';
@@ -253,6 +254,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         presenceService.setAppInForeground();
         // Re-sync VoIP token so Firestore stays current for long-lived sessions
         sl<VoIPTokenRepository>().refreshToken();
+        // Notify subscribers (e.g. HomeViewModel) to refresh stale data such
+        // as the experts list — a new expert may have been added while the
+        // app was backgrounded.
+        EventBus().emitAppResumed();
         break;
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:

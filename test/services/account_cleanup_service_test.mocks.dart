@@ -375,6 +375,15 @@ class MockVoIPTokenRepository extends _i1.Mock
           as _i5.Future<void>);
 
   @override
+  _i5.Future<void> refreshToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#refreshToken, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
   _i5.Future<String?> getTokenForUser(String? userId) =>
       (super.noSuchMethod(
             Invocation.method(#getTokenForUser, [userId]),

@@ -3298,8 +3298,22 @@ class MockEventBus extends _i1.Mock implements _i55.EventBus {
           as _i5.Stream<void>);
 
   @override
+  _i5.Stream<void> get onAppResumed =>
+      (super.noSuchMethod(
+            Invocation.getter(#onAppResumed),
+            returnValue: _i5.Stream<void>.empty(),
+          )
+          as _i5.Stream<void>);
+
+  @override
   void emitProfileUpdated() => super.noSuchMethod(
     Invocation.method(#emitProfileUpdated, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void emitAppResumed() => super.noSuchMethod(
+    Invocation.method(#emitAppResumed, []),
     returnValueForMissingStub: null,
   );
 

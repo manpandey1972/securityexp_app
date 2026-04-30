@@ -64,14 +64,17 @@ class HomeDataLoader {
   }
 
   /// Load experts from Firestore
-  /// Returns list of experts
-  Future<List<models.User>?> loadExperts() async {
+  /// Returns list of experts. Pass [forceRefresh] to bypass the
+  /// repository cache (e.g. on pull-to-refresh or app resume).
+  Future<List<models.User>?> loadExperts({bool forceRefresh = false}) async {
     final trace = sl<AnalyticsService>().newTrace('expert_list_load');
     await trace.start();
-    
+
     return ErrorHandler.handle(
       operation: () async {
-        final experts = await _expertRepository.getExperts();
+        final experts = await _expertRepository.getExperts(
+          forceRefresh: forceRefresh,
+        );
         
         trace.putAttribute('expert_count', experts.length.toString());
         await trace.stop();

@@ -86,7 +86,7 @@ class _HomePageView extends StatelessWidget {
           onSearchFocusChanged: (focused) {
             viewModel.setSearchFocused(focused);
           },
-          onRefresh: () => viewModel.loadExperts(),
+          onRefresh: () => viewModel.loadExperts(forceRefresh: true),
           searchUtils: viewModel.searchUtils,
           onChat: (expertId, expertName) {
             // Find the expert object to get profile picture
