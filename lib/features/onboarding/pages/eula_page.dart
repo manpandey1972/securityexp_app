@@ -98,8 +98,46 @@ class EulaPage extends StatefulWidget {
 class _EulaPageState extends State<EulaPage> {
   bool _agreed = false;
   bool _saving = false;
+  /// Becomes true once the user scrolls to (or past) the bottom of the
+  /// terms. Until then the acceptance checkbox is disabled so users must
+  /// scroll through the full content before they can accept (Apple 1.2:
+  /// EULA must be acknowledged, not silently dismissed).
+  bool _reachedEnd = false;
+  final ScrollController _scrollController = ScrollController();
   final _log = sl<AppLogger>();
   static const _tag = 'EulaPage';
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    // If the terms fit on screen without scrolling (very tall device or
+    // small content), enable acceptance immediately after first layout.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (!_scrollController.hasClients) return;
+      if (_scrollController.position.maxScrollExtent <= 0) {
+        setState(() => _reachedEnd = true);
+      }
+    });
+  }
+
+  void _onScroll() {
+    if (_reachedEnd) return;
+    final pos = _scrollController.position;
+    // Use a small threshold so users don't have to land exactly on the
+    // last pixel.
+    if (pos.pixels >= pos.maxScrollExtent - 24) {
+      setState(() => _reachedEnd = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> _accept() async {
     if (!_agreed || _saving) return;
@@ -217,6 +255,7 @@ class _EulaPageState extends State<EulaPage> {
         children: [
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(AppSpacing.spacing24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,14 +336,39 @@ class _EulaPageState extends State<EulaPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Hint shown until the user scrolls to the end.
+                  if (!_reachedEnd) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 18,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: AppSpacing.spacing8),
+                        Expanded(
+                          child: Text(
+                            'Please scroll to the end to review all terms.',
+                            style: AppTypography.captionSmall.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.spacing12),
+                  ],
                   GestureDetector(
-                    onTap: () => setState(() => _agreed = !_agreed),
+                    onTap: _reachedEnd
+                        ? () => setState(() => _agreed = !_agreed)
+                        : null,
                     child: Row(
                       children: [
                         Checkbox(
                           value: _agreed,
-                          onChanged: (v) =>
-                              setState(() => _agreed = v ?? false),
+                          onChanged: _reachedEnd
+                              ? (v) => setState(() => _agreed = v ?? false)
+                              : null,
                           activeColor: AppColors.primary,
                         ),
                         const SizedBox(width: AppSpacing.spacing8),
@@ -312,7 +376,9 @@ class _EulaPageState extends State<EulaPage> {
                           child: Text(
                             'I have read and agree to the Terms of Service and Community Guidelines',
                             style: AppTypography.bodyRegular.copyWith(
-                              color: AppColors.textPrimary,
+                              color: _reachedEnd
+                                  ? AppColors.textPrimary
+                                  : AppColors.textSecondary,
                             ),
                           ),
                         ),
@@ -321,10 +387,12 @@ class _EulaPageState extends State<EulaPage> {
                   ),
                   const SizedBox(height: AppSpacing.spacing16),
                   AppButtonVariants.secondary(
-                    onPressed: (_agreed && !_saving) ? _accept : null,
+                    onPressed: (_reachedEnd && _agreed && !_saving)
+                        ? _accept
+                        : null,
                     label: 'Continue',
                     isLoading: _saving,
-                    isEnabled: _agreed,
+                    isEnabled: _reachedEnd && _agreed,
                   ),
                 ],
               ),

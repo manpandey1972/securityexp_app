@@ -5,6 +5,8 @@ import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/features/support/data/models/support_enums.dart';
 import 'package:securityexperts_app/features/support/services/support_service.dart';
+import 'package:securityexperts_app/shared/services/hidden_messages_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 
 /// Provides a bottom-sheet UI to report a user or a specific message.
 ///
@@ -86,8 +88,19 @@ class _ReportSheetState extends State<_ReportSheet> {
     final subject = isContentReport
         ? 'Report: Inappropriate message from $targetName'
         : 'Report: Abusive user $targetName';
+    // Capture reporter identity explicitly in the description so a
+    // moderator viewing the ticket has full context without needing to
+    // cross-reference the ticket's `userId`/`userName` fields. Mirrors
+    // the block-user ticket format for consistency.
+    final reporterProfile = UserProfileService().userProfile;
+    final reporterId = reporterProfile?.id ?? 'unknown';
+    final reporterName = reporterProfile?.name ?? 'Unknown';
     final description =
-        'Reason: $reason\nReported user ID: ${widget.reportedUserId}'
+        'Reason: $reason\n'
+        'Reporter user ID: $reporterId\n'
+        'Reporter user name: $reporterName\n'
+        'Reported user ID: ${widget.reportedUserId}\n'
+        'Reported user name: $targetName'
         '${widget.reportedMessageId != null ? '\nMessage ID: ${widget.reportedMessageId}' : ''}';
 
     await ErrorHandler.handle<void>(
@@ -100,6 +113,23 @@ class _ReportSheetState extends State<_ReportSheet> {
         );
         if (!result.isSuccess) {
           throw Exception('Failed to submit report: ${result.error?.message}');
+        }
+        // Apple 1.2: hide the reported message immediately for the
+        // reporter (per-user hide). Other participants still see the
+        // message until/unless an admin removes it via moderation.
+        // Best-effort: failure to hide must not surface as a report
+        // failure since the ticket has already been created.
+        if (widget.reportedMessageId != null) {
+          try {
+            await sl<HiddenMessagesService>()
+                .hideMessage(widget.reportedMessageId!);
+          } catch (e) {
+            _log.warning(
+              'Hide-on-report failed for messageId='
+              '${widget.reportedMessageId}: $e',
+              tag: ReportService._tag,
+            );
+          }
         }
       },
       onError: (e) => _log.error('Report submission error: $e', tag: ReportService._tag),

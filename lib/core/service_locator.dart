@@ -53,6 +53,7 @@ import 'package:securityexperts_app/data/repositories/product/product_repository
 // Feature Services - Notifications
 import 'package:securityexperts_app/shared/services/notification_service.dart';
 import 'package:securityexperts_app/shared/services/block_user_service.dart';
+import 'package:securityexperts_app/shared/services/hidden_messages_service.dart';
 import 'package:securityexperts_app/shared/services/firebase_messaging_service.dart';
 import 'package:securityexperts_app/features/support/services/support_service.dart';
 
@@ -325,6 +326,14 @@ Future<void> setupServiceLocator() async {
     () => BlockUserService(
       userRepository: sl<UserRepository>(),
       supportService: sl<SupportService>(),
+      log: sl<AppLogger>(),
+    ),
+  );
+
+  // Hidden Messages Service - per-user hiding of reported messages (Apple 1.2)
+  sl.registerLazySingleton<HiddenMessagesService>(
+    () => HiddenMessagesService(
+      userRepository: sl<UserRepository>(),
       log: sl<AppLogger>(),
     ),
   );

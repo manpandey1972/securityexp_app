@@ -10,6 +10,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/shared/services/block_user_service.dart';
+import 'package:securityexperts_app/shared/services/hidden_messages_service.dart';
 
 // App - Models
 import 'package:securityexperts_app/data/models/models.dart';
@@ -146,6 +147,8 @@ class _ChatConversationPageContentState
     ChatConversationViewModel viewModel,
     ChatConversationState state,
   ) {
+    final partnerId = widget.partnerId;
+    final blockService = sl<BlockUserService>();
     return ChatAppBar(
       title: title,
       profilePictureUrl: state.peerProfilePictureUrl,
@@ -166,6 +169,17 @@ class _ChatConversationPageContentState
       },
       onClearChat: () => _showClearChatDialog(context, viewModel),
       onDeleteChat: () => _showDeleteChatDialog(context, viewModel),
+      // Conversation-level Block (Apple 1.2). Hidden for self-chat.
+      onBlockUser: (partnerId != null && partnerId.isNotEmpty)
+          ? () => blockService.confirmAndToggleBlock(
+                context,
+                userId: partnerId,
+                userName: widget.partnerName ?? 'User',
+              )
+          : null,
+      isUserBlocked: (partnerId != null && partnerId.isNotEmpty)
+          ? blockService.isBlocked(partnerId)
+          : false,
     );
   }
 
@@ -339,6 +353,11 @@ class _ChatConversationPageContentState
 
     // Hide messages from blocked users instantly (Apple 1.2 compliance)
     if (!fromMe && sl<BlockUserService>().isBlocked(m.senderId)) {
+      return const SizedBox.shrink();
+    }
+
+    // Hide messages the user has reported (per-user hide; Apple 1.2)
+    if (!fromMe && sl<HiddenMessagesService>().isHidden(m.id)) {
       return const SizedBox.shrink();
     }
 

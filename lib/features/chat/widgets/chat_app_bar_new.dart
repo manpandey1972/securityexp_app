@@ -24,6 +24,8 @@ class ChatAppBar extends PreferredSize {
     VoidCallback? onClearChat,
     VoidCallback? onDeleteChat,
     bool isE2eeEnabled = false,
+    VoidCallback? onBlockUser,
+    bool isUserBlocked = false,
   }) : super(
          preferredSize: const Size.fromHeight(kToolbarHeight),
          child: _ChatAppBarContent(
@@ -35,6 +37,8 @@ class ChatAppBar extends PreferredSize {
            onClearChat: onClearChat,
            onDeleteChat: onDeleteChat,
            isE2eeEnabled: isE2eeEnabled,
+           onBlockUser: onBlockUser,
+           isUserBlocked: isUserBlocked,
          ),
        );
 }
@@ -49,6 +53,8 @@ class _ChatAppBarContent extends StatelessWidget {
   final VoidCallback? onClearChat;
   final VoidCallback? onDeleteChat;
   final bool isE2eeEnabled;
+  final VoidCallback? onBlockUser;
+  final bool isUserBlocked;
 
   static const String _tag = 'ChatAppBar';
   final AppLogger _log = sl<AppLogger>();
@@ -62,6 +68,8 @@ class _ChatAppBarContent extends StatelessWidget {
     this.onClearChat,
     this.onDeleteChat,
     this.isE2eeEnabled = false,
+    this.onBlockUser,
+    this.isUserBlocked = false,
   });
 
   @override
@@ -174,6 +182,9 @@ class _ChatAppBarContent extends StatelessWidget {
               case 'delete_chat':
                 onDeleteChat?.call();
                 break;
+              case 'block_user':
+                onBlockUser?.call();
+                break;
             }
           },
           itemBuilder: (context) => [
@@ -213,6 +224,33 @@ class _ChatAppBarContent extends StatelessWidget {
                   ],
                 ),
               ),
+            if (onBlockUser != null) ...[
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: 'block_user',
+                child: Row(
+                  children: [
+                    Icon(
+                      isUserBlocked ? Icons.block_flipped : Icons.block,
+                      color: isUserBlocked
+                          ? AppColors.textPrimary
+                          : AppColors.error,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      isUserBlocked ? 'Unblock User' : 'Block User',
+                      style: TextStyle(
+                        color: isUserBlocked
+                            ? AppColors.textPrimary
+                            : AppColors.error,
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ],

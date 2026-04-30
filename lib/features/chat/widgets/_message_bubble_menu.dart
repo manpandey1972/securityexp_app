@@ -161,16 +161,6 @@ class MessageBubbleMenu extends StatelessWidget {
             onReport?.call();
           },
         ),
-        Container(height: 1, color: AppColors.divider),
-        _buildMenuItem(
-          icon: isUserBlocked ? Icons.block_flipped : Icons.block,
-          label: isUserBlocked ? 'Unblock User' : 'Block User',
-          isDestructive: !isUserBlocked,
-          onTap: () {
-            Navigator.pop(context);
-            onBlock?.call();
-          },
-        ),
       ],
     ];
   }

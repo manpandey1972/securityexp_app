@@ -29,6 +29,7 @@ class User extends Equatable {
   final int? totalRatings;
   // Safety & compliance fields
   final List<String> blockedUserIds;
+  final List<String> hiddenMessageIds;
   final Timestamp? termsAcceptedAt;
 
   const User({
@@ -52,6 +53,7 @@ class User extends Equatable {
     this.averageRating,
     this.totalRatings,
     this.blockedUserIds = const [],
+    this.hiddenMessageIds = const [],
     this.termsAcceptedAt,
   });
 
@@ -105,6 +107,8 @@ class User extends Equatable {
           (json['rating'] as Map<String, dynamic>?)?['totalRatings'] as int?,
       blockedUserIds: List<String>.from(
           json['blocked_user_ids'] as List<dynamic>? ?? []),
+      hiddenMessageIds: List<String>.from(
+          json['hidden_message_ids'] as List<dynamic>? ?? []),
       termsAcceptedAt: parseTimestamp(json['terms_accepted_at']),
     );
   }
@@ -136,6 +140,8 @@ class User extends Equatable {
           if (totalRatings != null) 'totalRatings': totalRatings,
         },
       if (blockedUserIds.isNotEmpty) 'blocked_user_ids': blockedUserIds,
+      if (hiddenMessageIds.isNotEmpty)
+        'hidden_message_ids': hiddenMessageIds,
       if (termsAcceptedAt != null) 'terms_accepted_at': termsAcceptedAt,
     };
   }
@@ -162,6 +168,7 @@ class User extends Equatable {
     double? averageRating,
     int? totalRatings,
     List<String>? blockedUserIds,
+    List<String>? hiddenMessageIds,
     Timestamp? termsAcceptedAt,
   }) {
     return User(
@@ -186,6 +193,7 @@ class User extends Equatable {
       averageRating: averageRating ?? this.averageRating,
       totalRatings: totalRatings ?? this.totalRatings,
       blockedUserIds: blockedUserIds ?? this.blockedUserIds,
+      hiddenMessageIds: hiddenMessageIds ?? this.hiddenMessageIds,
       termsAcceptedAt: termsAcceptedAt ?? this.termsAcceptedAt,
     );
   }
@@ -234,6 +242,7 @@ class User extends Equatable {
     averageRating,
     totalRatings,
     blockedUserIds,
+    hiddenMessageIds,
     termsAcceptedAt,
   ];
 }

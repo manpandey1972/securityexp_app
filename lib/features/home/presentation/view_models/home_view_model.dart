@@ -6,6 +6,8 @@ import 'package:securityexperts_app/data/models/models.dart';
 import 'package:securityexperts_app/features/home/services/home_data_loader.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/shared/services/event_bus.dart';
+import 'package:securityexperts_app/shared/services/block_user_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import '../state/home_state.dart';
 
 /// ViewModel for HomePage - manages all business logic and state
@@ -36,7 +38,31 @@ class HomeViewModel extends ChangeNotifier {
     : _dataLoader = dataLoader,
       _instanceId = ++_instanceCounter {
     _log.debug('Created', tag: _tag, data: {'instanceId': _instanceId, 'totalInstances': _instanceCounter});
+    // Rebuild experts list when blocked-user list changes (Apple 1.2):
+    // a newly-blocked expert must disappear from the home Experts tab
+    // immediately, and an unblocked expert must reappear.
+    UserProfileService().addListener(_onProfileChanged);
     _initialize();
+  }
+
+  /// Cached, unfiltered experts loaded from the repository. Filtering by
+  /// `BlockUserService.blockedUserIds` happens at state-publish time so
+  /// the visible list updates instantly when blocks change without a
+  /// repository round-trip.
+  List<User> _expertsRaw = const [];
+
+  void _onProfileChanged() {
+    if (_expertsRaw.isEmpty) return;
+    _publishExperts(_expertsRaw);
+  }
+
+  void _publishExperts(List<User> experts) {
+    _expertsRaw = experts;
+    final blocked = sl<BlockUserService>().blockedUserIds.toSet();
+    final visible = blocked.isEmpty
+        ? experts
+        : experts.where((e) => !blocked.contains(e.id)).toList();
+    _updateState(_state.copyWith(experts: visible));
   }
 
   /// Initialize all data on startup
@@ -102,7 +128,7 @@ class HomeViewModel extends ChangeNotifier {
     );
 
     if (result != null) {
-      _updateState(_state.copyWith(experts: result));
+      _publishExperts(result);
     }
 
     _updateState(_state.copyWith(isLoadingExperts: false));
@@ -200,6 +226,7 @@ class HomeViewModel extends ChangeNotifier {
     _profileUpdatedSubscription?.cancel();
     _appResumedSubscription?.cancel();
     _unreadCountSubscription?.cancel();
+    UserProfileService().removeListener(_onProfileChanged);
     super.dispose();
   }
 }

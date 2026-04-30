@@ -10,6 +10,7 @@ import 'package:securityexperts_app/data/repositories/user/user_repository.dart'
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/permissions/permission_types.dart';
 import 'package:securityexperts_app/features/phone_auth/pages/phone_auth_screen.dart';
+import 'package:securityexperts_app/features/profile/pages/blocked_users_page.dart';
 import 'package:securityexperts_app/features/support/pages/support_hub_page.dart';
 import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 import 'package:securityexperts_app/core/routing/app_routes.dart';
@@ -116,6 +117,24 @@ class ProfileMenu {
               activeTrackColor: AppColors.primaryLight,
               inactiveThumbColor: AppColors.messageBubble,
               inactiveTrackColor: AppColors.primaryLight.withValues(alpha: 0.4),
+            ),
+          ],
+        ),
+      ),
+      const PopupMenuDivider(),
+
+      // Blocked Users option (Apple 1.2: users must be able to unblock).
+      PopupMenuItem(
+        value: 'blocked_users',
+        child: Row(
+          children: [
+            Icon(Icons.block, size: 20, color: AppColors.textPrimary),
+            const SizedBox(width: 8),
+            Text(
+              'Blocked Users',
+              style: AppTypography.bodyRegular.copyWith(
+                color: AppColors.textPrimary,
+              ),
             ),
           ],
         ),
@@ -411,6 +430,11 @@ class ProfileMenu {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const SupportHubPage()));
+    } else if (value == 'blocked_users') {
+      if (!context.mounted) return;
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const BlockedUsersPage()));
     } else if (value == 'admin_dashboard') {
       if (!context.mounted) return;
       // Import dynamically to avoid circular dependencies
