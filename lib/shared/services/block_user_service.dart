@@ -45,6 +45,16 @@ class BlockUserService {
     String? blockedUserName,
   }) async {
     if (blockedUserId.isEmpty) return;
+
+    // Self-block guard. The UI hides Block on own messages, but defend the
+    // service entry-point as well in case a caller forgets the check.
+    final blockerProfile = UserProfileService().userProfile;
+    final blockerId = blockerProfile?.id ?? '';
+    if (blockerId.isNotEmpty && blockerId == blockedUserId) {
+      _log.warning('Refusing self-block for uid=$blockerId', tag: _tag);
+      return;
+    }
+
     _log.info('Blocking user: $blockedUserId', tag: _tag);
 
     await ErrorHandler.handle<void>(
@@ -67,6 +77,11 @@ class BlockUserService {
     }
 
     // Notify developer via a safety support ticket. Required by Apple 1.2.
+    // Description includes BOTH the blocker UID and the blocked UID so a
+    // moderator can investigate without cross-referencing the ticket's
+    // own `userId` field. Priority is auto-set to `high` by
+    // `TicketPriority.fromTicketType(reportUser)`.
+    final blockerName = blockerProfile?.name ?? 'Unknown';
     final targetName = blockedUserName ?? 'Unknown user';
     await ErrorHandler.handle<void>(
       operation: () async {
@@ -75,7 +90,9 @@ class BlockUserService {
           category: TicketCategory.safety,
           subject: 'User blocked: $targetName',
           description:
-              'User blocked another user.\n'
+              'A user blocked another user.\n'
+              'Blocker user ID: $blockerId\n'
+              'Blocker user name: $blockerName\n'
               'Blocked user ID: $blockedUserId\n'
               'Blocked user name: $targetName',
         );

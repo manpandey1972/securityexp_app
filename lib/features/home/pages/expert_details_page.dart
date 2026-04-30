@@ -14,6 +14,7 @@ import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/shared/themes/app_card_styles.dart';
 import 'package:securityexperts_app/shared/services/block_user_service.dart';
 import 'package:securityexperts_app/shared/services/report_service.dart';
+import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 
 class ExpertDetailsPage extends StatefulWidget {
   final models.User expert; // Required user object
@@ -119,53 +120,57 @@ class _ExpertDetailsPageState extends State<ExpertDetailsPage> {
       appBar: AppBar(
         title: const Text('Expert Profile'),
         actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (value) {
-              if (value == 'report') {
-                ReportService.showReportDialog(
-                  context,
-                  reportedUserId: widget.expert.id,
-                  reportedUserName: widget.expert.name,
+          // Hide Report/Block menu when viewing one's own profile (Apple 1.2:
+          // self-block must be impossible).
+          if (UserProfileService().userProfile?.id != widget.expert.id)
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (value) {
+                if (value == 'report') {
+                  ReportService.showReportDialog(
+                    context,
+                    reportedUserId: widget.expert.id,
+                    reportedUserName: widget.expert.name,
+                  );
+                } else if (value == 'block') {
+                  sl<BlockUserService>().confirmAndToggleBlock(
+                    context,
+                    userId: widget.expert.id,
+                    userName: widget.expert.name,
+                  );
+                }
+              },
+              itemBuilder: (ctx) {
+                final isBlocked = sl<BlockUserService>().isBlocked(
+                  widget.expert.id,
                 );
-              } else if (value == 'block') {
-                sl<BlockUserService>().confirmAndToggleBlock(
-                  context,
-                  userId: widget.expert.id,
-                  userName: widget.expert.name,
-                );
-              }
-            },
-            itemBuilder: (ctx) {
-              final isBlocked =
-                  sl<BlockUserService>().isBlocked(widget.expert.id);
-              return [
-                const PopupMenuItem(
-                  value: 'report',
-                  child: Row(
-                    children: [
-                      Icon(Icons.flag_outlined, color: Colors.redAccent),
-                      SizedBox(width: 12),
-                      Text('Report User'),
-                    ],
+                return [
+                  const PopupMenuItem(
+                    value: 'report',
+                    child: Row(
+                      children: [
+                        Icon(Icons.flag_outlined, color: Colors.redAccent),
+                        SizedBox(width: 12),
+                        Text('Report User'),
+                      ],
+                    ),
                   ),
-                ),
-                PopupMenuItem(
-                  value: 'block',
-                  child: Row(
-                    children: [
-                      Icon(
-                        isBlocked ? Icons.block_flipped : Icons.block,
-                        color: isBlocked ? null : Colors.redAccent,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(isBlocked ? 'Unblock User' : 'Block User'),
-                    ],
+                  PopupMenuItem(
+                    value: 'block',
+                    child: Row(
+                      children: [
+                        Icon(
+                          isBlocked ? Icons.block_flipped : Icons.block,
+                          color: isBlocked ? null : Colors.redAccent,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(isBlocked ? 'Unblock User' : 'Block User'),
+                      ],
+                    ),
                   ),
-                ),
-              ];
-            },
-          ),
+                ];
+              },
+            ),
         ],
       ),
       body: SingleChildScrollView(

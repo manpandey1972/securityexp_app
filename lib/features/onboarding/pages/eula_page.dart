@@ -8,6 +8,7 @@ import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/data/services/firestore_instance.dart';
 
 /// Base prefix for the local EULA acceptance key. The full key is
 /// per-user: `${eulaAcceptedKeyPrefix}<uid>` (or `${eulaAcceptedKeyPrefix}anon`
@@ -112,23 +113,29 @@ class _EulaPageState extends State<EulaPage> {
         DateTime.now().toIso8601String(),
       );
 
-      // 2. Persist to Firestore — only if the user already has a profile
-      //    document. For brand-new users (no profile yet), the upcoming
-      //    onboarding `createUser` write carries `terms_accepted_at` into
-      //    the initial user document. We deliberately skip the inline
-      //    Firestore write here because `set(merge:true)` against a
-      //    not-yet-existing document right after fresh auth is known to
-      //    stall the Firestore web SDK (WebChannel transport quirk).
+      // 2. Persist to Firestore. Uses the named `green-hive-db` database
+      //    (via FirestoreInstance) — NOT the default DB. Writing through
+      //    `FirebaseFirestore.instance` would hit the wrong database and
+      //    hang indefinitely.
       //
-      //    A 10s timeout still guards the existing-user path against
-      //    indefinite network stalls.
+      //    Uses a client-side `Timestamp.now()` rather than
+      //    `FieldValue.serverTimestamp()` to avoid stalling the Firestore
+      //    web SDK on first writes to a not-yet-existing user document.
+      //
+      //    `set(merge: true)` covers both create (new user) and update
+      //    (existing user accepting newer terms). A 10s timeout guards
+      //    against indefinite network stalls. As a defense-in-depth, the
+      //    onboarding `createUser` flow also includes `terms_accepted_at`
+      //    sourced from SharedPreferences, so the field still lands even
+      //    if this write fails for a new user.
       final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null && !widget.isNewUser) {
+      if (currentUser != null) {
         final uid = currentUser.uid;
         final acceptedAt = Timestamp.now();
         _log.info('Persisting terms_accepted_at for uid=$uid', tag: _tag);
         try {
-          await FirebaseFirestore.instance
+          await FirestoreInstance()
+              .db
               .collection('users')
               .doc(uid)
               .set(
@@ -165,20 +172,12 @@ class _EulaPageState extends State<EulaPage> {
             setState(() => _saving = false);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text(
-                  'Could not save acceptance. Please try again.',
-                ),
+                content: Text('Could not save acceptance. Please try again.'),
               ),
             );
           }
           return;
         }
-      } else if (currentUser != null && widget.isNewUser) {
-        _log.info(
-          'Skipping inline terms_accepted_at write; will be set by '
-          'createUser during onboarding (uid=${currentUser.uid})',
-          tag: _tag,
-        );
       }
 
       // 3. Dismiss EULA page first so the caller's `mounted` checks resolve
