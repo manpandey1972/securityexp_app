@@ -229,7 +229,7 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                                 bottom: 0,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary,
+                                    color: AppColors.primaryLight,
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Padding(
@@ -288,7 +288,7 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                                 margin: const EdgeInsets.only(right: 8),
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary,
+                                  color: AppColors.primaryLight,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Text(
@@ -427,7 +427,7 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                           onDeleted: () {
                             viewModel.toggleSkill(skillId);
                           },
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppColors.primaryLight,
                           labelStyle: Theme.of(context).textTheme.labelMedium
                               ?.copyWith(color: AppColors.textPrimary),
                         );
@@ -459,7 +459,7 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                           viewModel.toggleLanguage(language);
                         },
                         backgroundColor: AppColors.surfaceVariant,
-                        selectedColor: AppColors.primary,
+                        selectedColor: AppColors.primaryLight,
                         labelStyle: Theme.of(context).textTheme.labelMedium
                             ?.copyWith(color: AppColors.textPrimary),
                       );

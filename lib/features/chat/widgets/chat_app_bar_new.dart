@@ -83,7 +83,7 @@ class _ChatAppBarContent extends StatelessWidget {
                 ),
                 placeholder: (context, url) => CircleAvatar(
                   radius: ChatHeaderConstants.profileAvatarRadius,
-                  backgroundColor: AppColors.surfaceVariant,
+                  backgroundColor: AppColors.avatarBackground,
                   child: const SizedBox(
                     width: 16,
                     height: 16,
@@ -92,7 +92,7 @@ class _ChatAppBarContent extends StatelessWidget {
                 ),
                 errorWidget: (context, url, error) => CircleAvatar(
                   radius: ChatHeaderConstants.profileAvatarRadius,
-                  backgroundColor: AppColors.surfaceVariant,
+                  backgroundColor: AppColors.avatarBackground,
                   child: Text(
                     title.isNotEmpty ? title[0].toUpperCase() : 'U',
                     style: AppTypography.bodyRegular.copyWith(
@@ -110,7 +110,7 @@ class _ChatAppBarContent extends StatelessWidget {
               ),
               child: CircleAvatar(
                 radius: ChatHeaderConstants.profileAvatarRadius,
-                backgroundColor: AppColors.surfaceVariant,
+                backgroundColor: AppColors.avatarBackground,
                 child: Text(
                   title.isNotEmpty ? title[0].toUpperCase() : 'U',
                   style: AppTypography.bodyRegular.copyWith(

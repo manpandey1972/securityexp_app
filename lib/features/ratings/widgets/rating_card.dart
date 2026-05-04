@@ -59,7 +59,7 @@ class RatingCard extends StatelessWidget {
                 // User avatar placeholder
                 CircleAvatar(
                   radius: 18,
-                  backgroundColor: AppColors.surfaceVariant,
+                  backgroundColor: AppColors.avatarBackground,
                   child: Text(
                     rating.displayName.isNotEmpty
                         ? rating.displayName[0].toUpperCase()

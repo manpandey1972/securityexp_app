@@ -99,7 +99,7 @@ class AvatarWidget extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.surfaceVariant,
+        color: backgroundColor ?? AppColors.avatarBackground,
         shape: BoxShape.circle,
       ),
       child: Center(

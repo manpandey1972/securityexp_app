@@ -215,7 +215,7 @@ class _MinimizedCallViewState extends State<MinimizedCallView> {
               )
             : CircleAvatar(
                 radius: 30,
-                backgroundColor: AppColors.surfaceVariant,
+                backgroundColor: AppColors.avatarBackground,
                 child: Text(
                   (widget.displayName.isNotEmpty
                           ? widget.displayName

@@ -308,10 +308,14 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           );
         }
 
-        return const Icon(
-          Icons.person,
-          color: AppColors.white,
-          size: HomePageConstants.profileIconFallbackSize,
+        return CircleAvatar(
+          radius: HomePageConstants.profileIconSize / 2,
+          backgroundColor: AppColors.avatarBackground,
+          child: const Icon(
+            Icons.person,
+            color: AppColors.white,
+            size: HomePageConstants.profileIconFallbackSize,
+          ),
         );
       },
     );

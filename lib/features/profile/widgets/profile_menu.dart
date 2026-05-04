@@ -112,7 +112,10 @@ class ProfileMenu {
                   UserProfileService().userProfile?.notificationsEnabled ??
                   true,
               onChanged: null, // Handled by menu selection
-              activeThumbColor: AppColors.primary,
+              activeThumbColor: AppColors.messageBubble,
+              activeTrackColor: AppColors.primaryLight,
+              inactiveThumbColor: AppColors.messageBubble,
+              inactiveTrackColor: AppColors.primaryLight.withValues(alpha: 0.4),
             ),
           ],
         ),

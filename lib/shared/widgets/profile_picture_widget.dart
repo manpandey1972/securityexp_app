@@ -12,6 +12,7 @@ class ProfilePictureWidget extends StatelessWidget {
   final bool showBorder;
   final String
   variant; // 'thumbnail' for UI elements, 'display' for profile view
+  final Color? backgroundColor;
 
   const ProfilePictureWidget({
     super.key,
@@ -20,6 +21,7 @@ class ProfilePictureWidget extends StatelessWidget {
     this.onTap,
     this.showBorder = true,
     this.variant = 'display',
+    this.backgroundColor,
   });
 
   @override
@@ -88,11 +90,7 @@ class ProfilePictureWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [AppColors.surface, AppColors.surfaceVariant],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: backgroundColor ?? AppColors.avatarBackground,
       ),
       child: Center(
         child: Text(

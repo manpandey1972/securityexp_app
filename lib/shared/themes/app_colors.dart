@@ -13,10 +13,10 @@ class AppColors {
   // BRAND COLORS (4)
   // ============================================================
   /// Primary green - main actions, buttons, CTAs, success states
-  static const Color primary = Color(0xFF22C55E);
+  static const Color primary = Color(0xFF9D4EDD);
 
   /// Primary light - hover states, focus rings, accents
-  static const Color primaryLight = Color(0xFF4ADE80);
+  static const Color primaryLight = Color(0xFF9D4EDD);
 
   /// Error - destructive actions, validation errors, file icons (PDF)
   static const Color error = Color(0xFFC0392B);
@@ -55,13 +55,13 @@ class AppColors {
   static const Color info = Color(0xFF2196F3);
 
   /// Purple - in progress, special status
-  static const Color purple = Color(0xFF9C27B0);
+  static const Color purple = primary;
 
   // ============================================================
   // SPECIAL PURPOSE (1) - tagBackground=messageBubble, filePdf=error
   // ============================================================
   /// Message bubble - sent messages, tags, green accents
-  static const Color messageBubble = Color(0xFF0B3B2E);
+  static const Color messageBubble = Color(0xFF3C096C);
 
   // ============================================================
   // BASE (2)
@@ -98,6 +98,9 @@ class AppColors {
 
   /// Neutral/grey for closed/inactive states
   static const Color neutral = textMuted;
+
+  /// Avatar circle background - used for initials placeholder across all avatar widgets
+  static const Color avatarBackground = messageBubble;
 
   // ============================================================
   // HELPER METHODS (use instead of separate overlay constants)

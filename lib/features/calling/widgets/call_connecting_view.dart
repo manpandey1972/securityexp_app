@@ -177,7 +177,7 @@ class _CallConnectingViewState extends State<CallConnectingView> {
     return _PulsingAvatar(
       child: CircleAvatar(
         radius: 24,
-        backgroundColor: AppColors.surfaceVariant,
+        backgroundColor: AppColors.avatarBackground,
         child: Text(
           (widget.displayName.isNotEmpty ? widget.displayName : 'User')[0].toUpperCase(),
           style: AppTypography.bodyEmphasis.copyWith(
