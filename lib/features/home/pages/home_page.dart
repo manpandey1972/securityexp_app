@@ -221,26 +221,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     verticalDirection: VerticalDirection.down,
                     children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            'assets/icon/small_logo.png',
-                            width: HomePageConstants.appLogoSize,
-                            height: HomePageConstants.appLogoSize,
-                            cacheWidth: 72,
-                            cacheHeight: 72,
-                          ),
-                          const SizedBox(
-                            width: HomePageConstants.appLogoSpacing,
-                          ),
-                          Text(
-                            'Security Experts',
-                            style: AppTypography.headingMedium.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
+                      const SizedBox(),
                       PopupMenuButton<String>(
                         icon: _buildProfileIcon(),
                         color: AppColors.surface,
