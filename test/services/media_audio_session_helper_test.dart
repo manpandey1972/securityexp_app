@@ -84,7 +84,7 @@ void main() {
       });
 
       test('uses platform channel for iOS native calls', () {
-        // Uses MethodChannel 'com.greenhive.call/audio'
+        // Uses MethodChannel 'com.securityexperts.call/audio'
         // Methods: configureForMediaPlayback, configureForWebRTC
         expect(true, true);
       });

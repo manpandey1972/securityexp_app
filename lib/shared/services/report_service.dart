@@ -139,7 +139,7 @@ class _ReportSheetState extends State<_ReportSheet> {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Report submitted. Thank you for helping keep GreenHive safe.'),
+          content: Text('Report submitted. Thank you for helping keep GoAegent safe.'),
           duration: Duration(seconds: 4),
         ),
       );

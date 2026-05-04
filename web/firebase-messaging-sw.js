@@ -4,12 +4,12 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-comp
 
 // Initialize Firebase in Service Worker
 firebase.initializeApp({
-  apiKey: 'AIzaSyAuI-6VQxI0w_Tq9tUEcdCuEo2xRqC6A4c',
-  authDomain: 'greenhive-app.firebaseapp.com',
-  projectId: 'greenhive-app',
-  storageBucket: 'greenhive-app.appspot.com',
-  messagingSenderId: '1023542646556',
-  appId: '1:1023542646556:web:ac72eab6b1e04c6e4d0fe0'
+  apiKey: 'AIzaSyBNcNVnt6Td9FJ_0aOLcLSU-t4DLdYFlHk',
+  authDomain: 'securityexp-app.firebaseapp.com',
+  projectId: 'securityexp-app',
+  storageBucket: 'securityexp-app.firebasestorage.app',
+  messagingSenderId: '1015827376061',
+  appId: '1:1015827376061:web:03f59d7cd8330245ca54d4'
 });
 
 // Handle background messages

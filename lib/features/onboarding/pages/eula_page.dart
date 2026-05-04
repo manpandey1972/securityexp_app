@@ -261,7 +261,7 @@ class _EulaPageState extends State<EulaPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'GreenHive Community Guidelines & Terms of Service',
+                    'GoAegent Community Guidelines & Terms of Service',
                     style: AppTypography.headingMedium.copyWith(
                       color: AppColors.textPrimary,
                     ),
@@ -276,11 +276,11 @@ class _EulaPageState extends State<EulaPage> {
                   const SizedBox(height: AppSpacing.spacing24),
                   _buildSection(
                     '1. Acceptance of Terms',
-                    'By using GreenHive, you agree to be bound by these Terms of Service and our Community Guidelines. If you do not agree to these terms, you may not use our services.',
+                    'By using GoAegent, you agree to be bound by these Terms of Service and our Community Guidelines. If you do not agree to these terms, you may not use our services.',
                   ),
                   _buildSection(
                     '2. Community Standards',
-                    'GreenHive is a platform built on respect and trust. You agree not to:\n\n'
+                    'GoAegent is a platform built on respect and trust. You agree not to:\n\n'
                         '• Post or share content that is abusive, hateful, harassing, threatening, or violent.\n'
                         '• Share sexually explicit or pornographic content.\n'
                         '• Bully, intimidate, or threaten other users.\n'
@@ -290,7 +290,7 @@ class _EulaPageState extends State<EulaPage> {
                   ),
                   _buildSection(
                     '3. User-Generated Content',
-                    'You are solely responsible for content you post or share. GreenHive does not endorse any user-generated content. We reserve the right to remove content that violates our guidelines without notice.\n\n'
+                    'You are solely responsible for content you post or share. GoAegent does not endorse any user-generated content. We reserve the right to remove content that violates our guidelines without notice.\n\n'
                         'We actively monitor the platform for objectionable content and will take action, including account suspension or termination, for violations.',
                   ),
                   _buildSection(
@@ -304,19 +304,19 @@ class _EulaPageState extends State<EulaPage> {
                   ),
                   _buildSection(
                     '6. Privacy',
-                    'Your use of GreenHive is also governed by our Privacy Policy, which is incorporated by reference into these Terms. We collect and use data as described in our Privacy Policy.',
+                    'Your use of GoAegent is also governed by our Privacy Policy, which is incorporated by reference into these Terms. We collect and use data as described in our Privacy Policy.',
                   ),
                   _buildSection(
                     '7. Intellectual Property',
-                    'You retain ownership of content you create. By posting content on GreenHive, you grant us a non-exclusive, royalty-free license to use, display, and distribute that content within the platform.',
+                    'You retain ownership of content you create. By posting content on GoAegent, you grant us a non-exclusive, royalty-free license to use, display, and distribute that content within the platform.',
                   ),
                   _buildSection(
                     '8. Termination',
-                    'We may suspend or terminate your access to GreenHive at our sole discretion, without notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties.',
+                    'We may suspend or terminate your access to GoAegent at our sole discretion, without notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties.',
                   ),
                   _buildSection(
                     '9. Disclaimer of Warranties',
-                    'GreenHive is provided "as is" without warranties of any kind. We do not guarantee that the service will be uninterrupted, error-free, or that any defects will be corrected.',
+                    'GoAegent is provided "as is" without warranties of any kind. We do not guarantee that the service will be uninterrupted, error-free, or that any defects will be corrected.',
                   ),
                   _buildSection(
                     '10. Contact',
