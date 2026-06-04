@@ -2,4 +2,9 @@
 <resources>
     <!-- FCM notification accent color (Security Experts primary color) -->
     <color name="notification_color">#4CAF50</color>
+    <color name="ic_launcher_background">#002609</color>
+    <!-- Matches AppColors.background in lib/shared/themes/app_colors.dart so
+         the Android system splash (API 31+), the LaunchTheme window, and
+         the Flutter Welcome splash all share the same color. -->
+    <color name="splash_background">#FF101518</color>
 </resources>
