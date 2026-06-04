@@ -16,7 +16,7 @@ class HFPCallControlService {
   HFPCallControlService._internal();
 
   static const MethodChannel _platform = MethodChannel(
-    'com.example.securityexpertsApp.call/hfp',
+    'com.goaegent.securityexperts.call/hfp',
   );
   late final IncomingCallManager _incomingCallManager =
       sl<IncomingCallManager>();

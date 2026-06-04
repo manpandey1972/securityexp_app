@@ -40,10 +40,46 @@
               "client_type": 3
             },
             {
-              "client_id": "1015827376061-d6r9q5nqfck81u8chkrpob91t10bhjgu.apps.googleusercontent.com",
+              "client_id": "1015827376061-7eat0tdjag2ku1ohti0ucp5bjgbvg3ji.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.securityexpertsApp"
+                "bundle_id": "com.goaegent.securityexperts"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015827376061:android:bce84de1e8e9478fca54d4",
+        "android_client_info": {
+          "package_name": "com.goaegent.securityexperts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015827376061-pq974q830ni388rcvsu1s99rdivgm09a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe9D55nX2YJq1aIMf6uPW4gFNokaffbVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015827376061-pq974q830ni388rcvsu1s99rdivgm09a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1015827376061-7eat0tdjag2ku1ohti0ucp5bjgbvg3ji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goaegent.securityexperts"
               }
             }
           ]

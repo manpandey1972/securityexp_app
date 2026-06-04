@@ -62,7 +62,7 @@ class VoIPTokenInfo {
 /// - Processing user actions from the native call UI
 /// - VoIP push token management
 class CallKitService {
-  static const _channelName = 'com.example.securityexpertsApp/callkit';
+  static const _channelName = 'com.goaegent.securityexperts/callkit';
 
   static CallKitService? _instance;
 

@@ -8,7 +8,7 @@ class CallKitChannelHandler {
     
     init(messenger: FlutterBinaryMessenger) {
         channel = FlutterMethodChannel(
-            name: "com.example.securityexpertsApp/callkit",
+            name: "com.goaegent.securityexperts/callkit",
             binaryMessenger: messenger
         )
         

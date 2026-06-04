@@ -64,6 +64,12 @@ post_install do |installer|
       config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
       # Ensure pods define modules so headers can be imported modularly
       config.build_settings['DEFINES_MODULE'] = 'YES'
+      # Fix: abseil headers must be findable for Firebase/Firestore/gRPC builds
+      config.build_settings['HEADER_SEARCH_PATHS'] ||= '$(inherited)'
+      config.build_settings['HEADER_SEARCH_PATHS'] = Array(config.build_settings['HEADER_SEARCH_PATHS'])
+      unless config.build_settings['HEADER_SEARCH_PATHS'].include?('${PODS_ROOT}/abseil')
+        config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}/abseil'
+      end
     end
   end
   # Also apply the same build-setting to the user project's targets (e.g. Runner)

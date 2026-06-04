@@ -52,32 +52,35 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBe9D55nX2YJq1aIMf6uPW4gFNokaffbVo',
-    appId: '1:1015827376061:android:30b282d2d31bcaadca54d4',
+    appId: '1:1015827376061:android:bce84de1e8e9478fca54d4',
     messagingSenderId: '1015827376061',
     projectId: 'securityexp-app',
-    authDomain: 'securityexp-app.firebaseapp.com',
     databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
     storageBucket: 'securityexp-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAbp_cYNPSnPOlYMnTtnGKJUCbwOSbtvbM',
-    appId: '1:1015827376061:ios:23864d39adb5e70cca54d4',
+    appId: '1:1015827376061:ios:cee7ba4c683e4dd8ca54d4',
     messagingSenderId: '1015827376061',
     projectId: 'securityexp-app',
     databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
     storageBucket: 'securityexp-app.firebasestorage.app',
-    iosBundleId: 'com.example.securityexpertsApp',
+    androidClientId: '1015827376061-6h8mnieq46h43ctkcukd5i9dhcvvknjp.apps.googleusercontent.com',
+    iosClientId: '1015827376061-7eat0tdjag2ku1ohti0ucp5bjgbvg3ji.apps.googleusercontent.com',
+    iosBundleId: 'com.goaegent.securityexperts',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAbp_cYNPSnPOlYMnTtnGKJUCbwOSbtvbM',
-    appId: '1:1015827376061:ios:23864d39adb5e70cca54d4',
+    appId: '1:1015827376061:ios:cee7ba4c683e4dd8ca54d4',
     messagingSenderId: '1015827376061',
     projectId: 'securityexp-app',
     databaseURL: 'https://securityexp-app-default-rtdb.firebaseio.com',
     storageBucket: 'securityexp-app.firebasestorage.app',
-    iosBundleId: 'com.example.securityexpertsApp',
+    androidClientId: '1015827376061-6h8mnieq46h43ctkcukd5i9dhcvvknjp.apps.googleusercontent.com',
+    iosClientId: '1015827376061-7eat0tdjag2ku1ohti0ucp5bjgbvg3ji.apps.googleusercontent.com',
+    iosBundleId: 'com.goaegent.securityexperts',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

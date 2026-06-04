@@ -1,4 +1,4 @@
-package com.example.securityexperts_app
+package com.goaegent.securityexperts
 
 import android.content.Context
 import android.media.AudioDeviceCallback
@@ -18,8 +18,8 @@ import io.flutter.plugin.common.EventChannel
 
 class MainActivity : FlutterActivity() {
     private val TAG = "SecurityExpertsAudio"
-    private val AUDIO_CHANNEL = "com.example.securityexpertsApp.call/audio"
-    private val EVENT_CHANNEL = "com.example.securityexpertsApp.call/audioDeviceEvents"
+    private val AUDIO_CHANNEL = "com.goaegent.securityexperts.call/audio"
+    private val EVENT_CHANNEL = "com.goaegent.securityexperts.call/audioDeviceEvents"
     
     private lateinit var audioManager: AudioManager
     private var audioDeviceChangeListener: AudioDeviceChangeListener? = null

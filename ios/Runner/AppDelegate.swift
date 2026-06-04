@@ -222,7 +222,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     let controller = self.window?.rootViewController as! FlutterViewController
     
     // Notification channel
-    let notificationChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp/notifications",
+    let notificationChannel = FlutterMethodChannel(name: "com.goaegent.securityexperts/notifications",
                                                     binaryMessenger: controller.binaryMessenger)
     notificationChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
       switch call.method {
@@ -249,7 +249,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
 
     // Ringtone channel
-    let ringtoneChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/ringtone",
+    let ringtoneChannel = FlutterMethodChannel(name: "com.goaegent.securityexperts.call/ringtone",
                                               binaryMessenger: controller.binaryMessenger)
     ringtoneChannel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
       guard let self = self else { return }
@@ -303,7 +303,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
     
     // Audio device channel
-    let audioChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/audio",
+    let audioChannel = FlutterMethodChannel(name: "com.goaegent.securityexperts.call/audio",
                                            binaryMessenger: controller.binaryMessenger)
     audioChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
       switch call.method {
@@ -341,7 +341,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
     
     // Setup event channel for audio device changes
-    let eventChannel = FlutterEventChannel(name: "com.example.securityexpertsApp.call/audioDeviceEvents",
+    let eventChannel = FlutterEventChannel(name: "com.goaegent.securityexperts.call/audioDeviceEvents",
                                           binaryMessenger: controller.binaryMessenger)
     eventChannel.setStreamHandler(AudioDeviceStreamHandler())
     
@@ -612,7 +612,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
       return
     }
     
-    let hfpChannel = FlutterMethodChannel(name: "com.example.securityexpertsApp.call/hfp",
+    let hfpChannel = FlutterMethodChannel(name: "com.goaegent.securityexperts.call/hfp",
                                           binaryMessenger: controller.binaryMessenger)
     
     debugPrint("flutter: 📞 [HFP] Sending call control action to Flutter: \(action)")
@@ -626,40 +626,4 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
   }
 
-  // MARK: - Firebase Phone Auth Support
-  // Required because FirebaseAppDelegateProxyEnabled = false in Info.plist.
-  // Without these, phone auth (APNs silent push + reCAPTCHA fallback) won't work,
-  // especially on iPad which has no SIM and always needs these paths.
-  
-  override func application(_ application: UIApplication,
-                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    // Forward APNs token to Firebase Auth for phone verification
-    Auth.auth().setAPNSToken(deviceToken, type: .unknown)
-    debugPrint("flutter: 📱 [AppDelegate] Forwarded APNs token to Firebase Auth")
-    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
-  }
-  
-  override func application(_ application: UIApplication,
-                            didReceiveRemoteNotification notification: [AnyHashable : Any],
-                            fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    // Let Firebase Auth handle silent push for phone verification
-    if Auth.auth().canHandleNotification(notification) {
-      debugPrint("flutter: 📱 [AppDelegate] Firebase Auth handled silent push notification")
-      completionHandler(.noData)
-      return
-    }
-    super.application(application, didReceiveRemoteNotification: notification,
-                      fetchCompletionHandler: completionHandler)
-  }
-  
-  override func application(_ app: UIApplication,
-                            open url: URL,
-                            options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    // Let Firebase Auth handle reCAPTCHA redirect
-    if Auth.auth().canHandle(url) {
-      debugPrint("flutter: 📱 [AppDelegate] Firebase Auth handled reCAPTCHA URL redirect")
-      return true
-    }
-    return super.application(app, open: url, options: options)
-  }
 }

@@ -28,7 +28,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.example.securityexpertsApp</string>
+			<string>com.goaegent.securityexperts</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 			<string>app-1-1015827376061-ios-23864d39adb5e70cca54d4</string>
