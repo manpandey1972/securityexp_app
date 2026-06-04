@@ -1,6 +1,7 @@
 package com.goaegent.securityexperts
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
@@ -11,12 +12,12 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.EventChannel
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
     private val TAG = "SecurityExpertsAudio"
     private val AUDIO_CHANNEL = "com.goaegent.securityexperts.call/audio"
     private val EVENT_CHANNEL = "com.goaegent.securityexperts.call/audioDeviceEvents"
@@ -62,7 +63,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         // Method channel for audio device commands
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, AUDIO_CHANNEL).setMethodCallHandler { call, methodResult ->
@@ -102,6 +103,15 @@ class MainActivity : FlutterActivity() {
                 }
                 "resetAudioDevice" -> {
                     resetToDefault()
+                    methodResult.success(null)
+                }
+                // Called from Dart immediately after signInWithProvider resolves.
+                // Brings MainActivity's task to the foreground before profile loading
+                // begins, so the app appears instantly after Apple auth succeeds.
+                "bringToFront" -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
                     methodResult.success(null)
                 }
                 else -> methodResult.notImplemented()

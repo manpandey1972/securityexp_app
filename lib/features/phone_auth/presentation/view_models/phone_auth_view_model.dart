@@ -501,6 +501,11 @@ class PhoneAuthViewModel extends ChangeNotifier {
           notifyListeners();
           success = true;
         },
+        onError: (error) {
+          _log?.error('Apple Sign-In post-auth error: $error', tag: _tag);
+          _state = _state.copyWith(isLoading: false, error: error);
+          notifyListeners();
+        },
       );
 
       await trace.stop();

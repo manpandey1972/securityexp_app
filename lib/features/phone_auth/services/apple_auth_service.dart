@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart' show PlatformException;
+import 'package:flutter/services.dart' show MethodChannel, PlatformException;
 
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
@@ -120,21 +120,75 @@ class AppleAuthService {
     return userCredential;
   }
 
+  static const _audioChannel =
+      MethodChannel('com.goaegent.securityexperts.call/audio');
+
   /// Android Apple Sign-In via Firebase provider (Chrome Custom Tab).
   ///
   /// Uses `signInWithProvider` which opens Apple's OAuth page in a
   /// Chrome Custom Tab — `signInWithPopup` is web-only.
+  ///
+  /// Common failure modes on Android:
+  /// - "missing initial state": Chrome Custom Tab session was interrupted, OR
+  ///   Firebase Console Apple provider is missing Service ID / .p8 key config,
+  ///   causing Firebase's handler to reject Apple's token and loop back to Apple.
+  /// - Loop back to Apple login: Same root cause — Firebase can't validate the
+  ///   Apple identity token because the Apple provider isn't fully configured in
+  ///   Firebase Console (Authentication → Sign-in method → Apple → Service ID,
+  ///   Team ID, Key ID, Private Key).
   Future<UserCredential?> _signInWithAppleAndroid() async {
-    final provider = AppleAuthProvider();
-    provider.addScope('email');
-    provider.addScope('name');
+    try {
+      final provider = AppleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('name');
 
-    final userCredential = await _auth.signInWithProvider(provider);
-    _log?.info(
-      'Apple Sign-In (Android) successful: ${userCredential.user?.uid}',
-      tag: _tag,
-    );
-    return userCredential;
+      _log?.debug(
+        'Starting Apple Sign-In on Android via Chrome Custom Tab.',
+        tag: _tag,
+      );
+
+      final userCredential = await _auth.signInWithProvider(provider);
+
+      // Bring the app to front immediately after signInWithProvider resolves,
+      // before profile loading begins. This eliminates the delay caused by
+      // Android leaving Chrome's Custom Tab task in the foreground while all
+      // post-auth work (profile load, token init) runs in the background.
+      try {
+        await _audioChannel.invokeMethod<void>('bringToFront');
+      } catch (_) {
+        // Non-fatal — user can still switch to the app manually.
+      }
+
+      _log?.info(
+        'Apple Sign-In (Android) successful: ${userCredential.user?.uid}',
+        tag: _tag,
+      );
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'cancelled' ||
+          e.code == 'web-context-cancelled' ||
+          e.code == 'user-cancelled') {
+        _log?.info('Apple Sign-In (Android) cancelled by user', tag: _tag);
+        return null;
+      }
+      _log?.error(
+        'Firebase rejected Apple credential (Android): code=${e.code} message=${e.message}. '
+        'If code is "invalid-credential" or "web-context-failed", the Apple provider '
+        'in Firebase Console is likely missing Service ID / private key configuration.',
+        tag: _tag,
+      );
+      rethrow;
+    } on PlatformException catch (e) {
+      if (e.code == '1001' || (e.message ?? '').contains('cancel')) {
+        _log?.info('Apple Sign-In (Android) cancelled by user (platform)', tag: _tag);
+        return null;
+      }
+      _log?.error(
+        'Apple Sign-In (Android) platform error: code=${e.code} message=${e.message}',
+        tag: _tag,
+      );
+      rethrow;
+    }
   }
 
   /// No-op sign out — Apple doesn't maintain a local session like Google.
