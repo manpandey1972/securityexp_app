@@ -37,6 +37,7 @@ class RoleService {
   List<String> _cachedCustomPermissions = [];
   bool _cacheReady = false;
   StreamSubscription<void>? _cacheSubscription;
+  StreamSubscription<void>? _authSubscription;
 
   RoleService({
     FirebaseFirestore? firestore,
@@ -45,14 +46,31 @@ class RoleService {
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
        _auth = auth ?? fb.FirebaseAuth.instance,
        _log = logger ?? sl<AppLogger>() {
-    _startCacheSubscription();
+    _startAuthSubscription();
   }
 
-  /// Start listening to user doc changes to keep cache warm.
-  void _startCacheSubscription() {
-    final userId = _auth.currentUser?.uid;
-    if (userId == null) return;
+  /// Listen to auth state changes and re-subscribe to the user doc on each login.
+  void _startAuthSubscription() {
+    _authSubscription = _auth.authStateChanges().listen((user) {
+      // Cancel existing doc subscription and reset cache on every auth change
+      _cacheSubscription?.cancel();
+      _cacheSubscription = null;
+      _cacheReady = false;
+      _cachedRole = UserRole.user;
+      _cachedRoles = [];
+      _cachedCustomPermissions = [];
 
+      if (user != null) {
+        _log.debug('Auth state changed: user=${user.uid}, re-subscribing cache', tag: _tag);
+        _startCacheSubscription(user.uid);
+      } else {
+        _log.debug('Auth state changed: signed out, cache cleared', tag: _tag);
+      }
+    });
+  }
+
+  /// Start listening to a specific user's doc changes to keep cache warm.
+  void _startCacheSubscription(String userId) {
     _cacheSubscription = _firestore
         .collection(FirestoreInstance.usersCollection)
         .doc(userId)
@@ -106,6 +124,8 @@ class RoleService {
   ///
   /// Call this when the service is no longer needed (e.g. on logout).
   void dispose() {
+    _authSubscription?.cancel();
+    _authSubscription = null;
     _cacheSubscription?.cancel();
     _cacheSubscription = null;
     _cacheReady = false;
@@ -234,6 +254,10 @@ class RoleService {
   Future<bool> hasPermission(AdminPermission permission) async {
     // Fast path: use cached data
     if (_cacheReady) {
+      _log.debug(
+        'hasPermission cache: role=${_cachedRole.displayName} permission=${permission.name}',
+        tag: _tag,
+      );
       return _hasPermissionFromCache(permission);
     }
 
@@ -260,6 +284,11 @@ class RoleService {
       final data = doc.data()!;
       final roles = List<String>.from(data['roles'] ?? []);
       final role = UserRole.fromRolesList(roles);
+
+      _log.debug(
+        'hasPermission fallback: roles=$roles resolvedRole=${role.displayName} permission=${permission.name}',
+        tag: _tag,
+      );
 
       // Super admin has all permissions
       if (role == UserRole.superAdmin) {
