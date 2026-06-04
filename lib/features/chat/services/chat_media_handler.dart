@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:securityexperts_app/data/models/models.dart';
 import 'package:securityexperts_app/shared/services/upload_manager.dart';
 import 'package:securityexperts_app/shared/services/media_confirmation_dialog_service.dart';
@@ -39,18 +42,24 @@ class ChatMediaHandler {
   }
 
   /// Pick and upload media (images/videos) - supports multiple selection
+  ///
+  /// Uses [ImagePicker] instead of [FilePicker] so that Android opens the
+  /// native Photos / Gallery picker (matching iOS behavior). `file_picker`
+  /// with `FileType.media` falls back to the Storage Access Framework
+  /// document UI on Android, which is the same surface used for documents
+  /// and is not the desired experience for the "Photos" action.
   Future<void> handleAttachMedia({required BuildContext context}) async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.media,
-      withData: true,
-      allowMultiple: true,
-    );
-    if (result == null) return;
+    debugPrint('[ChatMediaHandler] handleAttachMedia: opening ImagePicker.pickMultipleMedia');
+    _enableAndroidPhotoPicker();
+    final picker = ImagePicker();
+    final List<XFile> files = await picker.pickMultipleMedia();
+    debugPrint('[ChatMediaHandler] handleAttachMedia: picked ${files.length} files');
+    if (files.isEmpty) return;
 
-    // Upload all selected files
-    for (final f in result.files) {
+    for (final f in files) {
       final String? filePath = kIsWeb ? null : f.path;
-      await _startUpload(filePath: filePath, bytes: f.bytes, filename: f.name);
+      final Uint8List? bytes = kIsWeb ? await f.readAsBytes() : null;
+      await _startUpload(filePath: filePath, bytes: bytes, filename: f.name);
     }
   }
 
@@ -117,5 +126,22 @@ class ChatMediaHandler {
     );
     // Clear reply after starting upload
     clearReply();
+  }
+
+  /// Opt in to Android's system Photo Picker for [ImagePicker] calls.
+  ///
+  /// `image_picker_android` defaults to the legacy `ACTION_GET_CONTENT` intent
+  /// (which surfaces the SAF / Files / Downloads UI). Setting this flag
+  /// switches it to `PickVisualMedia` on Android 13+ so the native Photo
+  /// Picker is shown — matching the iOS Photos picker UX.
+  static bool _photoPickerEnabled = false;
+  void _enableAndroidPhotoPicker() {
+    if (_photoPickerEnabled || kIsWeb || !Platform.isAndroid) return;
+    final platform = ImagePickerPlatform.instance;
+    if (platform is ImagePickerAndroid) {
+      platform.useAndroidPhotoPicker = true;
+      _photoPickerEnabled = true;
+      debugPrint('[ChatMediaHandler] Enabled Android system Photo Picker');
+    }
   }
 }

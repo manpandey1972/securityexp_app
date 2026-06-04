@@ -31,6 +31,8 @@ dependencies:
   http: ^1.2.2
   permission_handler: ^11.0.1
   image_picker: ^1.0.7
+  image_picker_android: ^0.8.13+16
+  image_picker_platform_interface: ^2.11.1
   record: ^5.1.2
   camera: ^0.11.3
   shared_preferences: ^2.2.0
