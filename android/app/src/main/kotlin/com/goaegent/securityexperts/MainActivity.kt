@@ -21,6 +21,7 @@ class MainActivity : FlutterFragmentActivity() {
     private val TAG = "SecurityExpertsAudio"
     private val AUDIO_CHANNEL = "com.goaegent.securityexperts.call/audio"
     private val EVENT_CHANNEL = "com.goaegent.securityexperts.call/audioDeviceEvents"
+    private val OAUTH_CHANNEL = "com.goaegent.securityexperts/oauth"
     
     private lateinit var audioManager: AudioManager
     private var audioDeviceChangeListener: AudioDeviceChangeListener? = null
@@ -105,9 +106,18 @@ class MainActivity : FlutterFragmentActivity() {
                     resetToDefault()
                     methodResult.success(null)
                 }
+                else -> methodResult.notImplemented()
+            }
+        }
+
+        // Method channel for OAuth flows (e.g. Apple Sign-In Custom Tab handoff).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, OAUTH_CHANNEL).setMethodCallHandler { call, methodResult ->
+            when (call.method) {
                 // Called from Dart immediately after signInWithProvider resolves.
-                // Brings MainActivity's task to the foreground before profile loading
-                // begins, so the app appears instantly after Apple auth succeeds.
+                // signInWithProvider opens Apple's OAuth page in a Chrome Custom Tab
+                // and Android may leave Chrome's task in front after the redirect.
+                // This brings MainActivity's task back to the foreground so the app
+                // appears instantly without waiting for post-auth work.
                 "bringToFront" -> {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP)

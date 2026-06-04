@@ -12,10 +12,16 @@ import 'package:securityexperts_app/core/service_locator.dart';
 /// Handles the Apple Sign-In flow and creates Firebase credentials
 /// for seamless cross-platform (iOS, web, Android) authentication.
 ///
-/// On iOS, uses the native Apple Sign-In sheet.
-/// On web/Android, falls back to Firebase OAuth popup.
+/// - iOS: native Apple Sign-In sheet via `FirebaseAuth.signInWithProvider`.
+/// - Web: Firebase popup via `signInWithPopup`.
+/// - Android: `FirebaseAuth.signInWithProvider`, which opens Apple's OAuth
+///   page in a Chrome Custom Tab and exchanges the result via Firebase's
+///   hosted handler at `*.firebaseapp.com/__/auth/handler`.
 class AppleAuthService {
   static const String _tag = 'AppleAuthService';
+
+  static const _oauthChannel =
+      MethodChannel('com.goaegent.securityexperts/oauth');
 
   final FirebaseAuth _auth;
 
@@ -62,21 +68,7 @@ class AppleAuthService {
 
       final userCredential = await _auth.signInWithProvider(provider);
 
-      // Apple only sends the display name on the FIRST sign-in ever.
-      // Persist it to Firebase Auth so it's available on subsequent logins.
-      final profile = userCredential.additionalUserInfo?.profile;
-      if (profile != null) {
-        final givenName = profile['given_name'] as String?;
-        final familyName = profile['family_name'] as String?;
-        final displayName = [givenName, familyName]
-            .where((n) => n != null && n.isNotEmpty)
-            .join(' ');
-        if (displayName.isNotEmpty &&
-            (userCredential.user?.displayName == null ||
-                userCredential.user!.displayName!.isEmpty)) {
-          await userCredential.user?.updateDisplayName(displayName);
-        }
-      }
+      await _persistDisplayName(userCredential);
 
       _log?.info(
         'Apple Sign-In successful: ${userCredential.user?.uid}',
@@ -120,9 +112,6 @@ class AppleAuthService {
     return userCredential;
   }
 
-  static const _audioChannel =
-      MethodChannel('com.goaegent.securityexperts.call/audio');
-
   /// Android Apple Sign-In via Firebase provider (Chrome Custom Tab).
   ///
   /// Uses `signInWithProvider` which opens Apple's OAuth page in a
@@ -154,10 +143,12 @@ class AppleAuthService {
       // Android leaving Chrome's Custom Tab task in the foreground while all
       // post-auth work (profile load, token init) runs in the background.
       try {
-        await _audioChannel.invokeMethod<void>('bringToFront');
+        await _oauthChannel.invokeMethod<void>('bringToFront');
       } catch (_) {
         // Non-fatal — user can still switch to the app manually.
       }
+
+      await _persistDisplayName(userCredential);
 
       _log?.info(
         'Apple Sign-In (Android) successful: ${userCredential.user?.uid}',
@@ -178,16 +169,26 @@ class AppleAuthService {
         tag: _tag,
       );
       rethrow;
-    } on PlatformException catch (e) {
-      if (e.code == '1001' || (e.message ?? '').contains('cancel')) {
-        _log?.info('Apple Sign-In (Android) cancelled by user (platform)', tag: _tag);
-        return null;
-      }
-      _log?.error(
-        'Apple Sign-In (Android) platform error: code=${e.code} message=${e.message}',
-        tag: _tag,
-      );
-      rethrow;
+    }
+  }
+
+  /// Apple only sends the display name on the FIRST sign-in ever.
+  /// Persist it to Firebase Auth so it's available on subsequent logins.
+  Future<void> _persistDisplayName(UserCredential userCredential) async {
+    final profile = userCredential.additionalUserInfo?.profile;
+    if (profile == null) return;
+
+    final givenName = profile['given_name'] as String?;
+    final familyName = profile['family_name'] as String?;
+    final displayName = [givenName, familyName]
+        .where((n) => n != null && n.isNotEmpty)
+        .join(' ');
+
+    if (displayName.isEmpty) return;
+
+    final existing = userCredential.user?.displayName;
+    if (existing == null || existing.isEmpty) {
+      await userCredential.user?.updateDisplayName(displayName);
     }
   }
 

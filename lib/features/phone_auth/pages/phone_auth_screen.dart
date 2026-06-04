@@ -1,6 +1,3 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -147,21 +144,6 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
     final success = await viewModel.signInWithApple();
 
     if (!mounted || !success) return;
-
-    // On Android, Firebase's GenericIdpActivity (singleTask) finishes after
-    // OAuth and Android may surface Chrome's Custom Tab task instead of the
-    // app's task. Explicitly bring the app's task to the foreground so the
-    // Chrome Custom Tab is pushed behind the app before we navigate.
-    if (!kIsWeb && Platform.isAndroid) {
-      try {
-        await const MethodChannel('com.goaegent.securityexperts.call/audio')
-            .invokeMethod<void>('bringToFront');
-      } catch (_) {
-        // Non-critical — user can still manually switch to the app.
-      }
-    }
-
-    if (!mounted) return;
 
     final profile = UserProfileService().userProfile;
     if (profile != null) {
