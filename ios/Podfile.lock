@@ -1219,6 +1219,7 @@ PODS:
     - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
+  - CryptoSwift (1.10.0)
   - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.9):
@@ -1467,6 +1468,9 @@ PODS:
     - GoogleUtilities/Environment (~> 8.1)
     - GTMSessionFetcher/Core (< 6.0, >= 3.4)
   - Flutter (1.0.0)
+  - flutter_callkit_incoming (0.0.1):
+    - CryptoSwift
+    - Flutter
   - flutter_image_compress_common (1.0.0):
     - Flutter
     - Mantle
@@ -1742,6 +1746,7 @@ DEPENDENCIES:
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_callkit_incoming (from `.symlinks/plugins/flutter_callkit_incoming/ios`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
@@ -1770,6 +1775,7 @@ SPEC REPOS:
     - AppAuth
     - AppCheckCore
     - BoringSSL-GRPC
+    - CryptoSwift
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -1854,6 +1860,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_callkit_incoming:
+    :path: ".symlinks/plugins/flutter_callkit_incoming/ios"
   flutter_image_compress_common:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_local_notifications:
@@ -1907,6 +1915,7 @@ SPEC CHECKSUMS:
   cloud_firestore: 698d4d849c58da2ef2b3b8b9db27d2cd56614e7e
   cloud_functions: 8cfd7ba062db83be645823b41f2b42aa234bcfe3
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
+  CryptoSwift: e2e7776512f250e66205955da748e7a4e4abffe0
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
@@ -1946,6 +1955,7 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 9d2fa84a46676302b89dbd5e6e62bce2fe376909
   FirebaseStorage: 3ba2348d876c295236cdd9f408a62d3f9ff8e6b5
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_callkit_incoming: cb8138af67cda6dd981f7101a5d709003af21502
   flutter_image_compress_common: 1697a328fd72bfb335507c6bca1a65fa5ad87df1
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13

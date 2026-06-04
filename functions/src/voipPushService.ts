@@ -133,7 +133,25 @@ async function sendFallbackFCMPush(data: SendVoIPPushRequest): Promise<{success:
       return {success: false, error: "No FCM token available"};
     }
 
-    // Build the FCM message
+    // Build the FCM message.
+    //
+    // IMPORTANT (Android): we deliberately send a **data-only** message (no
+    // top-level `notification` field and no `android.notification` field).
+    // Including any `notification` field causes Android to deliver the
+    // payload via the system tray path, which means our Flutter background
+    // isolate (`onBackgroundMessage`) does NOT run, and we cannot display
+    // the native full-screen CallKit-style UI via
+    // `flutter_callkit_incoming`. With `priority: high` data-only messages
+    // Android always invokes the background isolate, even when the app is
+    // killed or the screen is locked, so we can reliably render the
+    // CallKit UI from there. The notification is built natively by
+    // `flutter_callkit_incoming` (high-priority channel "calls" with
+    // full-screen intent), so a duplicate system notification is not
+    // needed.
+    //
+    // iOS still receives the `apns` payload below — this fallback path is
+    // only used when the primary PushKit/VoIP push fails. A regular
+    // notification banner is the best UX iOS can give us in that case.
     const message: admin.messaging.MulticastMessage = {
       tokens: fcmTokens,
       data: {
@@ -150,14 +168,8 @@ async function sendFallbackFCMPush(data: SendVoIPPushRequest): Promise<{success:
       },
       android: {
         priority: "high",
-        ttl: 60000, // 60 seconds
-        notification: {
-          channelId: "calls",
-          priority: "max",
-          sound: "default",
-          title: "Incoming Call",
-          body: `${data.callerName} is calling...`,
-        },
+        ttl: 60000, // 60 seconds — must be > 0 for high-priority delivery.
+        // No `notification` block here on purpose; see comment above.
       },
       apns: {
         headers: {

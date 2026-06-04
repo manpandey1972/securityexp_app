@@ -163,6 +163,33 @@ class IncomingCallManager extends ChangeNotifier {
       return;
     }
 
+    // Idempotency guard: if we're already connecting/connected to this same
+    // room, ignore the duplicate accept. This protects against:
+    //   * `actionCallAccept` arriving alongside a cold-start synthesized
+    //     `answerCall` (both fire for the same call on Android).
+    //   * The Firestore listener leaking through and triggering a second
+    //     acceptance via the in-app dialog.
+    // A second `signaling.acceptCall` would otherwise fail with
+    // `failed-precondition: Call already handled` and the UI would surface
+    // “Failed to connect to call server” even though the call is fine.
+    final activeController = CallNavigationCoordinator().activeController;
+    if (activeController != null &&
+        (activeController.callId == roomId ||
+            activeController.session?.roomId == roomId)) {
+      _log.info(
+        'Ignoring duplicate CallKit accept — already handling roomId=$roomId',
+        tag: 'IncomingCallManager',
+      );
+      return;
+    }
+    if (_isHandlingCall) {
+      _log.info(
+        'Ignoring CallKit accept — another acceptance already in progress',
+        tag: 'IncomingCallManager',
+      );
+      return;
+    }
+
     // Cancel timeout first to prevent race condition
     _cancelTimeout();
 

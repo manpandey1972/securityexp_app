@@ -6,6 +6,7 @@ import 'package:securityexperts_app/core/logging/app_logger.dart';
 
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'call_navigation_coordinator.dart';
+import 'callkit/android_callkit_service.dart';
 import 'callkit/callkit_service.dart';
 import 'incoming_call_manager.dart';
 import 'interfaces/signaling_service.dart';
@@ -34,10 +35,13 @@ class IncomingCallStrategy {
   IncomingCallStrategy._internal();
 
   final CallKitService _callKitService = CallKitService();
+  final AndroidCallKitService _androidCallKitService =
+      AndroidCallKitService();
   late final IncomingCallManager _incomingCallManager =
       sl<IncomingCallManager>();
 
   StreamSubscription? _callKitActionSubscription;
+  StreamSubscription? _androidCallKitActionSubscription;
   bool _isInitialized = false;
 
   /// Track call IDs that are already being handled by CallKit
@@ -60,9 +64,12 @@ class IncomingCallStrategy {
   /// Uses PlatformUtils for web-safe check
   bool get _isIOSPlatform => PlatformUtils.isIOS;
 
+  /// Whether the platform is Android
+  bool get _isAndroidPlatform => PlatformUtils.isAndroid;
+
   /// Whether CallKit can be used on this platform
-  /// Note: This just checks platform capability, not notification permissions
-  bool get supportsCallKit => _isIOSPlatform;
+  /// iOS uses native CallKit; Android uses flutter_callkit_incoming.
+  bool get supportsCallKit => _isIOSPlatform || _isAndroidPlatform;
 
   /// Firestore listener should ALWAYS be active
   /// It serves as fallback when:
@@ -83,12 +90,123 @@ class IncomingCallStrategy {
         'Initialized for iOS (CallKit + Firestore fallback)',
         tag: 'IncomingCallStrategy',
       );
+    } else if (_isAndroidPlatform) {
+      // Subscribe to native CallKit events and process any already-accepted
+      // calls (cold-start path) before we ever touch the Firestore listener.
+      _setupAndroidCallKitListener();
+
+      // Pre-track any call IDs the plugin currently considers "active" so the
+      // Firestore listener (which fires as soon as Firebase Auth restores)
+      // skips showing the in-app incoming-call banner. Without this, on
+      // cold-start the Firestore listener races ahead of the auth-gated
+      // synthesized `answerCall` and the user briefly sees the banner before
+      // the call page appears.
+      try {
+        final preIds = await _androidCallKitService.peekActiveCallIds();
+        for (final id in preIds) {
+          _trackCallKitCall(id);
+        }
+        if (preIds.isNotEmpty) {
+          sl<AppLogger>().debug(
+            'Pre-tracked ${preIds.length} CallKit-handled call(s): $preIds',
+            tag: 'IncomingCallStrategy',
+          );
+        }
+      } catch (e) {
+        sl<AppLogger>().warning(
+          'Pre-track active CallKit calls failed: $e',
+          tag: 'IncomingCallStrategy',
+        );
+      }
+
+      await _androidCallKitService.initialize();
+      sl<AppLogger>().debug(
+        'Initialized for Android (flutter_callkit_incoming + Firestore)',
+        tag: 'IncomingCallStrategy',
+      );
     } else {
       sl<AppLogger>().debug(
-        'Initialized for ${kIsWeb ? "Web" : "Android"} (Firestore/FCM mode)',
+        'Initialized for ${kIsWeb ? "Web" : "unknown"} (Firestore/FCM mode)',
         tag: 'IncomingCallStrategy',
       );
     }
+  }
+
+  /// Setup listener for Android CallKit (flutter_callkit_incoming) actions.
+  /// Routes them through the same handlers as iOS CallKit so the rest of
+  /// the system only sees one unified event stream.
+  void _setupAndroidCallKitListener() {
+    _androidCallKitActionSubscription?.cancel();
+    _androidCallKitActionSubscription = _androidCallKitService.callActions.listen(
+      (action) {
+        sl<AppLogger>().debug(
+          'Android CallKit action: ${action.action} for ${action.callUUID}',
+          tag: 'IncomingCallStrategy',
+        );
+
+        // Mark this call as handled by CallKit to suppress duplicate Flutter
+        // dialog from the Firestore listener.
+        _trackCallKitCall(action.callUUID);
+        final roomId = action.data?['room_id'] as String?;
+        if (roomId != null && roomId != action.callUUID) {
+          _trackCallKitCall(roomId);
+        }
+
+        switch (action.action) {
+          case 'answerCall':
+            _handleCallKitAnswer(action.callUUID, action.data);
+            break;
+          case 'endCall':
+            _handleCallKitEnd(action.callUUID, action.data);
+            break;
+          case 'setMuted':
+            _handleCallKitMute(action.data);
+            break;
+        }
+      },
+    );
+  }
+
+  /// Show the Android native incoming-call UI (full-screen ringing screen)
+  /// for an incoming call. Called from the foreground FCM handler when a
+  /// data message of type "incoming_call" arrives, and also pre-registers
+  /// the call so the Firestore listener won't show a duplicate Flutter
+  /// dialog.
+  ///
+  /// The background-isolate path lives in `firebase_messaging_service.dart`
+  /// and calls `FlutterCallkitIncoming.showCallkitIncoming(...)` directly.
+  Future<void> showAndroidCallKitIncomingCall({
+    required String callId,
+    required String callerId,
+    required String callerName,
+    required bool isVideo,
+    String? roomId,
+    String? callerAvatar,
+  }) async {
+    if (!_isAndroidPlatform) return;
+
+    // Track ids so the Firestore listener path is suppressed.
+    _trackCallKitCall(callId);
+    if (roomId != null && roomId.isNotEmpty && roomId != callId) {
+      _trackCallKitCall(roomId);
+    }
+
+    // Stash data needed at accept time (mirror of iOS _pendingCallData).
+    _pendingCallData = {
+      'call_id': callId,
+      'caller_id': callerId,
+      'caller_name': callerName,
+      'room_id': roomId ?? callId,
+      'is_video': isVideo,
+    };
+
+    await _androidCallKitService.showIncomingCall(
+      callId: callId,
+      callerName: callerName,
+      isVideo: isVideo,
+      callerAvatar: callerAvatar,
+      extra: Map<String, dynamic>.from(_pendingCallData!),
+    );
   }
 
   /// Setup listener for CallKit actions (answer, end, etc.)
@@ -144,7 +262,10 @@ class IncomingCallStrategy {
     }
 
     // On iOS, check if this call is already being handled by CallKit (via VoIP push)
-    if (_isIOSPlatform && _callsHandledByCallKit.containsKey(callId)) {
+    // On Android, check if flutter_callkit_incoming is already showing the call
+    // (FCM background handler may have already raised the native UI).
+    if ((_isIOSPlatform || _isAndroidPlatform) &&
+        _callsHandledByCallKit.containsKey(callId)) {
       sl<AppLogger>().debug(
         'Call $callId already handled by CallKit, skipping Flutter dialog',
         tag: 'IncomingCallStrategy',
@@ -154,9 +275,13 @@ class IncomingCallStrategy {
 
     // On iOS, wait briefly for VoIP push to arrive before showing Flutter dialog
     // VoIP push can arrive up to ~400ms after Firestore notification
-    if (_isIOSPlatform) {
+    // On Android, the FCM background handler may show CallKit UI in a separate
+    // isolate; the corresponding `actionCallAccept`/`actionCallDecline` event
+    // arrives in the main isolate after a short delay once the app is brought
+    // up — wait briefly so we can detect it and suppress the Flutter dialog.
+    if (_isIOSPlatform || _isAndroidPlatform) {
       sl<AppLogger>().debug(
-        'iOS: waiting 500ms for VoIP push...',
+        '${_isIOSPlatform ? "iOS" : "Android"}: waiting 500ms for native CallKit event...',
         tag: 'IncomingCallStrategy',
       );
       await Future.delayed(const Duration(milliseconds: 500));
@@ -170,7 +295,7 @@ class IncomingCallStrategy {
         return;
       }
       sl<AppLogger>().debug(
-        'iOS: VoIP push not received, showing Flutter dialog',
+        '${_isIOSPlatform ? "iOS" : "Android"}: native CallKit event not received, showing Flutter dialog',
         tag: 'IncomingCallStrategy',
       );
     }
@@ -311,8 +436,13 @@ class IncomingCallStrategy {
     sl<AppLogger>().debug('Calling acceptCallFromCallKit...', tag: 'IncomingCallStrategy');
     _incomingCallManager.acceptCallFromCallKit(callData);
 
-    _cleanupCallKitTracking(callData['call_id'] as String?);
-    _cleanupCallKitTracking(callData['room_id'] as String?);
+    // NOTE: deliberately do NOT clear `_callsHandledByCallKit` here.
+    // The Firestore listener may still fire for this same call during the
+    // brief window between status='active' and the doc being deleted. Leaving
+    // the tracking in place ensures `handleIncomingCall` short-circuits and
+    // we don't surface a second in-app accept dialog that would trigger a
+    // duplicate acceptCall RPC. Tracking expires automatically after 2min
+    // via the cleanup pass in `_trackCallKitCall`.
     _pendingCallData = null;
   }
 
@@ -324,9 +454,44 @@ class IncomingCallStrategy {
     sl<AppLogger>().debug('CallKit end for $callUUID', tag: 'IncomingCallStrategy');
     sl<AppLogger>().debug('End data: $data', tag: 'IncomingCallStrategy');
 
-    // Check if there's an active connected call — end it via coordinator
+    // Check if there's an active connected call — end it via coordinator.
+    //
+    // On Android we apply a strict UUID-match guard. This is required because
+    // our cold-start stale-purge path proactively calls
+    // `FlutterCallkitIncoming.endCall(staleId)` and the plugin echoes back an
+    // `actionCallEnded` event for that id. Without the guard, that echo would
+    // tear down a live call the user just accepted.
+    //
+    // On iOS the `callUUID` is the CallKit UUID generated natively (does NOT
+    // equal `activeController.callId`, which is the Firestore room id), and
+    // the end event does not carry `room_id` in its data. Enforcing the
+    // match here would cause iOS hang-ups (red End button) to be silently
+    // ignored. iOS has no echo problem, so we trust any end event when an
+    // active call exists.
     final coordinator = CallNavigationCoordinator();
     if (coordinator.activeController != null) {
+      if (_isAndroidPlatform) {
+        final active = coordinator.activeController!;
+        final activeRoomId =
+            active.session?.roomId ?? active.session?.callId ?? active.callId;
+        final endRoomId =
+            (data?['room_id'] as String?) ??
+            (data?['roomName'] as String?) ??
+            callUUID;
+        final matches =
+            (activeRoomId != null && activeRoomId == endRoomId) ||
+            (active.callId != null && active.callId == callUUID);
+
+        if (!matches) {
+          sl<AppLogger>().debug(
+            'Android CallKit end UUID $callUUID does not match active call '
+            '(${active.callId}/$activeRoomId) — ignoring',
+            tag: 'IncomingCallStrategy',
+          );
+          return;
+        }
+      }
+
       sl<AppLogger>().debug(
         'Active call found — ending via coordinator',
         tag: 'IncomingCallStrategy',
@@ -454,13 +619,17 @@ class IncomingCallStrategy {
 
   /// End call on CallKit
   Future<void> endCall() async {
-    if (!_isIOSPlatform) return;
-    await _callKitService.endCall();
+    if (_isIOSPlatform) {
+      await _callKitService.endCall();
+    } else if (_isAndroidPlatform) {
+      await _androidCallKitService.endAllCalls();
+    }
   }
 
   /// Dispose resources
   void dispose() {
     _callKitActionSubscription?.cancel();
+    _androidCallKitActionSubscription?.cancel();
     _callsHandledByCallKit.clear();
     _pendingCallData = null;
 
@@ -471,6 +640,13 @@ class IncomingCallStrategy {
         tag: 'IncomingCallStrategy',
       );
       _callKitService.endCall();
+    }
+    if (_isAndroidPlatform && _androidCallKitService.hasActiveCall) {
+      sl<AppLogger>().debug(
+        'Ending active Android CallKit call on dispose',
+        tag: 'IncomingCallStrategy',
+      );
+      _androidCallKitService.endAllCalls();
     }
 
     _isInitialized = false;

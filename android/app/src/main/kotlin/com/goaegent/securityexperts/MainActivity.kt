@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -131,6 +132,78 @@ class MainActivity : FlutterFragmentActivity() {
         // Event channel for audio device changes
         audioDeviceChangeListener = AudioDeviceChangeListener(flutterEngine.dartExecutor.binaryMessenger)
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_CHANNEL).setStreamHandler(audioDeviceChangeListener)
+
+        // Method channel for inspecting how MainActivity was launched. Used
+        // by the Flutter side (`AndroidCallKitService._processColdStartActiveCalls`)
+        // to decide whether the current process start was triggered by the
+        // user tapping Accept on a `flutter_callkit_incoming` notification.
+        // Without this, cold-start logic would treat any stale
+        // `ACTIVE_CALLS` entry as an active accept and route the user to a
+        // "joining call" screen on every normal launch.
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "com.greenhive.call/launchIntent"
+        ).setMethodCallHandler { call, methodResult ->
+            when (call.method) {
+                "wasLaunchedFromCallKit" -> {
+                    val action = intent?.action ?: ""
+                    val hasCallKitExtra = intent?.hasExtra("EXTRA_CALLKIT_CALL_DATA") == true
+                    val fromCallKit = hasCallKitExtra ||
+                        action.startsWith("com.hiennv.flutter_callkit_incoming.")
+                    methodResult.success(fromCallKit)
+                }
+                else -> methodResult.notImplemented()
+            }
+        }
+
+        // Method channel for tearing down CallKit state owned by our native
+        // FCM service (GoAegentMessagingService).
+        //
+        // Why this exists:
+        //   When the app is cold-started by an `incoming_call` FCM, our
+        //   service creates its OWN `CallkitSoundPlayerManager` and
+        //   `CallkitNotificationManager` instances. The plugin's accept /
+        //   decline / timeout teardown path (`clearIncomingNotification`)
+        //   only stops the sound player held by its own singleton — a
+        //   DIFFERENT instance from ours. We can't intercept the plugin's
+        //   broadcast either: `TransparentActivity` issues an EXPLICIT
+        //   intent to `CallkitIncomingBroadcastReceiver::class.java`, so
+        //   any manifest receiver we declare for the same action will
+        //   never fire.
+        //
+        //   Dart is the one place that consistently sees every accept /
+        //   decline / ended / timeout event (via the plugin's event
+        //   channel), so it calls this method to explicitly stop our
+        //   sound player and cancel the lingering incoming notification.
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "com.goaegent.securityexperts.call/callkit"
+        ).setMethodCallHandler { call, methodResult ->
+            when (call.method) {
+                "stopCallKit" -> {
+                    val callId = call.argument<String>("callId")
+                    try {
+                        GoAegentMessagingService.activeSoundPlayer?.let {
+                            try { it.stop() } catch (_: Throwable) {}
+                        }
+                        GoAegentMessagingService.activeSoundPlayer = null
+                        if (!callId.isNullOrEmpty()) {
+                            // Mirrors the notification id used by the plugin
+                            // (`CallkitNotificationManager.getIncomingNotification`:
+                            // `data.getString(EXTRA_CALLKIT_ID).hashCode()`).
+                            val notificationId = callId.hashCode()
+                            NotificationManagerCompat.from(applicationContext)
+                                .cancel(notificationId)
+                        }
+                        methodResult.success(true)
+                    } catch (t: Throwable) {
+                        Log.w(TAG, "stopCallKit failed", t)
+                        methodResult.success(false)
+                    }
+                }
+                else -> methodResult.notImplemented()
+            }
+        }
     }
 
     /**

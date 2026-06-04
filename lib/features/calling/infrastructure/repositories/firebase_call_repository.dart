@@ -12,6 +12,22 @@ import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/core/analytics/analytics_service.dart';
 import 'package:securityexperts_app/core/services/cloud_callable_service.dart';
 
+/// Sentinel exception thrown by [FirebaseCallRepository.acceptCall] when the
+/// backend reports that the call no longer exists or has already been
+/// processed (Cloud Function returns `not-found` or `failed-precondition`
+/// "Call already handled").
+///
+/// These are benign on the caller's side — they indicate the accept arrived
+/// "too late" (e.g. the call ended, was already accepted by another race
+/// participant, or the entry was a stale CallKit ghost). The UI should NOT
+/// transition to a "failed" state or show "Failed to connect to call server".
+class CallAlreadyResolvedException implements Exception {
+  CallAlreadyResolvedException(this.reason);
+  final String reason;
+  @override
+  String toString() => 'CallAlreadyResolvedException($reason)';
+}
+
 /// Firebase implementation of CallRepository
 ///
 /// Uses Firebase Cloud Functions for call operations and
@@ -217,6 +233,25 @@ class FirebaseCallRepository implements CallRepository {
         isVideo: isVideo,
       );
     } catch (e) {
+      // Translate benign backend outcomes into a typed sentinel so the
+      // controller can swallow them without showing a "Failed to connect
+      // to call server" snackbar.
+      if (e is FirebaseFunctionsException) {
+        final code = e.code;
+        final msg = (e.message ?? '').toLowerCase();
+        final isBenign =
+            code == 'not-found' ||
+            (code == 'failed-precondition' &&
+                (msg.contains('already handled') ||
+                    msg.contains('already accepted')));
+        if (isBenign) {
+          _log.info(
+            'acceptCall benign outcome ($code): ${e.message}',
+            tag: _tag,
+          );
+          throw CallAlreadyResolvedException(e.message ?? code);
+        }
+      }
       _log.error('acceptCall failed', tag: _tag, error: e);
       trace.putAttribute('error', e.runtimeType.toString());
       rethrow;

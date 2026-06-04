@@ -51,4 +51,16 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // Required by GreenHiveMessagingService (native FCM handler that dispatches
+    // CallKit broadcasts directly from the main process for `incoming_call`).
+    implementation("com.google.firebase:firebase-messaging:25.0.1")
+    // Used by RejectCallWorker to call the `api{action:rejectCall}` Cloud
+    // Function from the cold-start decline path WITHOUT needing the Flutter
+    // engine — the firebase_messaging Flutter plugin only pulls in
+    // firebase-messaging transitively, so we declare functions / auth /
+    // workmanager explicitly here.
+    implementation("com.google.firebase:firebase-functions:21.1.0")
+    implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
 }

@@ -4,8 +4,11 @@ import 'package:securityexperts_app/data/models/call_session.dart';
 import 'package:securityexperts_app/features/calling/services/interfaces/signaling_service.dart';
 import 'package:securityexperts_app/features/calling/services/interfaces/media_manager_factory.dart';
 import 'package:securityexperts_app/features/calling/services/interfaces/room_service.dart';
+import 'package:securityexperts_app/features/calling/infrastructure/repositories/firebase_call_repository.dart'
+    show CallAlreadyResolvedException;
 import 'package:securityexperts_app/features/calling/services/call_logger.dart';
 import 'package:securityexperts_app/features/calling/services/callkit/callkit_service.dart';
+import 'package:securityexperts_app/features/calling/services/callkit/android_callkit_service.dart';
 import 'package:securityexperts_app/core/config/call_config.dart';
 import 'package:securityexperts_app/core/errors/call_errors.dart';
 import 'package:securityexperts_app/core/errors/call_error_handler.dart';
@@ -308,6 +311,18 @@ class CallController extends ChangeNotifier {
       // CRITICAL: Clean up media manager to ensure proper browser cleanup
       if (_mediaManager != null) {
         _logger.info('Cleaning up media manager after connection failure');
+        await _mediaManager!.disconnect();
+      }
+    } on CallAlreadyResolvedException catch (e) {
+      // Benign: backend says the call no longer exists or was already
+      // accepted/handled. This happens in legitimate races (stale CallKit
+      // entries, duplicate accept paths). Treat as a clean end — do NOT
+      // transition to `failed` and do NOT surface "Failed to connect" UI.
+      _logger.info(
+        'acceptCall resolved silently ($e) — ending without error UI',
+      );
+      _setCallState(CallState.ended);
+      if (_mediaManager != null) {
         await _mediaManager!.disconnect();
       }
     } catch (e, stackTrace) {
@@ -702,6 +717,18 @@ class CallController extends ChangeNotifier {
         }
       } catch (e, _) {
         _logger.warning('Failed to report call end to CallKit: $e');
+      }
+
+      // Report call end to the Android CallKit plugin so the ongoing-call
+      // foreground service is stopped and the `ACTIVE_CALLS`
+      // SharedPreferences entry is cleared. Without this, the plugin's
+      // stale state from a previous accepted call can interfere with the
+      // next incoming-call notification firing reliably (no UI / silent
+      // suppression on subsequent calls).
+      try {
+        await AndroidCallKitService().endAllCalls();
+      } catch (e) {
+        _logger.warning('Failed to end Android CallKit state: $e');
       }
     } catch (e, stackTrace) {
       _logger.error('Error ending call', e, stackTrace);

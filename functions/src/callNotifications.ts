@@ -73,22 +73,38 @@ export const sendCallNotification = onDocumentCreated(
       const title = `Incoming ${callType} Call`;
       const body = `${callData.caller_name} is calling...`;
 
+      // Prepare notification payload.
+      //
+      // IMPORTANT (Android): we send a **data-only** message (no top-level
+      // `notification` field and no `android.notification` field). Including
+      // any `notification` field causes Android to deliver the payload via
+      // the system tray path, which prevents our Flutter background isolate
+      // from running and rendering the native full-screen CallKit-style UI
+      // via `flutter_callkit_incoming`. With `priority: high` data-only
+      // messages Android always invokes the background isolate, even when
+      // the app is killed or the screen is locked.
+      //
+      // The data keys mirror those used by the primary VoIP/FCM path in
+      // `voipPushService.sendFallbackFCMPush` so the same Android
+      // background handler (`_handleBackgroundMessage` →
+      // `_showAndroidCallKitFromFcm`) processes both.
       const payload: admin.messaging.MulticastMessage = {
-        notification: {
-          title,
-          body,
-        },
         data: {
-          callType: callData.is_video ? "video" : "audio",
+          type: "incoming_call",
+          callId: callData.room_id,
           callerId: callData.caller_id,
           callerName: callData.caller_name,
-          roomId: callData.room_id,
+          callerAvatar: "",
+          hasVideo: String(!!callData.is_video),
+          roomName: callData.room_id,
           docId: docId,
           notificationType: "incomingCall",
           timestamp: callData.created_at?.toDate().toISOString() || new Date().toISOString(),
+          click_action: "FLUTTER_NOTIFICATION_CLICK",
         },
         tokens: calleeTokens,
-        // Apple-specific settings for iOS
+        // Apple-specific settings for iOS (regular notification as fallback
+        // when PushKit/VoIP is unavailable).
         apns: {
           payload: {
             aps: {
@@ -98,20 +114,15 @@ export const sendCallNotification = onDocumentCreated(
               },
               "sound": "default",
               "badge": 1,
-              "content-available": 1, // Enable background notification handling
+              "content-available": 1,
             },
           },
         },
-        // Android-specific settings
+        // Android-specific settings — data-only, high priority. No
+        // `notification` block on purpose (see comment above).
         android: {
           priority: "high",
-          notification: {
-            title,
-            body,
-            sound: "default",
-            channelId: "calls", // Custom notification channel for calls
-            clickAction: "FLUTTER_NOTIFICATION_CLICK",
-          },
+          ttl: 60000,
         },
       };
 

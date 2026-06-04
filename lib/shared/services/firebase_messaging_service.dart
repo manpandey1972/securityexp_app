@@ -1,6 +1,11 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_callkit_incoming/entities/entities.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:securityexperts_app/shared/services/pending_notification_handler.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
@@ -251,11 +256,22 @@ class FirebaseMessagingService {
   /// Handle incoming call notification from FCM
   /// This triggers the call dialog immediately without waiting for Firestore
   void _handleIncomingCallFromFcm(Map<String, dynamic> data) {
-    final callerId = data['caller_id'] as String?;
-    final roomId = data['room_id'] as String?;
-    final callerName = data['caller_name'] as String? ?? 'Unknown Caller';
-    final isVideoStr = data['is_video'] as String?;
-    final isVideo = isVideoStr == 'true' || isVideoStr == '1';
+    // FCM payload uses camelCase (`callerId`, `callerName`, `roomName`,
+    // `hasVideo`) per `functions/src/voipPushService.ts`. Older callers may
+    // also send snake_case keys, so accept both.
+    final callerId =
+        (data['callerId'] ?? data['caller_id']) as String?;
+    final roomId = (data['roomName'] ??
+        data['room_id'] ??
+        data['callId']) as String?;
+    final callerName =
+        (data['callerName'] ?? data['caller_name']) as String? ??
+            'Unknown Caller';
+    final hasVideoRaw = data['hasVideo'] ?? data['is_video'];
+    final isVideo = hasVideoRaw is bool
+        ? hasVideoRaw
+        : (hasVideoRaw?.toString() == 'true' ||
+            hasVideoRaw?.toString() == '1');
 
     if (callerId == null || roomId == null) {
       _log.warning(
@@ -267,7 +283,20 @@ class FirebaseMessagingService {
 
     _log.debug('Triggering incoming call dialog from FCM', tag: _tag);
 
-    // Trigger the IncomingCallManager to show the call dialog
+    // App is in the foreground (this handler only fires for foreground
+    // messages). On Android we deliberately do NOT show the native
+    // flutter_callkit_incoming UI here — when the app is on top, Android
+    // routinely suppresses the heads-up/full-screen notification (no lock
+    // screen → no full-screen intent; foreground-app suppression rules;
+    // DnD; user previously dismissed similar notifications). The result was
+    // intermittent: tracking marked the call as "handled by CallKit", the
+    // Firestore listener short-circuited, and the user saw nothing.
+    //
+    // The native CallKit UX is reserved for the background/killed/locked
+    // paths, which are handled by the FCM background isolate
+    // (`_handleBackgroundMessage` → `_showAndroidCallKitFromFcm`).
+    //
+    // Foreground always shows the in-app banner.
     sl<IncomingCallManager>().showIncomingCall({
       'caller_id': callerId,
       'room_id': roomId,
@@ -405,10 +434,39 @@ class FirebaseMessagingService {
 /// This MUST be a top-level function, not a class method
 @pragma('vm:entry-point')
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
-  sl<AppLogger>().debug(
-    'Handling background message: ${message.messageId}',
-    tag: 'FCMService',
-  );
+  // CRITICAL: when the app is killed, this runs in a fresh isolate where
+  // no plugin bindings are set up. We must initialize the Flutter binding
+  // before any plugin method-channel calls (e.g. FlutterCallkitIncoming,
+  // flutter_local_notifications) — otherwise the calls silently no-op and
+  // the user sees nothing on the device.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Cannot use the service locator reliably here — background isolate may
+  // not have it set up. Use debugPrint for diagnostics.
+  if (kDebugMode) {
+    debugPrint(
+      '[FCMService] Handling background message: ${message.messageId}',
+    );
+  }
+
+  final type = message.data['type'] as String?;
+
+  // Android: the native `GoAegentMessagingService` (registered in
+  // AndroidManifest with intent-filter `com.google.firebase.MESSAGING_EVENT`)
+  // is the sole authority for showing CallKit on background/killed. It runs
+  // synchronously in the main process and avoids the bg-isolate spin-up
+  // race that previously caused "ringing without UI" on screen-unlocked +
+  // app-killed. We deliberately do NOT call `showCallkitIncoming` here
+  // again — that would double-dispatch (two CallKit notifications, two
+  // ringtones). iOS uses VoIP push + native CallKitService and is untouched.
+  if (type == 'incoming_call' && !kIsWeb && Platform.isAndroid) {
+    if (kDebugMode) {
+      debugPrint(
+        '[FCMService] incoming_call (Android) — native service owns CallKit; skipping Dart dispatch',
+      );
+    }
+    return; // Skip the generic notification path below.
+  }
 
   // Initialize notification service for background
   final notificationService = NotificationService();
@@ -426,5 +484,106 @@ Future<void> _handleBackgroundMessage(RemoteMessage message) async {
       body: message.notification!.body ?? '',
       payload: payload,
     );
+  }
+}
+
+/// Renders the Android native incoming-call full-screen UI from FCM data.
+///
+/// Safe to call from the background isolate (uses `flutter_callkit_incoming`
+/// directly, no service-locator dependency). The action result
+/// (`actionCallAccept` / `actionCallDecline`) is delivered to the main
+/// isolate's `FlutterCallkitIncoming.onEvent` listener after the app comes
+/// to foreground.
+@pragma('vm:entry-point')
+Future<void> _showAndroidCallKitFromFcm(Map<String, dynamic> data) async {
+  try {
+    final callerId =
+        (data['callerId'] ?? data['caller_id']) as String? ?? '';
+    final roomId = (data['roomName'] ??
+            data['room_id'] ??
+            data['callId']) as String? ??
+        '';
+    final callerName =
+        (data['callerName'] ?? data['caller_name']) as String? ??
+            'Incoming Call';
+    final hasVideoRaw = data['hasVideo'] ?? data['is_video'];
+    final isVideo = hasVideoRaw is bool
+        ? hasVideoRaw
+        : (hasVideoRaw?.toString() == 'true' ||
+            hasVideoRaw?.toString() == '1');
+    final callerAvatar = data['callerAvatar'] as String?;
+
+    if (roomId.isEmpty || callerId.isEmpty) {
+      if (kDebugMode) {
+        debugPrint(
+          '[FCMService] Skipping CallKit — missing callerId/roomId in $data',
+        );
+      }
+      return;
+    }
+
+    final params = CallKitParams(
+      id: roomId,
+      nameCaller: callerName,
+      appName: 'Greenhive',
+      avatar: callerAvatar,
+      handle: callerName,
+      type: isVideo ? 1 : 0,
+      duration: 30000,
+      textAccept: 'Accept',
+      textDecline: 'Decline',
+      missedCallNotification: const NotificationParams(
+        showNotification: true,
+        isShowCallback: true,
+        subtitle: 'Missed call',
+        callbackText: 'Call back',
+      ),
+      // Plumb the call data through so the main isolate can resolve it on
+      // accept (see AndroidCallKitService._handleEvent →
+      // IncomingCallStrategy._handleCallKitAnswer →
+      // IncomingCallManager.acceptCallFromCallKit).
+      extra: {
+        'call_id': roomId,
+        'caller_id': callerId,
+        'caller_name': callerName,
+        'room_id': roomId,
+        'is_video': isVideo,
+      },
+      android: const AndroidParams(
+        isCustomNotification: true,
+        isShowLogo: false,
+        ringtonePath: 'system_ringtone_default',
+        backgroundColor: '#0955fa',
+        actionColor: '#4CAF50',
+        textColor: '#ffffff',
+        incomingCallNotificationChannelName: 'Incoming Calls',
+        missedCallNotificationChannelName: 'Missed Calls',
+        isShowCallID: false,
+      ),
+    );
+
+    // Defensively clear any stale CallKit state from a previous call before
+    // showing the new one. Without this, leftover state from the prior
+    // session (ongoing-call foreground service, accepted-call entry in
+    // SharedPreferences) can prevent the new incoming-call notification
+    // from being delivered reliably — manifesting as "first call shows,
+    // subsequent calls don't". Safe here because this background handler
+    // only runs when no live in-app call is active.
+    try {
+      await FlutterCallkitIncoming.endAllCalls();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[FCMService] pre-show endAllCalls failed (ignored): $e');
+      }
+    }
+
+    await FlutterCallkitIncoming.showCallkitIncoming(params);
+    if (kDebugMode) {
+      debugPrint('[FCMService] CallKit shown for room $roomId');
+    }
+  } catch (e, st) {
+    if (kDebugMode) {
+      debugPrint('[FCMService] showCallkitIncoming failed: $e\n$st');
+    }
   }
 }
