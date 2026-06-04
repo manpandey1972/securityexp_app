@@ -257,9 +257,17 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
                               prefixText: '${state.selectedCountryDialCode} ',
                               labelStyle: AppTypography.bodyRegular.copyWith(color: AppColors.textSecondary),
                               hintStyle: AppTypography.bodyRegular.copyWith(color: AppColors.textMuted),
-                              errorText: state.error,
                             ),
                           ),
+                          if (state.error != null) ...[
+                            SizedBox(height: 6),
+                            Text(
+                              state.error!,
+                              style: AppTypography.bodySmall.copyWith(color: Colors.red),
+                              maxLines: 5,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ],
                           SizedBox(height: AppSpacing.spacing24),
 
                           // Send OTP Button

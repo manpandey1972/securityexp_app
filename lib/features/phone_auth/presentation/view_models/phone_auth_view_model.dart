@@ -580,10 +580,10 @@ class PhoneAuthViewModel extends ChangeNotifier {
 
   /// Handle verification failure
   void _handleVerificationFailed(FirebaseAuthException e) {
-    _log?.error('Verification failed: ${e.message}', tag: _tag);
+    _log?.error('Verification failed: code=${e.code} message=${e.message}', tag: _tag);
     _state = _state.copyWith(
       isLoading: false,
-      error: e.message ?? 'Verification failed. Please try again.',
+      error: '[${e.code}] ${e.message ?? 'Verification failed. Please try again.'}',
       inOtpStep: false,
     );
     notifyListeners();
