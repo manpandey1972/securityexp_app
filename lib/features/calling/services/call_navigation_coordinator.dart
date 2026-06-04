@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
 import 'package:securityexperts_app/features/calling/services/callkit/callkit_service.dart';
+import 'package:securityexperts_app/features/calling/services/call_back_gesture_channel.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 
@@ -149,6 +150,11 @@ class CallNavigationCoordinator extends ChangeNotifier {
     WakelockPlus.enable();
     _log.debug('Wake lock enabled for call', tag: _tag);
 
+    // Tell native Android to intercept the system back gesture while the
+    // call is full-screen so it minimises instead of finishing the Activity
+    // (which would crash the RTCVideoView platform view).
+    CallBackGestureChannel.instance.setCallActive(true);
+
     // Listen to controller state changes and forward to our listeners
     // Only notify when UI-relevant state actually changes to prevent excessive rebuilds
     CallState? lastCallState = controller.callState;
@@ -199,6 +205,9 @@ class CallNavigationCoordinator extends ChangeNotifier {
       _isMinimized = true;
       _minimizedPosition = position;
       notifyListeners();
+      // Once minimised, stop intercepting back so the next press behaves
+      // normally (e.g. moves the task to the background / goes home).
+      CallBackGestureChannel.instance.setCallActive(false);
       _log.verbose(
         'After notifyListeners - isMinimized: $_isMinimized',
         tag: _tag,
@@ -212,6 +221,11 @@ class CallNavigationCoordinator extends ChangeNotifier {
   void restore() {
     _isMinimized = false;
     notifyListeners();
+    // Back to full-screen — re-arm the native back interceptor so swipe
+    // back minimises again instead of finishing the Activity.
+    if (_activeController != null) {
+      CallBackGestureChannel.instance.setCallActive(true);
+    }
   }
 
   /// Alias for minimize - kept for backward compatibility
@@ -290,6 +304,9 @@ class CallNavigationCoordinator extends ChangeNotifier {
     // Disable wake lock when call ends
     WakelockPlus.disable();
     _log.debug('Wake lock disabled - call ended', tag: _tag);
+
+    // Call gone — release the native back gesture interceptor.
+    CallBackGestureChannel.instance.setCallActive(false);
   }
 
   /// Reset singleton state (useful for testing and logout)

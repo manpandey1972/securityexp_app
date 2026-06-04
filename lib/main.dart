@@ -19,6 +19,7 @@ import 'package:securityexperts_app/shared/themes/app_theme.dart';
 import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/themes/app_shape_config.dart';
 import 'package:securityexperts_app/features/calling/widgets/call_overlay.dart';
+import 'package:securityexperts_app/features/calling/services/call_back_gesture_channel.dart';
 import 'package:securityexperts_app/features/calling/services/monitoring/call_listener_service.dart';
 import 'package:securityexperts_app/features/chat/pages/chat_conversation_page.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
@@ -86,6 +87,13 @@ void main() async {
   _mainCallCount++;
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialise the native back-gesture channel (registers a Dart-side
+  // method-call handler so `MainActivity.kt`'s OnBackInvokedCallback can
+  // notify us). The native side only activates the callback once a call
+  // starts via `CallNavigationCoordinator.startCall`.
+  // ignore: unnecessary_statements
+  CallBackGestureChannel.instance;
 
   // Install global error handler to suppress known WebRTC errors on web
   // These errors occur when peer connection closes during track operations

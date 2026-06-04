@@ -27,7 +27,8 @@
     <application
         android:label="GoAegent"
         android:name=".GoAegentApplication"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         
         <!-- FCM Default Notification Channel (Android 8+) -->
         <meta-data

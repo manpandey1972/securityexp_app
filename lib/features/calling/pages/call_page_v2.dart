@@ -103,20 +103,6 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
     _controller.addListener(_handleStateChange);
   }
 
-  @override
-  void didUpdateWidget(VideoCallScreenV2 oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // If isMinimized parameter changed, trigger rebuild
-    if (oldWidget.isMinimized != widget.isMinimized) {
-      _logger.debug(
-        'isMinimized changed: ${oldWidget.isMinimized} → ${widget.isMinimized}',
-      );
-      setState(() {
-        // Force rebuild with new isMinimized value
-      });
-    }
-  }
-
   void _handleStateChange() {
     // If call ended, pop immediately (without delay) to avoid showing blank screen
     if (_controller.callState == CallState.ended) {
@@ -291,52 +277,23 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
 
   @override
   Widget build(BuildContext context) {
-    // Use widget.isMinimized parameter from CallOverlay
-    // CallOverlay rebuilds this via Navigator pages when minimize state changes
-    if (widget.isMinimized) {
-      // MinimizedCallView uses ValueListenableBuilder internally for dynamic
-      // values (mute state, remote video). No need for ListenableBuilder here
-      // which would cause excessive rebuilds on every controller notification
-      // (quality stats, track events, etc.).
-      _logger.debug(
-        'Building MinimizedCallView (isMinimized=true)',
-      );
-      return MinimizedCallView(
-        controller: _controller,
-        peerUser: _peerUser,
-        displayName: widget.calleeName,
-        onRestore: () {
-          CallNavigationCoordinator().restore();
-        },
-      );
-    }
-
-    // Full call view
+    // IMPORTANT: We always return the SAME widget subtree regardless of
+    // `widget.isMinimized`. Swapping between a full Scaffold and
+    // MinimizedCallView used to unmount the underlying RTCVideoView platform
+    // view, which races with `ImageReaderSurfaceProducer.onImage` and crashes
+    // the engine with:
+    //   "Cannot execute operation because FlutterJNI is not attached to native"
     //
-    // Block the system back gesture (swipe-from-edge on Android, back button)
-    // while a call is in progress. Popping the route while the LiveKit peer
-    // connection / media renderers are still alive crashed the app because
-    // the widget tree tore down before the native side could clean up.
-    // Instead, intercept the gesture and minimise the call — matches the UX
-    // of WhatsApp / Signal / Google Meet. Only allow the actual pop once the
-    // call has ended or failed (the existing _handleStateChange handler then
-    // performs the pop programmatically).
-    final canPop = _controller.callState == CallState.ended ||
-        _controller.callState == CallState.failed ||
-        _controller.isDisposed;
-    return PopScope(
-      canPop: canPop,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _logger.debug(
-          'Back gesture during active call — minimising instead of popping',
-        );
-        CallNavigationCoordinator().minimize();
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: _buildContent(),
-      ),
+    // CallOverlay handles the visual minimisation by wrapping this widget in a
+    // FittedBox + a small Positioned, so the logical tree (and the platform
+    // view inside it) never changes size or unmounts. Tap/drag interactions in
+    // the minimised state are handled by CallOverlay's outer GestureDetector.
+    //
+    // System back gesture during an active call is intercepted globally by
+    // CallBackButtonInterceptor → CallNavigationCoordinator.minimize().
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: _buildContent(),
     );
   }
 

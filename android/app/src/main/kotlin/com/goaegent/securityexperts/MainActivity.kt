@@ -11,6 +11,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.window.OnBackInvokedCallback
+import android.window.OnBackInvokedDispatcher
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import io.flutter.embedding.android.FlutterFragmentActivity
@@ -36,6 +38,29 @@ class MainActivity : FlutterFragmentActivity() {
     
     // VoIP call state tracking
     private var isInVoIPCall = false
+
+    // Back-gesture interception state for active calls.
+    //
+    // Why this exists:
+    //   On Android 14+ with predictive back, the system asks Flutter
+    //   whether it handles back. Flutter's embedding only claims back
+    //   handling when the root Navigator can pop. When the user is on
+    //   the home page with an active call overlaid (CallOverlay sits in
+    //   MaterialApp.builder, outside Navigator), the Navigator's
+    //   `canPop` is false, so the system finishes the Activity directly,
+    //   FlutterJNI detaches, and any in-flight RTCVideoView frame
+    //   crashes the process with:
+    //     "Cannot execute operation because FlutterJNI is not attached
+    //      to native"
+    //
+    //   We register an OnBackInvokedCallback at PRIORITY_OVERLAY (above
+    //   Flutter's default) only while a call is active. When fired we
+    //   notify Dart via the same MethodChannel so it can minimise the
+    //   call UI; the gesture is consumed natively so the Activity is
+    //   never finished.
+    private var callBackGestureChannel: MethodChannel? = null
+    private var callBackInvokedCallback: OnBackInvokedCallback? = null
+    private var isCallActiveForBack = false
 
     // Audio focus change listener
     private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
@@ -204,6 +229,82 @@ class MainActivity : FlutterFragmentActivity() {
                 else -> methodResult.notImplemented()
             }
         }
+
+        // Method channel for intercepting the Android system back gesture
+        // while a call is active. See the field comment above
+        // `callBackGestureChannel` for the full rationale.
+        callBackGestureChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "com.greenhive.call/backgesture"
+        )
+        callBackGestureChannel!!.setMethodCallHandler { call, methodResult ->
+            when (call.method) {
+                "setCallActive" -> {
+                    val active = call.argument<Boolean>("active") ?: false
+                    setCallBackInterception(active)
+                    methodResult.success(null)
+                }
+                else -> methodResult.notImplemented()
+            }
+        }
+    }
+
+    /**
+     * Enable or disable native interception of the Android system back
+     * gesture while a call is active. When enabled, the back gesture is
+     * consumed by [callBackInvokedCallback] and forwarded to Dart via
+     * `com.greenhive.call/backgesture#onBackInvoked` so the call UI can
+     * minimise without the Activity being finished.
+     */
+    private fun setCallBackInterception(active: Boolean) {
+        isCallActiveForBack = active
+        Log.d(TAG, "setCallBackInterception(active=$active)")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerOrUnregisterBackCallback(active)
+        }
+        // For API < 33 the legacy `onBackPressed()` override below handles it.
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun registerOrUnregisterBackCallback(active: Boolean) {
+        val dispatcher = onBackInvokedDispatcher
+        if (active) {
+            if (callBackInvokedCallback == null) {
+                callBackInvokedCallback = OnBackInvokedCallback {
+                    Log.d(TAG, "OnBackInvokedCallback fired → notifying Dart")
+                    callBackGestureChannel?.invokeMethod("onBackInvoked", null)
+                }
+            }
+            // Re-register to make sure we sit at PRIORITY_OVERLAY above
+            // Flutter's default callback. Unregister first to avoid stacking.
+            callBackInvokedCallback?.let {
+                runCatching { dispatcher.unregisterOnBackInvokedCallback(it) }
+                dispatcher.registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_OVERLAY,
+                    it
+                )
+            }
+        } else {
+            callBackInvokedCallback?.let {
+                runCatching { dispatcher.unregisterOnBackInvokedCallback(it) }
+            }
+        }
+    }
+
+    @Deprecated("Pre-Android 13 legacy back handling")
+    override fun onBackPressed() {
+        // For API < 33, the predictive-back framework is not used; the
+        // system delivers KEYCODE_BACK to the Activity. Intercept it here
+        // when a call is active and forward to Dart.
+        if (isCallActiveForBack &&
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+        ) {
+            Log.d(TAG, "onBackPressed intercepted (legacy) → notifying Dart")
+            callBackGestureChannel?.invokeMethod("onBackInvoked", null)
+            return
+        }
+        @Suppress("DEPRECATION")
+        super.onBackPressed()
     }
 
     /**
@@ -452,6 +553,17 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     override fun onDestroy() {
+        // Clean up back-gesture callback so we don't leak it across
+        // Activity recreation.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            callBackInvokedCallback?.let {
+                runCatching { onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it) }
+            }
+        }
+        callBackInvokedCallback = null
+        callBackGestureChannel?.setMethodCallHandler(null)
+        callBackGestureChannel = null
+
         super.onDestroy()
         // Clean up audio resources
         releaseVoIPCall()

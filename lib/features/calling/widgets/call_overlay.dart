@@ -39,7 +39,6 @@ class _CallOverlayState extends State<CallOverlay> {
   late double _top;
   late double _left;
   bool _wasMinimized = false; // Track previous minimized state
-  bool _isDragging = false; // Track active drag state for smooth animation
   bool _rebuildScheduled = false; // Debounce multiple setState calls
   
   // Peer user for profile picture in connecting view
@@ -266,31 +265,87 @@ class _CallOverlayState extends State<CallOverlay> {
       children: [
         widget.child,
 
-        // Full Call Page - mount when active (even during connecting) but control visibility
-        // This is crucial: CallPageV2 creates the CallController which initiates the connection
+        // CALL PAGE — kept continuously mounted at the same LOGICAL size
+        // while the call is active.
+        //
+        // The RTCVideoView used by flutter_webrtc is an Android platform view
+        // backed by an ImageReaderSurfaceProducer. Any of these operations
+        // races its `onImage` callback with the engine and crashes with:
+        //   "Cannot execute operation because FlutterJNI is not attached to
+        //    native"
+        //   - unmounting the widget that hosts it
+        //   - changing its logical size dramatically (e.g. full-screen → 150x220)
+        //   - rebuilding it inside a different parent on the same frame
+        //
+        // To avoid all of that we ALWAYS render VideoCallScreenV2 at the
+        // screen's logical full size, and only visually scale the result down
+        // when minimised using FittedBox. The platform view inside never sees
+        // a layout change.
         if (shouldMountCallPage)
-          AnimatedPositioned(
-            duration: _isDragging
-                ? Duration.zero
-                : const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            // During connecting (when banner shows), position offscreen or with zero size
-            // When connected, show normally (full screen or minimized)
-            top: shouldShowCallPageVisually ? (isMinimized ? _top : 0) : 0,
-            left: shouldShowCallPageVisually ? (isMinimized ? _left : 0) : 0,
-            width: shouldShowCallPageVisually ? (isMinimized ? 150 : size.width) : size.width,
-            height: shouldShowCallPageVisually ? (isMinimized ? 220 : size.height) : size.height,
+          Positioned(
+            top: isMinimized ? _top : 0,
+            left: isMinimized ? _left : 0,
+            width: isMinimized ? 150 : size.width,
+            height: isMinimized ? 220 : size.height,
             child: Visibility(
-              // Keep maintaining state so CallController stays active
               maintainState: true,
               maintainAnimation: true,
               maintainSize: false,
-              // Only visible when connected (not during connecting phase)
+              // Hide (but keep mounted) while the connecting banner is showing
+              // for the caller — keeps the controller alive without flashing
+              // the half-built call UI behind the banner.
               visible: shouldShowCallPageVisually,
-              child: _buildCallPageContent(
-                context,
-                size: size,
-                isMinimized: isMinimized,
+              child: GestureDetector(
+                behavior: isMinimized
+                    ? HitTestBehavior.opaque
+                    : HitTestBehavior.deferToChild,
+                onPanUpdate: isMinimized
+                    ? (details) {
+                        setState(() {
+                          _top = (_top + details.delta.dy)
+                              .clamp(50.0, size.height - 270);
+                          _left = (_left + details.delta.dx)
+                              .clamp(10.0, size.width - 160);
+                        });
+                      }
+                    : null,
+                onTap: isMinimized ? () => _coordinator.restore() : null,
+                child: Material(
+                  elevation: isMinimized ? 8 : 0,
+                  clipBehavior: Clip.antiAlias,
+                  color: Colors.transparent,
+                  shadowColor: isMinimized
+                      ? AppColors.primary.withValues(alpha: 0.3)
+                      : null,
+                  shape: isMinimized
+                      ? RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                            color: AppColors.primary,
+                            width: 2,
+                          ),
+                        )
+                      : null,
+                  // FittedBox visually scales the constant-sized call page
+                  // down to fit the minimised slot. When not minimised the
+                  // child already matches the parent size so FittedBox is a
+                  // no-op. IgnorePointer blocks inner controls while
+                  // minimised so the outer GestureDetector (drag / tap-to-
+                  // restore) wins.
+                  child: IgnorePointer(
+                    ignoring: isMinimized,
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      clipBehavior: Clip.hardEdge,
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: size.width,
+                        height: size.height,
+                        child: _buildCallPageContent(context),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -341,86 +396,35 @@ class _CallOverlayState extends State<CallOverlay> {
     );
   }
 
-  /// Build the call page content (GestureDetector + Material + Navigator)
-  Widget _buildCallPageContent(
-    BuildContext context, {
-    required Size size,
-    required bool isMinimized,
-  }) {
-    return GestureDetector(
-      behavior: isMinimized
-          ? HitTestBehavior.translucent
-          : HitTestBehavior.deferToChild,
-      onPanStart: isMinimized
-          ? (details) {
-              setState(() {
-                _isDragging = true;
-              });
-            }
-          : null,
-      onPanUpdate: isMinimized
-          ? (details) {
-              setState(() {
-                _top += details.delta.dy;
-                _left += details.delta.dx;
-
-                // Clamp to screen
-                _top = _top.clamp(50.0, size.height - 270);
-                _left = _left.clamp(10.0, size.width - 160);
-              });
-            }
-          : null,
-      onPanEnd: isMinimized
-          ? (details) {
-              setState(() {
-                _isDragging = false;
-              });
-            }
-          : null,
-      onTap: isMinimized
-          ? () {
-              _coordinator.restore();
-            }
-          : null,
-      child: Material(
-        elevation: isMinimized ? 8 : 0,
-        clipBehavior: Clip.antiAlias,
-        color: Colors.transparent,
-        shadowColor: isMinimized
-            ? AppColors.primary.withValues(alpha: 0.3)
-            : null,
-        shape: isMinimized
-            ? RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: AppColors.primary, width: 2),
-              )
-            : null,
-        // HeroControllerScope prevents Hero animation errors when Navigator is removed
-        child: HeroControllerScope(
-          controller: HeroController(),
-          child: Navigator(
-            key: const ValueKey('call_navigator'),
-            pages: [
-              MaterialPage(
-                key: ValueKey('call_page_${_coordinator.roomId ?? ''}'),
-                child: VideoCallScreenV2(
-                  key: ValueKey(
-                    'video_call_${_coordinator.roomId ?? ''}',
-                  ),
-                  calleeId: _coordinator.calleeId!,
-                  calleeName: _coordinator.calleeName!,
-                  roomId: _coordinator.roomId ?? '',
-                  isVideo: _coordinator.isVideo,
-                  isCaller: _coordinator.isCaller,
-                  isMinimized: isMinimized,
-                ),
-              ),
-            ],
-            onDidRemovePage: (page) {
-              // Page was removed from navigation stack
-            },
+  /// Build the call page content — a nested Navigator hosting
+  /// VideoCallScreenV2. Always rendered at full logical size; visual
+  /// minimisation is done by [build] via FittedBox so the RTCVideoView
+  /// platform view inside never resizes or unmounts.
+  Widget _buildCallPageContent(BuildContext context) {
+    return HeroControllerScope(
+      controller: HeroController(),
+      child: Navigator(
+        key: const ValueKey('call_navigator'),
+        pages: [
+          MaterialPage(
+            key: ValueKey('call_page_${_coordinator.roomId ?? ''}'),
+            child: VideoCallScreenV2(
+              key: ValueKey('video_call_${_coordinator.roomId ?? ''}'),
+              calleeId: _coordinator.calleeId!,
+              calleeName: _coordinator.calleeName!,
+              roomId: _coordinator.roomId ?? '',
+              isVideo: _coordinator.isVideo,
+              isCaller: _coordinator.isCaller,
+              // Always false — minimisation is purely visual (FittedBox in
+              // CallOverlay) so VideoCallScreenV2 never swaps its subtree
+              // and the platform view stays mounted across the transition.
+              isMinimized: false,
+            ),
           ),
-        ),
+        ],
+        onDidRemovePage: (page) {
+          // Page was removed from navigation stack
+        },
       ),
     );
   }
