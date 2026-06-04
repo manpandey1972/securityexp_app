@@ -20,7 +20,6 @@ import 'package:securityexperts_app/data/models/models.dart' as models;
 import 'package:securityexperts_app/features/calling/pages/call_controller.dart';
 import 'package:securityexperts_app/features/calling/widgets/call_connecting_view.dart';
 import 'package:securityexperts_app/features/calling/widgets/call_room_view.dart';
-import 'package:securityexperts_app/features/calling/widgets/minimized_call_view.dart';
 import 'package:securityexperts_app/features/ratings/utils/post_call_rating_prompt.dart';
 
 class VideoCallScreenV2 extends StatefulWidget {
