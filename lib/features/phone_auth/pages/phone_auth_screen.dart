@@ -6,7 +6,6 @@ import 'package:securityexperts_app/features/onboarding/pages/eula_page.dart';
 import 'package:securityexperts_app/features/home/pages/home_page.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
 import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
-import 'package:securityexperts_app/shared/widgets/app_button_variants.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/features/phone_auth/presentation/view_models/phone_auth_view_model.dart';
 import 'package:securityexperts_app/features/phone_auth/presentation/state/phone_auth_state.dart';
