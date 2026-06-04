@@ -394,17 +394,32 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
                           SizedBox(height: AppSpacing.spacing32),
 
                           // OTP Input
-                          TextField(
-                            controller: _otpController,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            style: AppTypography.headingSmall.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
-                            decoration: InputDecoration(
-                              labelText: 'Enter OTP',
-                              labelStyle: AppTypography.bodyRegular.copyWith(color: AppColors.textSecondary),
-                              errorText: state.error,
+                          // AutofillGroup + autofillHints.oneTimeCode tells
+                          // Android's SMS Autofill framework (and iOS keyboard
+                          // suggestion bar) to intercept the incoming SMS and
+                          // offer to fill the code without the user typing it.
+                          AutofillGroup(
+                            child: TextField(
+                              controller: _otpController,
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              autofillHints: const [AutofillHints.oneTimeCode],
+                              style: AppTypography.headingSmall.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                              onChanged: (value) {
+                                viewModel.setOtpCode(value);
+                                // Auto-submit once all 6 digits are filled
+                                // (works for both autofill and manual paste).
+                                if (value.length == 6 && !state.isLoading) {
+                                  _handleVerifyOtp();
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Enter OTP',
+                                labelStyle: AppTypography.bodyRegular.copyWith(color: AppColors.textSecondary),
+                                errorText: state.error,
+                              ),
                             ),
                           ),
                           SizedBox(height: AppSpacing.spacing24),
