@@ -254,25 +254,96 @@ class PhoneAuthViewModel extends ChangeNotifier {
     final trace = sl<AnalyticsService>().newTrace('auth_otp_verification');
     await trace.start();
 
+    // ── Step 1: OTP credential verification ─────────────────────────────
+    // Keep this in its own try-catch so we can show "Invalid OTP" ONLY for
+    // actual credential failures, not for post-auth network/Firestore errors.
+    //
+    // RACE NOTE: On Android with Play Integrity working (typical outside the
+    // US too — Play Integrity validates silently with no reCAPTCHA), the
+    // SMS Retriever API can fire `verificationCompleted` automatically the
+    // moment the SMS arrives. That callback calls `signInWithCredential` and
+    // persists the session BEFORE the user finishes tapping Verify. When
+    // the user then taps Verify, this manual `signInWithCredential` runs
+    // with a verificationId that has already been consumed and Firebase
+    // throws `FirebaseAuthException` — even though the user is already
+    // signed in. We detect that by re-checking `_auth.currentUser` and
+    // continue with the post-auth setup instead of showing "Invalid OTP".
+    User? signedInUser;
     try {
       final credential = PhoneAuthProvider.credential(
         verificationId: _state.verificationId,
         smsCode: _state.otpCode,
       );
-
       final userCredential = await _auth.signInWithCredential(credential);
-      final user = userCredential.user;
-
-      if (user == null) {
+      signedInUser = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      // If the concurrent auto-verification path already signed the user in,
+      // honour that and don't surface a misleading "Invalid OTP".
+      final existing = _auth.currentUser;
+      if (existing != null) {
+        _log?.warning(
+          'signInWithCredential threw ${e.code} but currentUser is set '
+          '(uid=${existing.uid}); treating as success',
+          tag: _tag,
+        );
+        signedInUser = existing;
+      } else {
+        _log?.error('OTP credential failed: code=${e.code}', tag: _tag);
+        await trace.stop();
+        AuthAnalytics.otpVerified(success: false, errorType: e.code);
         _state = _state.copyWith(
           isLoading: false,
-          error: 'Authentication failed',
+          error: 'Invalid OTP. Please try again.',
         );
         notifyListeners();
         return;
       }
+    } catch (e) {
+      // Same defensive check for non-Firebase exceptions: if the parallel
+      // path already authenticated us, run the post-auth flow.
+      final existing = _auth.currentUser;
+      if (existing != null) {
+        _log?.warning(
+          'signInWithCredential threw $e but currentUser is set; '
+          'treating as success',
+          tag: _tag,
+        );
+        signedInUser = existing;
+      } else {
+        _log?.error('Unexpected error during sign-in: $e', tag: _tag);
+        await trace.stop();
+        _state = _state.copyWith(
+          isLoading: false,
+          error: 'Sign-in failed. Please try again.',
+        );
+        notifyListeners();
+        return;
+      }
+    }
 
-      // Get ID token
+    if (signedInUser == null) {
+      await trace.stop();
+      _state = _state.copyWith(
+        isLoading: false,
+        error: 'Authentication failed',
+      );
+      notifyListeners();
+      return;
+    }
+
+    // ── Step 2: Post-auth setup ──────────────────────────────────────────
+    await _completePostAuthSetup(signedInUser, trace);
+  }
+
+  /// Run the post-authentication setup that's shared between the manual
+  /// `verifyOtp` path and the Android auto-verification path
+  /// (`_handleVerificationCompleted`).
+  ///
+  /// Failures here do NOT roll back the auth state — the session is already
+  /// persisted by Firebase Auth, so we show a clear "setup failed" message
+  /// rather than a misleading "Invalid OTP".
+  Future<void> _completePostAuthSetup(User user, dynamic trace) async {
+    try {
       final idToken = await user.getIdToken();
       if (idToken == null) {
         _state = _state.copyWith(
@@ -283,64 +354,50 @@ class PhoneAuthViewModel extends ChangeNotifier {
         return;
       }
 
-      // Fetch user profile to check if exists
-      await ErrorHandler.handle<void>(
-        operation: () async {
-          final userProfile = await _userRepository.getCurrentUserProfile();
+      final userProfile = await _userRepository.getCurrentUserProfile();
 
-          if (userProfile != null) {
-            // Profile exists - store and signal success
-            UserProfileService().setUserProfile(userProfile);
-            
-            // Set user context for analytics (user properties + Crashlytics)
-            if (sl.isRegistered<AnalyticsService>()) {
-              sl<AnalyticsService>().setUserOnLogin(
-                userId: user.uid,
-                isExpert: userProfile.roles.contains('Expert'),
-                accountCreatedAt: userProfile.createdTime?.toDate(),
-              );
-            }
-            
-            // Update last login timestamp
-            await _userRepository.updateLastLogin();
-            
-            // Track login success
-            trace.putAttribute('user_type', 'existing');
-            await trace.stop();
-            
-            AuthAnalytics.loginComplete(
-              method: 'phone',
-              isNewUser: false,
-            );
-            
-            // Initialize FCM and VoIP tokens for existing user
-            // This is safe because we confirmed the user document exists
-            await _initializeTokenServices(user.uid);
-            
-            _state = _state.copyWith(isLoading: false, error: null);
-          } else {
-            // Profile doesn't exist yet - will navigate to onboarding
-            // Track as new user signup start
-            trace.putAttribute('user_type', 'new');
-            await trace.stop();
-            
-            AuthAnalytics.otpVerified(success: true);
-            _state = _state.copyWith(isLoading: false, error: null);
-          }
-          notifyListeners();
-        },
-      );
+      if (userProfile != null) {
+        // Existing user — store profile and finalize login.
+        UserProfileService().setUserProfile(userProfile);
+
+        if (sl.isRegistered<AnalyticsService>()) {
+          sl<AnalyticsService>().setUserOnLogin(
+            userId: user.uid,
+            isExpert: userProfile.roles.contains('Expert'),
+            accountCreatedAt: userProfile.createdTime?.toDate(),
+          );
+        }
+
+        await _userRepository.updateLastLogin();
+
+        trace.putAttribute('user_type', 'existing');
+        await trace.stop();
+
+        AuthAnalytics.loginComplete(method: 'phone', isNewUser: false);
+
+        // Initialize FCM and VoIP tokens for existing user.
+        await _initializeTokenServices(user.uid);
+      } else {
+        // New user — navigate to onboarding.
+        trace.putAttribute('user_type', 'new');
+        await trace.stop();
+
+        AuthAnalytics.otpVerified(success: true);
+      }
+
+      _state = _state.copyWith(isLoading: false, error: null);
+      notifyListeners();
     } catch (e) {
-      _log?.error('Error verifying OTP: $e', tag: _tag);
-      // Track OTP verification failure
-      await trace.stop();
-      AuthAnalytics.otpVerified(
-        success: false,
-        errorType: e.runtimeType.toString(),
-      );
+      _log?.error('Post-auth setup failed: $e', tag: _tag);
+      try {
+        await trace.stop();
+      } catch (_) {}
+      // Auth DID succeed — session is already persisted to disk.
+      // Don't say "Invalid OTP"; the user can kill+reopen the app and
+      // will land in the correct screen automatically.
       _state = _state.copyWith(
         isLoading: false,
-        error: 'Invalid OTP. Please try again.',
+        error: 'Sign-in succeeded but setup failed. Please try again.',
       );
       notifyListeners();
     }
@@ -526,14 +583,22 @@ class PhoneAuthViewModel extends ChangeNotifier {
   }
 
   /// Handle auto-verification completion
+  ///
+  /// On Android with Play Integrity working, this fires automatically as
+  /// soon as the SMS arrives — without the user having to tap Verify. We
+  /// run the same post-auth setup as the manual path so the screen can
+  /// navigate (the screen widget observes the same `error == null` +
+  /// `isLoading == false` transition).
   Future<void> _handleVerificationCompleted(
     PhoneAuthCredential credential,
   ) async {
+    final trace = sl<AnalyticsService>().newTrace('auth_otp_verification');
+    await trace.start();
     try {
       final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user;
-
       if (user == null) {
+        await trace.stop();
         _state = _state.copyWith(
           error: 'Authentication failed',
           isLoading: false,
@@ -541,35 +606,13 @@ class PhoneAuthViewModel extends ChangeNotifier {
         notifyListeners();
         return;
       }
-
-      final idToken = await user.getIdToken();
-      if (idToken == null) {
-        _state = _state.copyWith(
-          error: 'Could not get authentication token',
-          isLoading: false,
-        );
-        notifyListeners();
-        return;
-      }
-
       SnackbarService.show('Phone verified automatically');
-
-      // Fetch user profile
-      await ErrorHandler.handle<void>(
-        operation: () async {
-          final userProfile = await _userRepository.getCurrentUserProfile();
-
-          if (userProfile != null) {
-            UserProfileService().setUserProfile(userProfile);
-            _state = _state.copyWith(isLoading: false, error: null);
-          } else {
-            _state = _state.copyWith(isLoading: false, error: null);
-          }
-          notifyListeners();
-        },
-      );
+      await _completePostAuthSetup(user, trace);
     } catch (e) {
       _log?.error('Error in verification completed: $e', tag: _tag);
+      try {
+        await trace.stop();
+      } catch (_) {}
       _state = _state.copyWith(
         error: 'Verification failed: $e',
         isLoading: false,
