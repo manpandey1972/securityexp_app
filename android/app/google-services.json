@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1015827376061:android:30b282d2d31bcaadca54d4",
         "android_client_info": {
-          "package_name": "com.example.securityexperts_app"
+          "package_name": "com.goaegent.securityexperts"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1015827376061-6h8mnieq46h43ctkcukd5i9dhcvvknjp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.securityexperts_app",
+            "package_name": "com.goaegent.securityexperts",
             "certificate_hash": "4804505e328546555ee295f94811bc7ef0bb3091"
           }
         },

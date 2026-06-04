@@ -103,6 +103,11 @@ void main() async {
       // Activate App Check — uses Debug provider in debug builds so that
       // simulators / emulators work; Device Check (iOS) and Play Integrity
       // (Android) are used in release builds. Web uses free reCAPTCHA v3.
+      //
+      // iOS DeviceCheck setup: Firebase Console → App Check → iOS app → Manage DeviceCheck
+      // Register the DeviceCheck .p8 key (Apple Developer Portal → Keys → DeviceCheck).
+      // For local testing with release builds, also register the debug token printed
+      // by AppleDebugProvider in Firebase Console → App Check → Manage debug tokens.
       await FirebaseAppCheck.instance.activate(
         providerAndroid:
             kDebugMode ? const AndroidDebugProvider() : const AndroidPlayIntegrityProvider(),

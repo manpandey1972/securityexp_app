@@ -31,7 +31,7 @@
 			<string>com.goaegent.securityexperts</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-			<string>app-1-1015827376061-ios-23864d39adb5e70cca54d4</string>
+			<string>app-1-1015827376061-ios-cee7ba4c683e4dd8ca54d4</string>
 		</array>
 		</dict>
 		<dict>
@@ -39,7 +39,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1015827376061-d6r9q5nqfck81u8chkrpob91t10bhjgu</string>
+				<string>com.googleusercontent.apps.1015827376061-7eat0tdjag2ku1ohti0ucp5bjgbvg3ji</string>
 			</array>
 		</dict>
 	</array>

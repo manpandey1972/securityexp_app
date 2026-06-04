@@ -102,7 +102,22 @@ class _SplashPageState extends State<SplashPage>
   Future<void> _performAuthCheck() async {
     if (!mounted) return;
 
-    final user = _auth.currentUser;
+    // Firebase restores the persisted user from Keychain asynchronously after
+    // FirebaseAuth.instance is first accessed. On iOS this restore is not
+    // complete by the first frame, so `_auth.currentUser` is null on cold
+    // start even when the user is signed in. Awaiting the first event from
+    // `authStateChanges()` guarantees the persisted user is loaded.
+    User? user = _auth.currentUser;
+    if (user == null) {
+      try {
+        user = await _auth
+            .authStateChanges()
+            .first
+            .timeout(const Duration(seconds: 3), onTimeout: () => null);
+      } catch (e) {
+        _log.warning('authStateChanges wait failed: $e', tag: _tag);
+      }
+    }
 
     if (user == null) {
       // Not logged in → go straight to phone auth.

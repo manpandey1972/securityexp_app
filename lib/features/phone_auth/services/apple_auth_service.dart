@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'dart:io' show Platform;
 
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:flutter/services.dart' show PlatformException;
 
 import 'package:securityexperts_app/core/logging/app_logger.dart';
 import 'package:securityexperts_app/core/service_locator.dart';
@@ -27,22 +23,6 @@ class AppleAuthService {
 
   AppleAuthService({FirebaseAuth? auth})
       : _auth = auth ?? FirebaseAuth.instance;
-
-  /// Generate a cryptographically-secure random nonce.
-  String _generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
-  }
-
-  /// SHA-256 hash of a string (used to hash the nonce).
-  String _sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
 
   /// Sign in with Apple and return the Firebase [UserCredential].
   ///
@@ -66,46 +46,36 @@ class AppleAuthService {
     }
   }
 
-  /// Native Apple Sign-In (iOS primarily, fallback on Android).
+  /// Native Apple Sign-In on iOS via Firebase's built-in provider.
+  ///
+  /// Uses [FirebaseAuth.signInWithProvider] with [AppleAuthProvider], which
+  /// triggers the native ASAuthorizationAppleIDProvider sheet and handles the
+  /// nonce + token exchange entirely inside the Firebase iOS SDK.
+  /// This avoids the sign_in_with_apple plugin's credential path which can
+  /// cause "Invalid OAuth response from apple.com" on some Firebase SDK
+  /// versions due to the authorization code being included in the request.
   Future<UserCredential?> _signInWithAppleNative() async {
-    // 1. Generate a nonce to prevent replay attacks
-    final rawNonce = _generateNonce();
-    final hashedNonce = _sha256ofString(rawNonce);
-
     try {
-      // 2. Request Apple credential via native sheet
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-      );
+      final provider = AppleAuthProvider()
+        ..addScope('email')
+        ..addScope('name');
 
-      // 3. Create an OAuth credential for Firebase
-      //    Only pass idToken + rawNonce on native. Passing the authorization
-      //    code as accessToken triggers a server-side token exchange that
-      //    requires a Service ID + .p8 key configured in Firebase — not
-      //    needed for native iOS/Android sign-in.
-      final oauthCredential = OAuthProvider('apple.com').credential(
-        idToken: appleCredential.identityToken,
-        rawNonce: rawNonce,
-      );
+      final userCredential = await _auth.signInWithProvider(provider);
 
-      // 4. Sign in to Firebase
-      final userCredential = await _auth.signInWithCredential(oauthCredential);
-
-      // 5. Apple only sends the display name on the FIRST sign-in ever.
-      //    Persist it to Firebase Auth so it's available on subsequent logins.
-      final displayName = [
-        appleCredential.givenName,
-        appleCredential.familyName,
-      ].where((n) => n != null && n.isNotEmpty).join(' ');
-
-      if (displayName.isNotEmpty &&
-          (userCredential.user?.displayName == null ||
-              userCredential.user!.displayName!.isEmpty)) {
-        await userCredential.user?.updateDisplayName(displayName);
+      // Apple only sends the display name on the FIRST sign-in ever.
+      // Persist it to Firebase Auth so it's available on subsequent logins.
+      final profile = userCredential.additionalUserInfo?.profile;
+      if (profile != null) {
+        final givenName = profile['given_name'] as String?;
+        final familyName = profile['family_name'] as String?;
+        final displayName = [givenName, familyName]
+            .where((n) => n != null && n.isNotEmpty)
+            .join(' ');
+        if (displayName.isNotEmpty &&
+            (userCredential.user?.displayName == null ||
+                userCredential.user!.displayName!.isEmpty)) {
+          await userCredential.user?.updateDisplayName(displayName);
+        }
       }
 
       _log?.info(
@@ -113,9 +83,23 @@ class AppleAuthService {
         tag: _tag,
       );
       return userCredential;
-    } on SignInWithAppleAuthorizationException catch (e) {
-      if (e.code == AuthorizationErrorCode.canceled) {
+    } on FirebaseAuthException catch (e) {
+      // User-cancelled sign-in — not an error
+      if (e.code == 'cancelled' ||
+          e.code == 'web-context-cancelled' ||
+          e.code == 'user-cancelled') {
         _log?.info('Apple Sign-In cancelled by user', tag: _tag);
+        return null;
+      }
+      _log?.error(
+        'Firebase rejected Apple credential: code=${e.code} message=${e.message}',
+        tag: _tag,
+      );
+      rethrow;
+    } on PlatformException catch (e) {
+      // ASAuthorizationError.canceled (code 1001) on iOS
+      if (e.code == '1001' || (e.message ?? '').contains('cancel')) {
+        _log?.info('Apple Sign-In cancelled by user (platform)', tag: _tag);
         return null;
       }
       rethrow;

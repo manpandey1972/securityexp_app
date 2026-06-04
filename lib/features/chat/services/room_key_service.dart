@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/services/cloud_callable_service.dart';
 import 'package:securityexperts_app/data/models/crypto/room_key_info.dart';
 
 /// Manages room key retrieval from Cloud Functions.
@@ -27,11 +29,19 @@ class RoomKeyService {
   /// In-flight requests: coalesces concurrent calls for the same room.
   final Map<String, Future<RoomKeyInfo>> _pending = {};
 
+  /// HTTP workaround for iOS Firebase Functions native SDK crash (Xcode 26).
+  /// Null on web and Android — those platforms use the regular SDK.
+  final CloudCallableService? _httpCallable;
+
   RoomKeyService({
     required FirebaseFunctions functions,
     required AppLogger logger,
+    FirebaseAuth? auth,
   })  : _functions = functions,
-        _log = logger;
+        _log = logger,
+        _httpCallable = CloudCallableService.shouldUseHttpWorkaround
+            ? CloudCallableService(auth: auth ?? FirebaseAuth.instance)
+            : null;
 
   /// Get the room key, from cache or Cloud Function.
   ///
@@ -69,25 +79,45 @@ class RoomKeyService {
     _log.debug('Fetching room key for $roomId', tag: _tag);
 
     try {
-      // Try getRoomKey first
-      final result = await _functions
-          .httpsCallable('api')
-          .call<Map<String, dynamic>>(
-            {'action': 'getRoomKey', 'payload': {'roomId': roomId}},
-          );
-
-      return _cacheResult(roomId, result.data);
+      final data = await _callApi('getRoomKey', {'roomId': roomId});
+      return _cacheResult(roomId, data);
     } on FirebaseFunctionsException catch (e) {
       if (e.code == 'not-found') {
-        // Room has no key yet (pre-existing room) — seal one now
-        _log.info(
-          'No room key for $roomId — auto-sealing',
-          tag: _tag,
-        );
+        _log.info('No room key for $roomId — auto-sealing', tag: _tag);
+        return sealRoomKey(roomId);
+      }
+      rethrow;
+    } on FirebaseCallableException catch (e) {
+      // HTTP workaround path — server returns NOT_FOUND for missing keys.
+      if (e.code == 'NOT_FOUND' || e.statusCode == 404) {
+        _log.info('No room key for $roomId — auto-sealing', tag: _tag);
         return sealRoomKey(roomId);
       }
       rethrow;
     }
+  }
+
+  /// Invoke the unified `api` callable, transparently selecting between
+  /// the native Firebase SDK and the iOS HTTP workaround.
+  ///
+  /// The Firebase SDK returns `Map<Object?, Object?>` on iOS/Android, so we
+  /// always normalize to `Map<String, dynamic>` here.
+  Future<Map<String, dynamic>> _callApi(
+    String action,
+    Map<String, dynamic> payload,
+  ) async {
+    if (_httpCallable != null) {
+      final result = await _httpCallable.call('api', {
+        'action': action,
+        'payload': payload,
+      });
+      return Map<String, dynamic>.from(result as Map);
+    }
+    final result = await _functions.httpsCallable('api').call({
+      'action': action,
+      'payload': payload,
+    });
+    return Map<String, dynamic>.from(result.data as Map);
   }
 
   /// Seal a new room key (called after room creation or on first access).
@@ -100,14 +130,8 @@ class RoomKeyService {
   /// the CF returns the existing decrypted key.
   Future<RoomKeyInfo> sealRoomKey(String roomId) async {
     _log.debug('Sealing room key for $roomId', tag: _tag);
-
-    final result = await _functions
-        .httpsCallable('api')
-        .call<Map<String, dynamic>>(
-          {'action': 'sealRoomKey', 'payload': {'roomId': roomId}},
-        );
-
-    final info = _cacheResult(roomId, result.data);
+    final data = await _callApi('sealRoomKey', {'roomId': roomId});
+    final info = _cacheResult(roomId, data);
     _log.info('Room key sealed and cached for $roomId', tag: _tag);
     return info;
   }
