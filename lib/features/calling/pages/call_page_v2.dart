@@ -312,9 +312,31 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
     }
 
     // Full call view
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: _buildContent(),
+    //
+    // Block the system back gesture (swipe-from-edge on Android, back button)
+    // while a call is in progress. Popping the route while the LiveKit peer
+    // connection / media renderers are still alive crashed the app because
+    // the widget tree tore down before the native side could clean up.
+    // Instead, intercept the gesture and minimise the call — matches the UX
+    // of WhatsApp / Signal / Google Meet. Only allow the actual pop once the
+    // call has ended or failed (the existing _handleStateChange handler then
+    // performs the pop programmatically).
+    final canPop = _controller.callState == CallState.ended ||
+        _controller.callState == CallState.failed ||
+        _controller.isDisposed;
+    return PopScope(
+      canPop: canPop,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _logger.debug(
+          'Back gesture during active call — minimising instead of popping',
+        );
+        CallNavigationCoordinator().minimize();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: _buildContent(),
+      ),
     );
   }
 
