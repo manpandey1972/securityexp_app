@@ -41,6 +41,7 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
   static const String _tag = 'InlineAudioPlayer';
 
   bool _isPlaying = false;
+  bool _isStarting = false; // guard against rapid double-taps before first await
   bool _isSourceSet = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
@@ -248,7 +249,14 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
       await _audioPlayer.pause();
       setState(() => _isPlaying = false);
     } else {
+      // Guard: ignore tap if a start is already in progress
+      if (_isStarting) {
+        _log.debug('Start already in progress, ignoring tap', tag: _tag);
+        return;
+      }
+      _isStarting = true;
       _log.debug('Starting playback', tag: _tag);
+      try {
       // Configure iOS audio session for media playback (native)
       await MediaAudioSessionHelper.configureForMediaPlayback();
 
@@ -280,8 +288,11 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
         }
       }
       
-      setState(() => _isPlaying = true);
+      if (mounted) setState(() => _isPlaying = true);
       _log.debug('Playback started, isPlaying set to true', tag: _tag);
+      } finally {
+        _isStarting = false;
+      }
     }
   }
 
