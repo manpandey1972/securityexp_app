@@ -18,6 +18,12 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL"/>
+    <!-- Required for expedited WorkManager workers (RejectCallWorker) to
+         actually run as a foreground service on Android 14+. Without
+         FOREGROUND_SERVICE_SHORT_SERVICE the system rejects the FGS start
+         and the worker silently falls back to deferrable work, which can
+         be killed alongside the process on cold start. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE"/>
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -89,6 +95,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!--
+            WorkManager's foreground service used by expedited workers
+            (RejectCallWorker). We override the declared
+            foregroundServiceType so that on Android 14+ (API 34+) the
+            system allows the worker to actually start its foreground
+            service. SHORT_SERVICE is correct for our use — a network
+            round trip that completes in seconds.
+            tools:node="merge" because WorkManager declares this service
+            in its own manifest; we are only contributing the extra
+            attribute.
+        -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="shortService"
+            tools:node="merge" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

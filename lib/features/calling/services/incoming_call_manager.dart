@@ -270,7 +270,21 @@ class IncomingCallManager extends ChangeNotifier {
         'Starting connection to enable audio',
         tag: 'IncomingCallManager',
       );
-      controller.connect();
+      // Fire-and-forget by design: navigation must not wait for the full
+      // LiveKit handshake. The controller catches every internal error and
+      // surfaces it via callState (failed/ended) + SnackbarService, but we
+      // still attach a guard here so any escaped exception is logged
+      // rather than turning into an unhandled async error.
+      unawaited(
+        controller.connect().catchError((Object e, StackTrace st) {
+          _log.error(
+            'controller.connect() escaped uncaught: $e',
+            tag: 'IncomingCallManager',
+            error: e,
+            stackTrace: st,
+          );
+        }),
+      );
 
       // Notify callback to navigate to call page (if registered)
       _log.info(

@@ -347,9 +347,19 @@ class FirebaseCallRepository implements CallRepository {
               tag: _tag,
             );
 
+            // Treat a missing document as "no update" rather than "ended".
+            // The Cloud Functions handlers always write an explicit terminal
+            // status string ('ended'/'rejected'/'cancelled'/'missed') before
+            // any deletion or TTL expiry, so a transient !exists snapshot is
+            // never authoritative — emitting `ended` here was tearing down
+            // calls during the connecting window when listener ordering
+            // races caused a brief absent read.
             if (!snapshot.exists) {
-              _log.debug('Document does not exist - emitting ended', tag: _tag);
-              onStatusChange(CallStatus.ended);
+              _log.debug(
+                'Document does not exist — ignoring (waiting for explicit '
+                'status); will not synthesize ended',
+                tag: _tag,
+              );
               return;
             }
 

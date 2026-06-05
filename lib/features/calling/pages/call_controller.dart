@@ -20,6 +20,32 @@ import 'package:securityexperts_app/shared/services/ringtone_service.dart';
 
 enum CallState { initial, connecting, connected, ended, failed, reconnecting }
 
+/// Why the controller is leaving the active states. Drives whether to tell
+/// the backend to clean up (only for calls that actually connected) and
+/// what analytics endReason string to emit. Owned by the controller — do
+/// NOT add UI-routing logic here; that belongs to the caller of
+/// `endCall()` / the listeners on `callState`.
+enum CallTerminationReason {
+  /// User pressed hang-up locally.
+  userHangup,
+
+  /// Remote side ended the call (received via signaling or LiveKit room
+  /// disconnect).
+  remoteEnded,
+
+  /// Backend told us the call no longer exists / was already accepted.
+  /// Common during cold-start races. Do NOT call signaling.endCall — the
+  /// server already cleared its state.
+  alreadyResolved,
+
+  /// Connection setup failed (signaling RPC, media init, room.connect).
+  /// Transition to `failed` so the UI shows an error.
+  connectError,
+
+  /// Unexpected exception during connect. Treated as `connectError`.
+  unknownError,
+}
+
 /// Controller for managing call lifecycle and state
 ///
 /// This controller orchestrates the call flow including:
@@ -191,7 +217,12 @@ class CallController extends ChangeNotifier {
         if (callId == null) {
           throw CallStateError('initial', 'accept call without callId');
         }
+        final acceptSw = Stopwatch()..start();
         _session = await _signaling.acceptCall(callId!, isVideo: isVideo);
+        acceptSw.stop();
+        _logger.info(
+          '[ColdStartTiming] signaling.acceptCall took ${acceptSw.elapsedMilliseconds}ms (callId=$callId)',
+        );
       }
 
       _logger.debug('[STEP 1/6] Signaling handshake completed');
@@ -236,7 +267,12 @@ class CallController extends ChangeNotifier {
 
       // 4. Connect Media
       _logger.debug('[STEP 4/5] Connecting media (calling room.connect)');
+      final mediaSw = Stopwatch()..start();
       await _mediaManager!.connect(_session!);
+      mediaSw.stop();
+      _logger.info(
+        '[ColdStartTiming] mediaManager.connect took ${mediaSw.elapsedMilliseconds}ms',
+      );
       _logger.debug('[STEP 4/5] Media connected successfully');
 
       _logger.info('Media connected successfully');
@@ -301,30 +337,24 @@ class CallController extends ChangeNotifier {
         return;
       }
 
-      // This is a real connection error - show it
       _logger.error('Call connection failed [$hashCode]', e, null);
-      _lastError = e; // Preserve actual error
+      _lastError = e;
       _errorMessage = e.userMessage;
-      _setCallState(CallState.failed);
       _errorHandler.handleError(e);
-
-      // CRITICAL: Clean up media manager to ensure proper browser cleanup
-      if (_mediaManager != null) {
-        _logger.info('Cleaning up media manager after connection failure');
-        await _mediaManager!.disconnect();
-      }
+      await _finalize(CallTerminationReason.connectError);
     } on CallAlreadyResolvedException catch (e) {
-      // Benign: backend says the call no longer exists or was already
-      // accepted/handled. This happens in legitimate races (stale CallKit
-      // entries, duplicate accept paths). Treat as a clean end — do NOT
-      // transition to `failed` and do NOT surface "Failed to connect" UI.
+      // Backend says the call no longer exists or was already accepted /
+      // handled elsewhere. Common causes: caller cancelled before we
+      // answered, stale CallKit entry from a prior session, duplicate
+      // accept from another device. Surface a brief user-visible message
+      // so the user understands why the call screen vanished, then end
+      // cleanly (no scary `failed` UI).
       _logger.info(
-        'acceptCall resolved silently ($e) — ending without error UI',
+        'acceptCall resolved by backend ($e) — informing user and ending',
       );
-      _setCallState(CallState.ended);
-      if (_mediaManager != null) {
-        await _mediaManager!.disconnect();
-      }
+      _errorMessage = 'Call is no longer available';
+      SnackbarService.show('Call is no longer available');
+      await _finalize(CallTerminationReason.alreadyResolved);
     } catch (e, stackTrace) {
       // Log at DEBUG level so error is always visible regardless of log filter
       _logger.debug(
@@ -338,7 +368,6 @@ class CallController extends ChangeNotifier {
         return;
       }
 
-      // This is a real connection error - show it
       _logger.error(
         'Call connection failed with unexpected error [$hashCode]',
         e,
@@ -348,16 +377,10 @@ class CallController extends ChangeNotifier {
         e,
         stackTrace: stackTrace,
       );
-      _lastError = callError; // Preserve actual error
+      _lastError = callError;
       _errorMessage = callError.userMessage;
-      _setCallState(CallState.failed);
       _errorHandler.handleError(callError);
-
-      // CRITICAL: Clean up media manager to ensure proper browser cleanup
-      if (_mediaManager != null) {
-        _logger.info('Cleaning up media manager after connection failure');
-        await _mediaManager!.disconnect();
-      }
+      await _finalize(CallTerminationReason.unknownError);
     }
   }
 
@@ -646,76 +669,101 @@ class CallController extends ChangeNotifier {
     }
   }
 
-  Future<void> endCall() async {
-    // Guard against duplicate calls
-    if (_isEndingCall || _callState == CallState.ended || _isDisposed) return;
+  /// User-initiated hang-up. All other terminal transitions (remote ended,
+  /// connect error, already-resolved) flow through [_finalize] directly.
+  Future<void> endCall() => _finalize(CallTerminationReason.userHangup);
 
-    // Set flag to suppress errors that occur during call termination
+  /// Single terminal transition for the call controller. Owns:
+  ///   * idempotency (no-op if already terminal)
+  ///   * the `_isEndingCall` re-entry guard
+  ///   * setting the right [CallState] (`ended` vs `failed`)
+  ///   * cancelling timers & stopping the network monitor
+  ///   * tearing down media, signaling, and BOTH platform CallKit surfaces
+  ///   * emitting analytics
+  ///
+  /// Before this method existed the three `connect()` catch blocks each
+  /// called `_setCallState(failed)` directly, which leaked timers, network
+  /// monitor state, and (most importantly) the native CallKit UI on
+  /// connect failures. Funnel every terminal transition here.
+  Future<void> _finalize(CallTerminationReason reason) async {
+    if (_isEndingCall || _callState == CallState.ended || _isDisposed) return;
     _isEndingCall = true;
 
-    // Cancel timeout timer immediately
+    // Cancel the per-call ringback / accept-timeout timer immediately so
+    // it can't fire during the async teardown below.
     _cancelCallTimeoutTimer();
 
+    final isFailure = reason == CallTerminationReason.connectError ||
+        reason == CallTerminationReason.unknownError;
+    final terminalState =
+        isFailure ? CallState.failed : CallState.ended;
+
     _logger.info(
-      'Ending call - state: $_callState, isCaller: $isCaller, callId: ${_session?.callId}',
+      'Finalizing call - reason: ${reason.name}, state: $_callState → $terminalState, '
+      'isCaller: $isCaller, callId: ${_session?.callId}',
     );
 
-    // Track call end analytics
     if (_session != null && _callStartTime != null) {
       _analytics?.trackCallEnd(
         callId: _session!.callId,
         callDuration: DateTime.now().difference(_callStartTime!),
-        endReason: 'user_ended',
+        endReason: reason.name,
       );
     }
 
-    _setCallState(CallState.ended);
+    _setCallState(terminalState);
     _cancelAllTimers();
     _networkMonitor?.stopMonitoring();
 
+    // Only notify the backend for calls that were actually established
+    // server-side. `alreadyResolved` means the server has already cleared
+    // state; `connectError` / `unknownError` mean we never got far enough
+    // to expect a server-side participant to clean up.
+    final shouldSignalServer = reason == CallTerminationReason.userHangup ||
+        reason == CallTerminationReason.remoteEnded;
+
     try {
-      // Call endCall FIRST to trigger server-side participant cleanup
-      // This gives the server time to clean up while we do client cleanup
-      // Without this, the next call may fail with ICE timeout because
-      // the server still has the old participant session active
-      if (_session != null) {
+      if (shouldSignalServer && _session != null) {
         _logger.info(
           '📞 [CallController] Calling signaling.endCall for room: ${_session!.callId}',
         );
-        // Don't await - let it run in parallel with client cleanup
-        _signaling
-            .endCall(_session!.callId)
-            .then((_) {
-              _logger.info('📞 [CallController] signaling.endCall completed');
-            })
-            .catchError((e) {
-              _logger.warning(
-                '📞 [CallController] signaling.endCall error: $e',
-              );
-            });
+        // Fire-and-forget — server cleanup runs in parallel with client.
+        unawaited(
+          _signaling.endCall(_session!.callId).then(
+            (_) => _logger.info('📞 [CallController] signaling.endCall completed'),
+          ).catchError((Object e) {
+            _logger.warning('📞 [CallController] signaling.endCall error: $e');
+          }),
+        );
       }
 
-      // Now disconnect the media (this includes browser cleanup delays)
-      await _mediaManager?.disconnect();
+      // Disconnect the media (idempotent at the manager level).
+      if (_mediaManager != null) {
+        try {
+          await _mediaManager!.disconnect();
+        } catch (e) {
+          _logger.warning('Media disconnect failed: $e');
+        }
+      }
 
-      // Report call end to CallKit (iOS only)
+      // Report call end to iOS CallKit (no-op on other platforms).
       try {
         final callKit = CallKitService();
         _logger.debug(
           'CallKit check - isAvailable: ${callKit.isAvailable}, hasActiveCall: ${callKit.hasActiveCall}, activeCallUUID: ${callKit.activeCallUUID}',
         );
-        if (callKit.isAvailable && callKit.hasActiveCall) {
-          _logger.info(
-            '📞 [CallController] Reporting call end to CallKit with UUID: ${callKit.activeCallUUID}',
-          );
+        if (callKit.isAvailable) {
+          if (callKit.hasActiveCall) {
+            _logger.info(
+              '📞 [CallController] Reporting call end to CallKit with UUID: ${callKit.activeCallUUID}',
+            );
+          } else {
+            _logger.debug('No active call UUID, attempting endCall anyway');
+          }
           await callKit.endCall();
           _logger.debug('CallKit endCall completed');
-        } else if (callKit.isAvailable) {
-          // Try to end call anyway - native side will use its active UUID
-          _logger.debug('No active call UUID, attempting endCall anyway');
-          await callKit.endCall();
         }
-      } catch (e, _) {
+      } catch (e) {
         _logger.warning('Failed to report call end to CallKit: $e');
       }
 
@@ -731,7 +779,7 @@ class CallController extends ChangeNotifier {
         _logger.warning('Failed to end Android CallKit state: $e');
       }
     } catch (e, stackTrace) {
-      _logger.error('Error ending call', e, stackTrace);
+      _logger.error('Error finalizing call', e, stackTrace);
     }
   }
 

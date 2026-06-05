@@ -1734,6 +1734,7 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Firebase/Auth
   - Firebase/Core
+  - Firebase/Functions
   - Firebase/Storage
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
@@ -1998,6 +1999,6 @@ SPEC CHECKSUMS:
   wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
   WebRTC-SDK: 40d4f5ba05cadff14e4db5614aec402a633f007e
 
-PODFILE CHECKSUM: bf11c597ecf2b57a0834885856810fafa6da956d
+PODFILE CHECKSUM: 7eb106e27445de90b505d441a2ebbdc2b73df6a2
 
 COCOAPODS: 1.16.2

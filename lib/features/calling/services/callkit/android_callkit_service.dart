@@ -167,6 +167,7 @@ class AndroidCallKitService {
   ///      RPCs that all return 404 / "Call already handled" and surface as a
   ///      "Failed to connect to call server" snackbar to the user.
   Future<void> _processColdStartActiveCalls() async {
+    final coldStartSw = Stopwatch()..start();
     try {
       final calls = await FlutterCallkitIncoming.activeCalls();
       if (calls is! List || calls.isEmpty) return;
@@ -183,9 +184,11 @@ class AndroidCallKitService {
       // leftover from a prior session and must NOT be auto-answered.
       // (Otherwise the user lands on a "joining call" screen after the
       // splash on every normal launch.)
+      final launchSw = Stopwatch()..start();
       final bool launchedFromCallKit = await _wasLaunchedFromCallKit();
-      sl<AppLogger>().debug(
-        'Cold-start launchedFromCallKit=$launchedFromCallKit',
+      launchSw.stop();
+      sl<AppLogger>().info(
+        '[ColdStartTiming] wasLaunchedFromCallKit=$launchedFromCallKit took ${launchSw.elapsedMilliseconds}ms',
         tag: _tag,
       );
 
@@ -220,7 +223,13 @@ class AndroidCallKitService {
 
       // Wait for Firebase Auth restoration before triggering acceptCall.
       // Returns immediately if a user is already signed in.
+      final authSw = Stopwatch()..start();
       final user = await _awaitAuthReady();
+      authSw.stop();
+      sl<AppLogger>().info(
+        '[ColdStartTiming] awaitAuthReady took ${authSw.elapsedMilliseconds}ms (user=${user?.uid ?? 'null'})',
+        tag: _tag,
+      );
       if (user == null) {
         sl<AppLogger>().warning(
           'No authenticated user on cold-start; cannot accept CallKit call. '
@@ -416,6 +425,12 @@ class AndroidCallKitService {
     } catch (e) {
       sl<AppLogger>().warning(
         'Failed to read activeCalls on cold-start: $e',
+        tag: _tag,
+      );
+    } finally {
+      coldStartSw.stop();
+      sl<AppLogger>().info(
+        '[ColdStartTiming] _processColdStartActiveCalls total ${coldStartSw.elapsedMilliseconds}ms',
         tag: _tag,
       );
     }

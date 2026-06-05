@@ -21,6 +21,7 @@
 		A18113102F16EB2D00EA14C8 /* CallKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181130C2F16EB2D00EA14C8 /* CallKitManager.swift */; };
 		A18113112F16EB2D00EA14C8 /* CallKitChannelHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A181130B2F16EB2D00EA14C8 /* CallKitChannelHandler.swift */; };
 		A18113122F16EB2E00EA14C8 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18113132F16EB2E00EA14C8 /* AudioSessionManager.swift */; };
+		A18113302F16EB2D00EA14C8 /* InlineRejectDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18113312F16EB2D00EA14C8 /* InlineRejectDispatcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		A181130C2F16EB2D00EA14C8 /* CallKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitManager.swift; sourceTree = "<group>"; };
 		A181130D2F16EB2D00EA14C8 /* PushKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitManager.swift; sourceTree = "<group>"; };
 		A18113132F16EB2E00EA14C8 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
+		A18113312F16EB2D00EA14C8 /* InlineRejectDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineRejectDispatcher.swift; sourceTree = "<group>"; };
 		C75EA459F1FC57E39D263171 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -176,6 +178,7 @@
 				A181130B2F16EB2D00EA14C8 /* CallKitChannelHandler.swift */,
 				A181130C2F16EB2D00EA14C8 /* CallKitManager.swift */,
 				A181130D2F16EB2D00EA14C8 /* PushKitManager.swift */,
+				A18113312F16EB2D00EA14C8 /* InlineRejectDispatcher.swift */,
 			);
 			path = CallKit;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				A18113102F16EB2D00EA14C8 /* CallKitManager.swift in Sources */,
 				A18113112F16EB2D00EA14C8 /* CallKitChannelHandler.swift in Sources */,
 				A18113122F16EB2E00EA14C8 /* AudioSessionManager.swift in Sources */,
+				A18113302F16EB2D00EA14C8 /* InlineRejectDispatcher.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);

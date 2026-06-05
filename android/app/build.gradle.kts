@@ -51,7 +51,7 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-    // Required by GreenHiveMessagingService (native FCM handler that dispatches
+    // Required by GoAegentMessagingService (native FCM handler that dispatches
     // CallKit broadcasts directly from the main process for `incoming_call`).
     implementation("com.google.firebase:firebase-messaging:25.0.1")
     // Used by RejectCallWorker to call the `api{action:rejectCall}` Cloud

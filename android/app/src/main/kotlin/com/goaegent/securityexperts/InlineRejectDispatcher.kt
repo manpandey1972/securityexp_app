@@ -48,7 +48,14 @@ object InlineRejectDispatcher {
             return
         }
 
-        val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+        // Take a wakelock now (on the caller's thread, which still has
+        // the broadcast-receiver wakelock from the system) and hand it
+        // to the worker. We do NOT block the caller — doing so on the
+        // main thread (which is where the plugin's BroadcastReceiver
+        // and our SharedPreferences listener run) causes an ANR and
+        // the OS force-kills the process before the HTTP call lands.
+        val appCtx = context.applicationContext
+        val pm = appCtx.getSystemService(Context.POWER_SERVICE) as? PowerManager
         val wakeLock = pm?.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
             "goaegent:reject_$roomId",
@@ -61,33 +68,22 @@ object InlineRejectDispatcher {
             }
         }
 
-        val done = CountDownLatch(1)
+        Log.d(TAG, "dispatch(roomId=$roomId) — spawning worker thread")
         val thread = Thread({
             try {
-                runReject(context, roomId)
+                runReject(appCtx, roomId)
             } catch (t: Throwable) {
                 Log.w(TAG, "Inline reject thread crashed for $roomId", t)
             } finally {
-                done.countDown()
+                try {
+                    if (wakeLock?.isHeld == true) wakeLock.release()
+                } catch (_: Throwable) {
+                }
             }
         }, "InlineReject-$roomId")
-        thread.isDaemon = true
+        // Non-daemon so the process stays alive while the call is in flight.
+        thread.isDaemon = false
         thread.start()
-
-        try {
-            val completed = done.await(OVERALL_TIMEOUT_MS, TimeUnit.MILLISECONDS)
-            if (!completed) {
-                Log.w(TAG, "Inline reject for $roomId did not finish in ${OVERALL_TIMEOUT_MS}ms; backup worker will retry")
-            }
-        } catch (t: InterruptedException) {
-            Log.w(TAG, "Interrupted while waiting for inline reject of $roomId", t)
-            Thread.currentThread().interrupt()
-        } finally {
-            try {
-                if (wakeLock?.isHeld == true) wakeLock.release()
-            } catch (_: Throwable) {
-            }
-        }
     }
 
     private fun runReject(context: Context, roomId: String) {

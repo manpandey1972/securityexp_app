@@ -34,6 +34,11 @@ target 'Runner' do
   pod 'Firebase/Core', :modular_headers => true
   pod 'Firebase/Auth', :modular_headers => true
   pod 'Firebase/Storage', :modular_headers => true
+  # Explicit so InlineRejectDispatcher.swift can `import FirebaseFunctions`
+  # for the native cold-start decline shim. (Also brought in transitively
+  # by the cloud_functions Flutter plugin; declaring explicitly guarantees
+  # the Swift module is always available to the Runner target.)
+  pod 'Firebase/Functions', :modular_headers => true
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 

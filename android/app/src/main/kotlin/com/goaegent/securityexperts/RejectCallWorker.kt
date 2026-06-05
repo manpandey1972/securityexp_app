@@ -1,12 +1,19 @@
 package com.goaegent.securityexperts
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
+import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
@@ -71,6 +78,13 @@ class RejectCallWorker(
     companion object {
         private const val TAG = "RejectCallWorker"
         private const val INPUT_ROOM_ID = "room_id"
+
+        // Foreground-service notification channel for the expedited worker.
+        // Required on Android 12+ so the worker can actually run as a
+        // foreground service rather than silently falling back to a
+        // (potentially heavily delayed) regular worker.
+        private const val FG_CHANNEL_ID = "call_reject_progress"
+        private const val FG_NOTIFICATION_ID = 4321
 
         // Region default — must match the Cloud Functions deployment.
         // The Dart side uses `FirebaseFunctions.instance` (us-central1),
@@ -296,5 +310,55 @@ class RejectCallWorker(
             PendingCallKitStore.clearIncoming(applicationContext, roomId)
         } catch (_: Throwable) {
         }
+    }
+
+    /**
+     * Required for expedited workers on Android 12+ (API 31+). Without
+     * this override, [OneTimeWorkRequest.Builder.setExpedited] silently
+     * falls back to non-expedited (deferrable) work — and on cold start
+     * after a notification-action tap that deferrable work may never
+     * run before the OS kills the process. Returning a real
+     * [ForegroundInfo] makes WorkManager actually start a foreground
+     * service for the worker, which elevates the process priority and
+     * gives the HTTP `rejectCall` time to complete.
+     */
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        ensureChannel(applicationContext)
+        val notification: Notification = NotificationCompat.Builder(applicationContext, FG_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_sys_phone_call)
+            .setContentTitle("Declining call…")
+            .setOngoing(true)
+            .setShowWhen(false)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .build()
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // API 34+: must declare a foregroundServiceType. SHORT_SERVICE
+            // is ideal for this <3-minute network round trip and does not
+            // require any extra permission.
+            ForegroundInfo(
+                FG_NOTIFICATION_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE,
+            )
+        } else {
+            ForegroundInfo(FG_NOTIFICATION_ID, notification)
+        }
+    }
+
+    private fun ensureChannel(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val nm = context.getSystemService(NotificationManager::class.java) ?: return
+        if (nm.getNotificationChannel(FG_CHANNEL_ID) != null) return
+        val channel = NotificationChannel(
+            FG_CHANNEL_ID,
+            "Call control",
+            NotificationManager.IMPORTANCE_MIN,
+        ).apply {
+            description = "Background work for call accept/decline"
+            setShowBadge(false)
+        }
+        nm.createNotificationChannel(channel)
     }
 }

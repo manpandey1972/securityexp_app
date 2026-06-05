@@ -28,6 +28,12 @@ class CallKitManager: NSObject {
     // iOS triggers our CXProviderDelegate which would echo 'onMuteToggled' right
     // back to Flutter creating a feedback loop.
     private var muteSetByFlutter: Bool = false
+
+    // Tracks whether the user accepted the current incoming call. Reset on
+    // every new incoming-call report / call end. Used in CXEndCallAction to
+    // distinguish a pre-answer decline (→ native rejectCall shim) from a
+    // mid-call hangup (Flutter owns the teardown via endCall).
+    private var wasAnswered: Bool = false
     
     // Flutter method channel for callbacks
     var flutterChannel: FlutterMethodChannel?
@@ -74,6 +80,7 @@ class CallKitManager: NSObject {
         debugPrint("flutter: 📞 [CallKit] Reporting incoming call: \(callerName) (video: \(hasVideo))")
         currentCallName = callerName
         currentCallIsVideo = hasVideo
+        wasAnswered = false
         
         let update = CXCallUpdate()
         update.remoteHandle = CXHandle(type: .generic, value: callerName)
@@ -158,6 +165,7 @@ class CallKitManager: NSObject {
         pendingCallData = nil
         currentCallName = nil
         currentCallIsVideo = false
+        wasAnswered = false
         
         // Deactivate audio session
         deactivateAudioSession()
@@ -300,6 +308,7 @@ extension CallKitManager: CXProviderDelegate {
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         debugPrint("flutter: ✅ [CallKit] User answered call")
+        wasAnswered = true
         
         // Configure audio session
         configureAudioSession()
@@ -340,7 +349,7 @@ extension CallKitManager: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        debugPrint("flutter: 📴 [CallKit] User ended/rejected call: \(action.callUUID.uuidString)")
+        debugPrint("flutter: 📴 [CallKit] User ended/rejected call: \(action.callUUID.uuidString) (wasAnswered=\(wasAnswered))")
         
         // Build arguments with call UUID and pending data
         var arguments: [String: Any] = [
@@ -353,6 +362,23 @@ extension CallKitManager: CXProviderDelegate {
             arguments.merge(pending) { (current, _) in current }
         }
         
+        // Pre-answer decline (cold-start or backgrounded): notify the
+        // server natively so the caller sees "Declined" within ~1–2s
+        // instead of waiting for the ring timeout. The Flutter
+        // _handleEnd path may ALSO run if the engine is alive — the
+        // server is idempotent so duplicates return "already handled".
+        if !wasAnswered, let pending = pendingCallData {
+            let roomId = (pending["roomName"] as? String)
+                ?? (pending["room_id"] as? String)
+                ?? (pending["callId"] as? String)
+                ?? ""
+            if !roomId.isEmpty {
+                InlineRejectDispatcher.shared.dispatch(roomId: roomId)
+            } else {
+                debugPrint("flutter: ⚠️ [CallKit] pre-answer end with no roomId in pendingCallData")
+            }
+        }
+        
         debugPrint("flutter: 📴 [CallKit] Sending onCallEnded to Flutter with: \(arguments)")
         
         // Notify Flutter
@@ -363,6 +389,7 @@ extension CallKitManager: CXProviderDelegate {
         pendingCallData = nil
         currentCallName = nil
         currentCallIsVideo = false
+        wasAnswered = false
         
         // Deactivate audio session
         deactivateAudioSession()

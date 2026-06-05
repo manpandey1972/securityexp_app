@@ -4,7 +4,7 @@
         Android 12+ (API 31+) splash screen overrides. The system shows
         a splash on every cold launch and we cannot opt out, but we can
         recolor it to match the Flutter splash so the user perceives
-        only a single "Welcome to GreenHive" screen.
+        only a single "Welcome to GoAegent" screen.
     -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>

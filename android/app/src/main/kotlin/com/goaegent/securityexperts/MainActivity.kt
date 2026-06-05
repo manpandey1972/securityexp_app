@@ -167,7 +167,7 @@ class MainActivity : FlutterFragmentActivity() {
         // "joining call" screen on every normal launch.
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            "com.greenhive.call/launchIntent"
+            "com.goaegent.securityexperts.call/launchIntent"
         ).setMethodCallHandler { call, methodResult ->
             when (call.method) {
                 "wasLaunchedFromCallKit" -> {
@@ -235,7 +235,7 @@ class MainActivity : FlutterFragmentActivity() {
         // `callBackGestureChannel` for the full rationale.
         callBackGestureChannel = MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            "com.greenhive.call/backgesture"
+            "com.goaegent.securityexperts.call/backgesture"
         )
         callBackGestureChannel!!.setMethodCallHandler { call, methodResult ->
             when (call.method) {
@@ -253,7 +253,7 @@ class MainActivity : FlutterFragmentActivity() {
      * Enable or disable native interception of the Android system back
      * gesture while a call is active. When enabled, the back gesture is
      * consumed by [callBackInvokedCallback] and forwarded to Dart via
-     * `com.greenhive.call/backgesture#onBackInvoked` so the call UI can
+     * `com.goaegent.securityexperts.call/backgesture#onBackInvoked` so the call UI can
      * minimise without the Activity being finished.
      */
     private fun setCallBackInterception(active: Boolean) {

@@ -38,7 +38,7 @@ import com.hiennv.flutter_callkit_incoming.addCall
 class GoAegentMessagingService : FirebaseMessagingService() {
 
     companion object {
-        private const val TAG = "GreenHiveMsgService"
+        private const val TAG = "GoAegentMsgService"
 
         /**
          * Sound player created by this service's CallKit dispatch.
@@ -53,7 +53,7 @@ class GoAegentMessagingService : FirebaseMessagingService() {
          * `CallkitIncomingBroadcastReceiver::class.java`, so a manifest
          * receiver of our own can never fire for those actions.
          *
-         * Instead, [MainActivity]'s `com.greenhive.call/callkit` MethodChannel
+         * Instead, [MainActivity]'s `com.goaegent.securityexperts.call/callkit` MethodChannel
          * exposes `stopCallKit(callId)` which Dart calls on every accept /
          * decline / ended / timeout event. That handler reads this field and
          * stops the player.
@@ -107,7 +107,7 @@ class GoAegentMessagingService : FirebaseMessagingService() {
         val args = mutableMapOf<String, Any?>(
             "id" to callId,
             "nameCaller" to callerName,
-            "appName" to "Greenhive",
+            "appName" to "GoAegent",
             "handle" to (callerId.ifEmpty { callerName }),
             "avatar" to avatar,
             "type" to if (isVideo) 1 else 0,

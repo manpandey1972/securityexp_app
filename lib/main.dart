@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
@@ -107,6 +108,16 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      // Pre-warm Firebase Auth so the persisted user is restored in
+      // parallel with the rest of startup. Critical for the Android
+      // cold-start CallKit accept path: `_processColdStartActiveCalls`
+      // awaits `FirebaseAuth.instance.authStateChanges()` before
+      // synthesizing the answer, so any delay here translates directly
+      // into a delay before the call screen appears. Subscribing once
+      // here triggers the underlying token restore eagerly.
+      // ignore: unawaited_futures
+      FirebaseAuth.instance.authStateChanges().first.catchError((_) => null);
 
       // Activate App Check — uses Debug provider in debug builds so that
       // simulators / emulators work; Device Check (iOS) and Play Integrity

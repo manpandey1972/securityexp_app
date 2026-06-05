@@ -55,7 +55,7 @@ import org.json.JSONObject
 class GoAegentApplication : FlutterApplication() {
 
     companion object {
-        private const val TAG = "GreenHiveApp"
+        private const val TAG = "GoAegentApp"
 
         // Plugin's SharedPreferences file + key — must match the
         // hardcoded values in the plugin's SharedPreferencesUtils.kt.
@@ -121,9 +121,34 @@ class GoAegentApplication : FlutterApplication() {
             val previous = lastActive
             lastActive = newSnapshot
 
-            // Dispatch work to the main thread so notification /
-            // activity-launch APIs run on a well-defined looper. The
-            // listener itself can fire on any thread.
+            // Cold-start critical path: any id that disappeared from
+            // ACTIVE_CALLS means the user just hit Decline (or the call
+            // timed out / ended). Fire the inline rejectCall RIGHT NOW
+            // on the listener thread, which is still synchronously
+            // inside the plugin's BroadcastReceiver. This is the only
+            // moment we're guaranteed the FCM service process is alive
+            // AND has the receiver's wakelock — by the time main
+            // looper picks up a posted Runnable, the receiver has
+            // returned and the process can be killed at any moment.
+            val removed = previous.keys - newSnapshot.keys
+            for (callId in removed) {
+                try {
+                    val roomId = resolveRoomId(callId)
+                    if (roomId.isNotBlank()) {
+                        Log.d(TAG, "Listener thread inline reject for $callId → roomId=$roomId")
+                        InlineRejectDispatcher.dispatch(applicationContext, roomId)
+                        RejectCallWorker.enqueue(applicationContext, roomId)
+                    } else {
+                        Log.w(TAG, "Listener removal $callId — no roomId resolvable")
+                    }
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Listener-thread reject for $callId failed", t)
+                }
+            }
+
+            // Dispatch the rest (UI cleanup, accept handling) to the
+            // main thread so notification / activity-launch APIs run on
+            // a well-defined looper.
             mainHandler.post {
                 try {
                     handleTransition(previous, newSnapshot)
@@ -149,6 +174,25 @@ class GoAegentApplication : FlutterApplication() {
 
         lastActive = current
         Log.d(TAG, "Reconciled ACTIVE_CALLS from $source: previous=$previous current=$current")
+
+        // The listener thread is the primary path for cold-start
+        // rejectCall (see installActiveCallsListener). If we ever fall
+        // back to the poll, fire the same inline reject here so we
+        // don't silently miss the network call.
+        val removed = previous.keys - current.keys
+        for (callId in removed) {
+            try {
+                val roomId = resolveRoomId(callId)
+                if (roomId.isNotBlank()) {
+                    Log.d(TAG, "Poll-detected removal $callId → inline reject roomId=$roomId")
+                    InlineRejectDispatcher.dispatch(applicationContext, roomId)
+                    RejectCallWorker.enqueue(applicationContext, roomId)
+                }
+            } catch (t: Throwable) {
+                Log.w(TAG, "Poll-path reject for $callId failed", t)
+            }
+        }
+
         handleTransition(previous, current)
     }
 
@@ -178,35 +222,16 @@ class GoAegentApplication : FlutterApplication() {
     }
 
     /**
-     * Called when an id leaves ACTIVE_CALLS. Stops the ringer, dismisses
-     * the heads-up notification, and on cold start fires a native
-     * `rejectCall` via [RejectCallWorker] so the caller drops out of
-     * "connecting…" within a couple of seconds rather than waiting for
-     * server-side ring timeout.
+     * Called from main thread when an id leaves ACTIVE_CALLS. Stops the
+     * ringer and dismisses the heads-up notification.
+     *
+     * The actual `rejectCall` is dispatched UPSTREAM on the listener
+     * thread (which is still inside the plugin's BroadcastReceiver) so
+     * the FCM service process can't die before the HTTP call lands.
+     * See `installActiveCallsListener`.
      */
     private fun onCallRemoved(callId: String) {
         stopRingerAndNotification(callId)
-
-        try {
-            val roomId = resolveRoomId(callId)
-            if (roomId.isBlank()) {
-                Log.w(TAG, "No room_id resolvable for $callId — skipping reject")
-                return
-            }
-            // Inline best-effort reject. Runs on a background thread held
-            // alive by a partial wakelock so the FCM service process can't
-            // die before the HTTP call completes. The broadcast receiver
-            // that triggered this listener has a ~10s window, which is
-            // typically plenty for the network round trip.
-            InlineRejectDispatcher.dispatch(applicationContext, roomId)
-
-            // Belt-and-braces: also enqueue the WorkManager-backed worker
-            // so a retry happens if the inline attempt was killed mid-flight
-            // or hit a transient network error. Server is idempotent.
-            RejectCallWorker.enqueue(applicationContext, roomId)
-        } catch (t: Throwable) {
-            Log.w(TAG, "onCallRemoved for $callId failed", t)
-        }
     }
 
     /**

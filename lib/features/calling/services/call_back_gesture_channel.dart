@@ -27,7 +27,7 @@ class CallBackGestureChannel {
   static final CallBackGestureChannel instance = CallBackGestureChannel._();
 
   static const MethodChannel _channel =
-      MethodChannel('com.greenhive.call/backgesture');
+      MethodChannel('com.goaegent.securityexperts.call/backgesture');
 
   Future<dynamic> _onMethodCall(MethodCall call) async {
     if (call.method == 'onBackInvoked') {

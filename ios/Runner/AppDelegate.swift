@@ -3,6 +3,8 @@ import UIKit
 import AVFoundation
 import MediaPlayer
 import FirebaseAuth
+import flutter_callkit_incoming
+import CallKit
 
 // Audio device stream handler for Flutter event channel
 class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
@@ -364,7 +366,7 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
   // Required because FirebaseAppDelegateProxyEnabled is false
   
   override func application(_ application: UIApplication,
-                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Foundation.Data) {
     // Forward APNs token to Firebase Auth for phone number verification
     Auth.auth().setAPNSToken(deviceToken, type: .unknown)
     super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
@@ -626,4 +628,80 @@ class AudioDeviceStreamHandler: NSObject, FlutterStreamHandler {
     }
   }
 
+}
+
+// MARK: - CallkitIncomingAppDelegate
+//
+// When the flutter_callkit_incoming plugin's own CXProvider receives a
+// CXEndCallAction (i.e. user tapped Decline on the plugin-rendered
+// CallKit UI — the case for iOS cold-start where Dart called
+// `showCallkitIncoming`), it checks whether the app delegate adopts
+// this protocol and, if so, calls `onDecline` / `onEnd` instead of
+// just `action.fulfill()`. That's our native hook to ping the server.
+//
+// We MUST call `action.fulfill()` ourselves — the plugin no longer does.
+//
+// The native PushKit path (CallKitManager.swift) is handled separately
+// in its own CXProviderDelegate; this extension only catches the
+// plugin's provider. Server is idempotent so dual firing is safe.
+extension AppDelegate: CallkitIncomingAppDelegate {
+  public func onAccept(_ call: flutter_callkit_incoming.Call, _ action: CXAnswerCallAction) {
+    NSLog("[AppDelegate] plugin onAccept uuid=%@", call.uuid.uuidString)
+    action.fulfill()
+  }
+
+  public func onDecline(_ call: flutter_callkit_incoming.Call, _ action: CXEndCallAction) {
+    let roomId = resolveRoomId(from: call)
+    NSLog("[AppDelegate] plugin onDecline uuid=%@ roomId=%@", call.uuid.uuidString, roomId)
+    if !roomId.isEmpty {
+      InlineRejectDispatcher.shared.dispatch(roomId: roomId)
+    } else {
+      NSLog("[AppDelegate] plugin onDecline — no roomId resolvable, skipping rejectCall")
+    }
+    action.fulfill()
+  }
+
+  public func onEnd(_ call: flutter_callkit_incoming.Call, _ action: CXEndCallAction) {
+    // onEnd fires when the call had been answered and then ended. In that
+    // case the in-app endCall flow owns server signalling; nothing to do
+    // here. Still must fulfill the action so the plugin's CXProvider
+    // doesn't time it out.
+    NSLog("[AppDelegate] plugin onEnd uuid=%@", call.uuid.uuidString)
+    action.fulfill()
+  }
+
+  public func onTimeOut(_ call: flutter_callkit_incoming.Call) {
+    // Plugin's own ring-timeout fired client-side. The server has its
+    // own ring timeout and will mark the call missed; no client-side
+    // action needed.
+    NSLog("[AppDelegate] plugin onTimeOut uuid=%@", call.uuid.uuidString)
+  }
+
+  public func didActivateAudioSession(_ audioSession: AVAudioSession) {
+    // No-op — our native CallKit path (CallKitManager) owns audio session
+    // lifecycle for the calls we control. The plugin only renders the UI
+    // for cold-start cases; audio session for those calls is configured
+    // by AudioSessionManager during the in-app accept flow.
+  }
+
+  public func didDeactivateAudioSession(_ audioSession: AVAudioSession) {
+    // No-op (see above).
+  }
+
+  /// Pull the room id out of the plugin's `Call` object. The plugin uses
+  /// `data.uuid` for the call's string id (set from CallKitParams.id on
+  /// the Dart side, which is the Firestore room id). `extra.room_id` is
+  /// also present as a defensive fallback (we always include it when
+  /// building the params in firebase_messaging_service.dart and in
+  /// GoAegentMessagingService.kt).
+  private func resolveRoomId(from call: flutter_callkit_incoming.Call) -> String {
+    let extra = call.data.extra
+    if let fromExtra = extra["room_id"] as? String, !fromExtra.isEmpty {
+      return fromExtra
+    }
+    if let fromExtra = extra["roomName"] as? String, !fromExtra.isEmpty {
+      return fromExtra
+    }
+    return call.data.uuid
+  }
 }
