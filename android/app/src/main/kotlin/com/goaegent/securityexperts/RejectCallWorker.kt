@@ -147,6 +147,11 @@ class RejectCallWorker(
             return Result.failure()
         }
 
+        if (!FirebaseBootstrap.ensureInitialized(applicationContext)) {
+            Log.w(TAG, "Could not initialize FirebaseApp — retrying later for $roomId")
+            return Result.retry()
+        }
+
         // Firebase Auth persists the user's session to encrypted disk on
         // sign-in. On a cold start the SDK rehydrates `currentUser`
         // lazily — we briefly poll for it to become non-null before

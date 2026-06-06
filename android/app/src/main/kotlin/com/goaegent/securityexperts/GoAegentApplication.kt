@@ -95,6 +95,14 @@ class GoAegentApplication : FlutterApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.i(TAG, "GoAegentApplication.onCreate — process pid=${android.os.Process.myPid()}")
+        // Belt-and-braces: ensure the default FirebaseApp is initialized
+        // before any native code path (foreground service / inline
+        // worker / WorkManager) tries FirebaseAuth.getInstance(). On
+        // some cold-start FCM-spawned processes FirebaseInitProvider
+        // hasn't completed by the time our listener fires.
+        val fbReady = FirebaseBootstrap.ensureInitialized(this)
+        Log.i(TAG, "FirebaseBootstrap.ensureInitialized -> $fbReady")
         try {
             installActiveCallsListener()
         } catch (t: Throwable) {
@@ -113,6 +121,7 @@ class GoAegentApplication : FlutterApplication() {
         // was already ringing).
         val initialState = prefs.getString(ACTIVE_CALLS_KEY, null)
         lastActive = parseActiveCalls(initialState)
+        Log.i(TAG, "installActiveCallsListener: seeded with ${lastActive.size} active calls: ${lastActive.keys}")
 
         activeCallsListener = SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
             if (key != ACTIVE_CALLS_KEY) return@OnSharedPreferenceChangeListener
@@ -120,22 +129,38 @@ class GoAegentApplication : FlutterApplication() {
             val newSnapshot = parseActiveCalls(rawNew)
             val previous = lastActive
             lastActive = newSnapshot
+            Log.i(TAG, "ACTIVE_CALLS changed: prev=${previous.keys} new=${newSnapshot.keys} thread=${Thread.currentThread().name}")
 
             // Cold-start critical path: any id that disappeared from
             // ACTIVE_CALLS means the user just hit Decline (or the call
-            // timed out / ended). Fire the inline rejectCall RIGHT NOW
-            // on the listener thread, which is still synchronously
-            // inside the plugin's BroadcastReceiver. This is the only
-            // moment we're guaranteed the FCM service process is alive
-            // AND has the receiver's wakelock — by the time main
-            // looper picks up a posted Runnable, the receiver has
-            // returned and the process can be killed at any moment.
+            // timed out / ended). Fire the reject RIGHT NOW on the
+            // listener thread, which is still synchronously inside the
+            // plugin's BroadcastReceiver. This is the only moment we're
+            // guaranteed the FCM service process is alive AND has the
+            // receiver's wakelock — by the time main looper picks up a
+            // posted Runnable, the receiver has returned and the
+            // process can be killed at any moment.
+            //
+            // We fire THREE paths in parallel (server is idempotent —
+            // duplicate calls return `failed-precondition` which we
+            // treat as success):
+            //   1. RejectCallForegroundService (PRIMARY): a direct
+            //      foreground-service start, which guarantees the
+            //      process priority is elevated for the duration of the
+            //      HTTP call (~3 min ceiling via SHORT_SERVICE).
+            //   2. InlineRejectDispatcher (FAST PATH): a plain Thread
+            //      + wakelock. Usually wins because it bypasses the
+            //      service-bind dance, but is killable if the OS is
+            //      aggressive.
+            //   3. RejectCallWorker (SAFETY NET): WorkManager job that
+            //      survives process death and retries with backoff.
             val removed = previous.keys - newSnapshot.keys
             for (callId in removed) {
                 try {
                     val roomId = resolveRoomId(callId)
                     if (roomId.isNotBlank()) {
-                        Log.d(TAG, "Listener thread inline reject for $callId → roomId=$roomId")
+                        Log.d(TAG, "Listener thread reject for $callId → roomId=$roomId")
+                        RejectCallForegroundService.start(applicationContext, roomId)
                         InlineRejectDispatcher.dispatch(applicationContext, roomId)
                         RejectCallWorker.enqueue(applicationContext, roomId)
                     } else {
@@ -177,14 +202,15 @@ class GoAegentApplication : FlutterApplication() {
 
         // The listener thread is the primary path for cold-start
         // rejectCall (see installActiveCallsListener). If we ever fall
-        // back to the poll, fire the same inline reject here so we
-        // don't silently miss the network call.
+        // back to the poll, fire the same three-pronged reject here so
+        // we don't silently miss the network call.
         val removed = previous.keys - current.keys
         for (callId in removed) {
             try {
                 val roomId = resolveRoomId(callId)
                 if (roomId.isNotBlank()) {
-                    Log.d(TAG, "Poll-detected removal $callId → inline reject roomId=$roomId")
+                    Log.d(TAG, "Poll-detected removal $callId → reject roomId=$roomId")
+                    RejectCallForegroundService.start(applicationContext, roomId)
                     InlineRejectDispatcher.dispatch(applicationContext, roomId)
                     RejectCallWorker.enqueue(applicationContext, roomId)
                 }

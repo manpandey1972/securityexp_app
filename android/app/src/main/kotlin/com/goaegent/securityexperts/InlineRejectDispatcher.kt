@@ -87,6 +87,10 @@ object InlineRejectDispatcher {
     }
 
     private fun runReject(context: Context, roomId: String) {
+        if (!FirebaseBootstrap.ensureInitialized(context.applicationContext)) {
+            Log.w(TAG, "Could not initialize FirebaseApp — abort inline reject for $roomId")
+            return
+        }
         val user = awaitCurrentUser()
         if (user == null) {
             Log.w(TAG, "No signed-in user after ${AUTH_WAIT_TIMEOUT_MS}ms — skipping inline reject for $roomId")
@@ -151,6 +155,16 @@ object InlineRejectDispatcher {
             when {
                 status in 200..299 -> {
                     Log.i(TAG, "inline rejectCall($roomId) succeeded: status=$status body=$responseBody")
+                    try {
+                        PendingCallKitStore.clearIncoming(context, roomId)
+                    } catch (_: Throwable) {}
+                }
+                status == 400 && (
+                    responseBody.contains("failed-precondition", ignoreCase = true) ||
+                        responseBody.contains("failed_precondition", ignoreCase = true) ||
+                        responseBody.contains("already handled", ignoreCase = true)
+                    ) -> {
+                    Log.i(TAG, "inline rejectCall($roomId) already-handled (FAILED_PRECONDITION) — treating as success")
                     try {
                         PendingCallKitStore.clearIncoming(context, roomId)
                     } catch (_: Throwable) {}

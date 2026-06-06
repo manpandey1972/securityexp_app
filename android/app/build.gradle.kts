@@ -43,6 +43,50 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // Flutter remaps the Gradle `buildDir` (see android/build.gradle.kts) so the
+    // google-services plugin generates `values.xml` (with google_app_id, etc.)
+    // under <project>/build/app/generated/res/google-services/<variant>/values/
+    // but AGP's mergeResources doesn't auto-discover it under the remapped path
+    // on this Flutter / AGP / google-services combination. Without it,
+    // FirebaseInitProvider can't find the default options at runtime and any
+    // call to FirebaseAuth.getInstance() throws "Default FirebaseApp is not
+    // initialized". Explicitly register the directory as a per-variant res
+    // srcset so the merge picks it up.
+    sourceSets {
+        getByName("debug") {
+            res.srcDirs(rootProject.layout.buildDirectory.dir("app/generated/res/google-services/debug"))
+        }
+        getByName("release") {
+            res.srcDirs(rootProject.layout.buildDirectory.dir("app/generated/res/google-services/release"))
+        }
+    }
+}
+
+// AGP can't infer the implicit producer→consumer dependency between
+// processXxxGoogleServices and every task that scans the res source
+// paths (mergeResources, generateResources, mapSourceSetPaths,
+// packageResources, extractDeepLinks, lint*, etc.) once we add the
+// generated directory as a manual srcset above. Declare the dependency
+// on every variant-scoped consumer that runs after source collection.
+afterEvaluate {
+    listOf("Debug", "Release").forEach { variant ->
+        val producer = tasks.findByName("process${variant}GoogleServices") ?: return@forEach
+        tasks.matching { task ->
+            val n = task.name
+            n != producer.name && n.contains(variant) && (
+                n.startsWith("merge") ||
+                    n.startsWith("generate") ||
+                    n.startsWith("map") && n.contains("SourceSet") ||
+                    n.startsWith("package") && n.contains("Resources") ||
+                    n.startsWith("extractDeepLinks") ||
+                    n.startsWith("lint") ||
+                    n.startsWith("process") && n.endsWith("Manifest")
+                )
+        }.configureEach {
+            dependsOn(producer)
+        }
+    }
 }
 
 flutter {

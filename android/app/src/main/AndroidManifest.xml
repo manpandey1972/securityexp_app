@@ -111,6 +111,18 @@
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="shortService"
             tools:node="merge" />
+
+        <!--
+            Primary native decline path. Started directly (not via
+            WorkManager) from the SharedPreferences listener inside the
+            plugin's broadcast receiver, so it always promotes to
+            foreground within the ~5 s startForegroundService deadline.
+            See RejectCallForegroundService for the detailed rationale.
+        -->
+        <service
+            android:name=".RejectCallForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
