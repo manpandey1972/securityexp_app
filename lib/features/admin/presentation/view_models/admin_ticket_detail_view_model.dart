@@ -100,7 +100,7 @@ class AdminTicketDetailViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final userProfile = UserProfileService().userProfile;
+      final userProfile = sl<UserProfileService>().userProfile;
       final success = await _ticketService.sendAdminReply(
         ticketId: ticketId,
         senderId: userProfile?.id ?? '',
@@ -134,7 +134,7 @@ class AdminTicketDetailViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final userProfile = UserProfileService().userProfile;
+      final userProfile = sl<UserProfileService>().userProfile;
       final note = await _ticketService.addInternalNote(
         ticketId: ticketId,
         authorId: userProfile?.id ?? '',

@@ -517,7 +517,7 @@ class SupportService {
 
   String? _getCurrentUserName() {
     // First try to get the display name from user profile service
-    final profileService = UserProfileService();
+    final profileService = sl<UserProfileService>();
     final displayName = profileService.userProfile?.name;
     if (displayName != null && displayName.isNotEmpty) {
       return displayName;

@@ -53,7 +53,7 @@ class ChatListViewModel extends ChangeNotifier {
        _unreadMessagesService = unreadMessagesService,
        _instanceId = ++_instanceCounter {
     // Re-filter rooms when the blocked-user list changes (Apple 1.2)
-    UserProfileService().addListener(_onUserProfileChanged);
+    sl<UserProfileService>().addListener(_onUserProfileChanged);
   }
 
   /// Last known blocked-user set, used to avoid redundant rebuilds.
@@ -374,7 +374,7 @@ class ChatListViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _isDisposed = true;
-    UserProfileService().removeListener(_onUserProfileChanged);
+    sl<UserProfileService>().removeListener(_onUserProfileChanged);
     _roomsSubscription?.cancel();
     super.dispose();
   }

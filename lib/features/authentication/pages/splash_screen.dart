@@ -185,7 +185,7 @@ class _SplashPageState extends State<SplashPage>
 
     if (profile != null) {
       _log.debug('Profile loaded successfully for user: ${user.uid}', tag: _tag);
-      UserProfileService().setUserProfile(profile);
+      sl<UserProfileService>().setUserProfile(profile);
 
       // Update last login timestamp to track app session starts
       await ErrorHandler.handle<void>(
@@ -215,7 +215,7 @@ class _SplashPageState extends State<SplashPage>
       }
     } else {
       _log.warning('No user profile found', tag: _tag);
-      UserProfileService().clearUserProfile();
+      sl<UserProfileService>().clearUserProfile();
       if (mounted) {
         // Signed in but no profile yet (mid-onboarding) → gate EULA before
         // onboarding so a profile cannot be created without acceptance.

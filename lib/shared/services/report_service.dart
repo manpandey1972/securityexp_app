@@ -92,7 +92,7 @@ class _ReportSheetState extends State<_ReportSheet> {
     // moderator viewing the ticket has full context without needing to
     // cross-reference the ticket's `userId`/`userName` fields. Mirrors
     // the block-user ticket format for consistency.
-    final reporterProfile = UserProfileService().userProfile;
+    final reporterProfile = sl<UserProfileService>().userProfile;
     final reporterId = reporterProfile?.id ?? 'unknown';
     final reporterName = reporterProfile?.name ?? 'Unknown';
     final description =

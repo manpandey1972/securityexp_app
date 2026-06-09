@@ -41,7 +41,7 @@ class HomeViewModel extends ChangeNotifier {
     // Rebuild experts list when blocked-user list changes (Apple 1.2):
     // a newly-blocked expert must disappear from the home Experts tab
     // immediately, and an unblocked expert must reappear.
-    UserProfileService().addListener(_onProfileChanged);
+    sl<UserProfileService>().addListener(_onProfileChanged);
     _initialize();
   }
 
@@ -226,7 +226,7 @@ class HomeViewModel extends ChangeNotifier {
     _profileUpdatedSubscription?.cancel();
     _appResumedSubscription?.cancel();
     _unreadCountSubscription?.cancel();
-    UserProfileService().removeListener(_onProfileChanged);
+    sl<UserProfileService>().removeListener(_onProfileChanged);
     super.dispose();
   }
 }

@@ -219,7 +219,7 @@ class _VideoCallScreenV2State extends State<VideoCallScreenV2> {
   Future<void> _fetchUserProfiles() async {
     try {
       // Get current user from UserProfileService
-      _currentUser = UserProfileService().userProfile;
+      _currentUser = sl<UserProfileService>().userProfile;
 
       // Fetch peer user from Firestore
       final doc = await FirestoreInstance().db

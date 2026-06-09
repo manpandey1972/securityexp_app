@@ -110,7 +110,7 @@ class ChatConversationViewModel extends ChangeNotifier {
     // Listen to upload manager for progress updates
     _uploadManager.addListener(_onUploadStateChanged);
     // Rebuild when blocked-user list changes (Apple 1.2 compliance)
-    UserProfileService().addListener(_onProfileChanged);
+    sl<UserProfileService>().addListener(_onProfileChanged);
   }
 
   void _onProfileChanged() {
@@ -539,7 +539,7 @@ class ChatConversationViewModel extends ChangeNotifier {
   void dispose() {
     _logger.debug('Disposing ChatConversationViewModel');
     _isDisposed = true;
-    UserProfileService().removeListener(_onProfileChanged);
+    sl<UserProfileService>().removeListener(_onProfileChanged);
     
     // Update presence to indicate user left the chat room
     sl<UserPresenceService>().leaveChatRoom();

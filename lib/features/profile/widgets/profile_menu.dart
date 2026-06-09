@@ -50,7 +50,7 @@ class ProfileMenu {
     required Function() onLogoutConfirmed,
     required Function() onDeleteAccountConfirmed,
   }) {
-    final userName = UserProfileService().userProfile?.name ?? 'User';
+    final userName = sl<UserProfileService>().userProfile?.name ?? 'User';
 
     return [
       // Header: User greeting
@@ -86,40 +86,12 @@ class ProfileMenu {
       ),
       const PopupMenuDivider(),
 
-      // Notifications toggle option
-      PopupMenuItem(
+      // Notifications toggle option — uses a StatefulWidget so the icon,
+      // label and switch reflect the current value (and update when the
+      // menu is reopened after a toggle).
+      PopupMenuItem<String>(
         value: 'toggle_notifications',
-        child: Row(
-          children: [
-            Icon(
-              UserProfileService().userProfile?.notificationsEnabled == true
-                  ? Icons.notifications_active
-                  : Icons.notifications_off,
-              size: 20,
-              color: AppColors.textPrimary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              UserProfileService().userProfile?.notificationsEnabled == true
-                  ? 'Notifications On'
-                  : 'Notifications Off',
-              style: AppTypography.bodyRegular.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const Spacer(),
-            Switch(
-              value:
-                  UserProfileService().userProfile?.notificationsEnabled ??
-                  true,
-              onChanged: null, // Handled by menu selection
-              activeThumbColor: AppColors.messageBubble,
-              activeTrackColor: AppColors.primaryLight,
-              inactiveThumbColor: AppColors.messageBubble,
-              inactiveTrackColor: AppColors.primaryLight.withValues(alpha: 0.4),
-            ),
-          ],
-        ),
+        child: const _NotificationsMenuItem(),
       ),
       const PopupMenuDivider(),
 
@@ -225,7 +197,7 @@ class ProfileMenu {
       return roleProvider.currentRole.isSupport;
     } catch (e) {
       // RoleProvider not available, check roles array directly
-      final userProfile = UserProfileService().userProfile;
+      final userProfile = sl<UserProfileService>().userProfile;
       if (userProfile == null) return false;
 
       // Use case-insensitive helper method
@@ -390,26 +362,35 @@ class ProfileMenu {
   static Future<void> toggleNotifications(BuildContext context) async {
     await ErrorHandler.handle<void>(
       operation: () async {
-        final currentProfile = UserProfileService().userProfile;
-        if (currentProfile == null) return;
+        final profileService = sl<UserProfileService>();
+        final currentProfile = profileService.userProfile;
+        debugPrint('[Notifications] toggle requested. profile=${currentProfile?.id} current=${currentProfile?.notificationsEnabled}');
+        if (currentProfile == null) {
+          debugPrint('[Notifications] ABORT — userProfile is null in singleton');
+          return;
+        }
 
         final currentValue = currentProfile.notificationsEnabled;
         final newValue = !currentValue;
+        debugPrint('[Notifications] flipping $currentValue -> $newValue');
 
         // Update in Firestore
         await sl<UserRepository>().toggleNotifications(newValue);
+        debugPrint('[Notifications] Firestore write OK');
 
         // Update local profile
         final updatedProfile = currentProfile.copyWith(
           notificationsEnabled: newValue,
         );
-        UserProfileService().updateUserProfile(updatedProfile);
+        profileService.updateUserProfile(updatedProfile);
+        debugPrint('[Notifications] local profile updated. now=${profileService.userProfile?.notificationsEnabled}');
 
         SnackbarService.show(
           newValue ? 'Notifications enabled' : 'Notifications disabled',
         );
       },
       onError: (error) {
+        debugPrint('[Notifications] toggle FAILED: $error');
         SnackbarService.show('Failed to update notification settings');
       },
     );
@@ -452,5 +433,62 @@ class ProfileMenu {
         await handleDeleteAccount(context);
       }
     }
+  }
+}
+
+/// Live-rebuilding notifications row for use inside a [PopupMenuItem].
+///
+/// Two-part fix:
+///   1. Subscribes to [UserProfileService] via [ListenableBuilder] so when
+///      the user reopens the menu after a toggle, the icon/label/switch
+///      reflect the new state (combined with the [ListenableBuilder]
+///      wrapping the [PopupMenuButton] itself in the home app bar, which
+///      forces `itemBuilder` to re-run with fresh data).
+///   2. Wraps the [Switch] in [IgnorePointer] so clicks/taps on the
+///      switch fall through to the surrounding [PopupMenuItem]. Without
+///      this, the [Switch] widget absorbs pointer events on web/desktop
+///      and the menu's `onSelected` callback never fires — making the
+///      toggle appear broken.
+class _NotificationsMenuItem extends StatelessWidget {
+  const _NotificationsMenuItem();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: sl<UserProfileService>(),
+      builder: (context, _) {
+        final profile = sl<UserProfileService>().userProfile;
+        final enabled = profile?.notificationsEnabled ?? true;
+        debugPrint('[Notifications] menu rebuild. profile=${profile?.id} enabled=$enabled (raw=${profile?.notificationsEnabled})');
+        return Row(
+          children: [
+            Icon(
+              enabled ? Icons.notifications_active : Icons.notifications_off,
+              size: 20,
+              color: AppColors.textPrimary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              enabled ? 'Notifications On' : 'Notifications Off',
+              style: AppTypography.bodyRegular.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const Spacer(),
+            IgnorePointer(
+              child: Switch(
+                value: enabled,
+                onChanged: (_) {}, // visual only; PopupMenuItem owns the tap
+                activeThumbColor: AppColors.messageBubble,
+                activeTrackColor: AppColors.primaryLight,
+                inactiveThumbColor: AppColors.messageBubble,
+                inactiveTrackColor:
+                    AppColors.primaryLight.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

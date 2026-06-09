@@ -33,6 +33,7 @@ class UserProfileService extends ChangeNotifier {
 
   /// Set the user profile and notify listeners
   void setUserProfile(User profile) {
+    debugPrint('[UserProfileService] setUserProfile id=${profile.id} notificationsEnabled=${profile.notificationsEnabled}');
     _userProfile = profile;
     _error = null;
     notifyListeners();
@@ -40,6 +41,7 @@ class UserProfileService extends ChangeNotifier {
 
   /// Update the user profile (for partial updates)
   void updateUserProfile(User profile) {
+    debugPrint('[UserProfileService] updateUserProfile id=${profile.id} notificationsEnabled=${profile.notificationsEnabled}');
     _userProfile = profile;
     _error = null;
     notifyListeners();

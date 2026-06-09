@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
 import 'package:securityexperts_app/shared/services/error_handler.dart';
 import 'package:securityexperts_app/shared/services/user_profile_service.dart';
@@ -31,7 +32,7 @@ class HiddenMessagesService {
   /// Whether [messageId] is currently hidden for the current user.
   bool isHidden(String messageId) {
     if (messageId.isEmpty) return false;
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     return profile?.hiddenMessageIds.contains(messageId) ?? false;
   }
 
@@ -43,7 +44,7 @@ class HiddenMessagesService {
   Future<void> hideMessage(String messageId) async {
     if (messageId.isEmpty) return;
 
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     if (profile != null && profile.hiddenMessageIds.contains(messageId)) {
       // Already hidden; no-op.
       return;
@@ -62,7 +63,7 @@ class HiddenMessagesService {
 
     // Update local cache so the UI reflects the hide instantly.
     if (profile != null) {
-      UserProfileService().updateUserProfile(
+      sl<UserProfileService>().updateUserProfile(
         profile.copyWith(
           hiddenMessageIds: [...profile.hiddenMessageIds, messageId],
         ),

@@ -283,7 +283,7 @@ class RatingService {
 
   String? _getCurrentUserName() {
     // Get from cached user profile first (most reliable)
-    final cachedUser = UserProfileService().userProfile;
+    final cachedUser = sl<UserProfileService>().userProfile;
     if (cachedUser?.name != null && cachedUser!.name.isNotEmpty) {
       return cachedUser.name;
     }

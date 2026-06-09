@@ -236,7 +236,7 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
       operation: () async {
         final profile = await _userRepository.getCurrentUserProfile();
         if (profile != null && profile.name.trim().isNotEmpty) {
-          UserProfileService().setUserProfile(profile);
+          sl<UserProfileService>().setUserProfile(profile);
           if (!mounted) return;
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomePage()),
@@ -319,7 +319,7 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
         );
 
         final createdUser = await _userRepository.createUser(userModel);
-        UserProfileService().setUserProfile(createdUser);
+        sl<UserProfileService>().setUserProfile(createdUser);
         EventBus().emitProfileUpdated();
 
         // Initialize FCM and VoIP tokens now that user document exists

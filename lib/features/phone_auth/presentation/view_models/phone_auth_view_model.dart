@@ -358,7 +358,7 @@ class PhoneAuthViewModel extends ChangeNotifier {
 
       if (userProfile != null) {
         // Existing user — store profile and finalize login.
-        UserProfileService().setUserProfile(userProfile);
+        sl<UserProfileService>().setUserProfile(userProfile);
 
         if (sl.isRegistered<AnalyticsService>()) {
           sl<AnalyticsService>().setUserOnLogin(
@@ -449,7 +449,7 @@ class PhoneAuthViewModel extends ChangeNotifier {
           final userProfile = await _userRepository.getCurrentUserProfile();
 
           if (userProfile != null) {
-            UserProfileService().setUserProfile(userProfile);
+            sl<UserProfileService>().setUserProfile(userProfile);
 
             if (sl.isRegistered<AnalyticsService>()) {
               sl<AnalyticsService>().setUserOnLogin(
@@ -533,7 +533,7 @@ class PhoneAuthViewModel extends ChangeNotifier {
           final userProfile = await _userRepository.getCurrentUserProfile();
 
           if (userProfile != null) {
-            UserProfileService().setUserProfile(userProfile);
+            sl<UserProfileService>().setUserProfile(userProfile);
 
             if (sl.isRegistered<AnalyticsService>()) {
               sl<AnalyticsService>().setUserOnLogin(

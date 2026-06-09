@@ -145,7 +145,7 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
     }
     if (!newState.isLoading && newState.error == null) {
       // Successfully verified - gate EULA acceptance, then route based on profile.
-      final profile = UserProfileService().userProfile;
+      final profile = sl<UserProfileService>().userProfile;
       await EulaPage.showIfNeeded(
         context,
         profileTermsAcceptedAt: profile?.termsAcceptedAt,
@@ -177,7 +177,7 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
     if (!mounted || !success) return;
 
     // Successfully signed in - check if profile exists
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     if (profile != null) {
       Navigator.of(
         context,
@@ -195,7 +195,7 @@ class _PhoneAuthPageViewState extends State<_PhoneAuthPageView> {
 
     if (!mounted || !success) return;
 
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     if (profile != null) {
       Navigator.of(
         context,

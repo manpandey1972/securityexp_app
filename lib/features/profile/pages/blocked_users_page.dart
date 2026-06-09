@@ -34,13 +34,13 @@ class _BlockedUsersPageState extends State<BlockedUsersPage> {
   @override
   void initState() {
     super.initState();
-    UserProfileService().addListener(_onProfileChanged);
+    sl<UserProfileService>().addListener(_onProfileChanged);
     _loadProfiles();
   }
 
   @override
   void dispose() {
-    UserProfileService().removeListener(_onProfileChanged);
+    sl<UserProfileService>().removeListener(_onProfileChanged);
     super.dispose();
   }
 

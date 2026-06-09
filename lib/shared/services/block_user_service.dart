@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:securityexperts_app/core/logging/app_logger.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/data/repositories/user/user_repository.dart';
 import 'package:securityexperts_app/features/support/data/models/support_enums.dart';
 import 'package:securityexperts_app/features/support/services/support_service.dart';
@@ -28,13 +29,13 @@ class BlockUserService {
 
   /// Whether the given [userId] is currently blocked by the current user.
   bool isBlocked(String userId) {
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     return profile?.blockedUserIds.contains(userId) ?? false;
   }
 
   /// Returns the current list of blocked user IDs.
   List<String> get blockedUserIds =>
-      UserProfileService().userProfile?.blockedUserIds ?? [];
+      sl<UserProfileService>().userProfile?.blockedUserIds ?? [];
 
   /// Blocks [blockedUserId] for the current user.
   /// Persists to Firestore, updates the local profile cache, and creates a
@@ -48,7 +49,7 @@ class BlockUserService {
 
     // Self-block guard. The UI hides Block on own messages, but defend the
     // service entry-point as well in case a caller forgets the check.
-    final blockerProfile = UserProfileService().userProfile;
+    final blockerProfile = sl<UserProfileService>().userProfile;
     final blockerId = blockerProfile?.id ?? '';
     if (blockerId.isNotEmpty && blockerId == blockedUserId) {
       _log.warning('Refusing self-block for uid=$blockerId', tag: _tag);
@@ -67,9 +68,9 @@ class BlockUserService {
     );
 
     // Update local cache so the UI reflects the block instantly.
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     if (profile != null && !profile.blockedUserIds.contains(blockedUserId)) {
-      UserProfileService().updateUserProfile(
+      sl<UserProfileService>().updateUserProfile(
         profile.copyWith(
           blockedUserIds: [...profile.blockedUserIds, blockedUserId],
         ),
@@ -119,9 +120,9 @@ class BlockUserService {
     );
 
     // Update local cache
-    final profile = UserProfileService().userProfile;
+    final profile = sl<UserProfileService>().userProfile;
     if (profile != null) {
-      UserProfileService().updateUserProfile(
+      sl<UserProfileService>().updateUserProfile(
         profile.copyWith(
           blockedUserIds: profile.blockedUserIds
               .where((id) => id != blockedUserId)

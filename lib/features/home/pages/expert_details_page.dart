@@ -122,7 +122,7 @@ class _ExpertDetailsPageState extends State<ExpertDetailsPage> {
         actions: [
           // Hide Report/Block menu when viewing one's own profile (Apple 1.2:
           // self-block must be impossible).
-          if (UserProfileService().userProfile?.id != widget.expert.id)
+          if (sl<UserProfileService>().userProfile?.id != widget.expert.id)
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
               onSelected: (value) {

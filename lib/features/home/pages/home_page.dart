@@ -222,7 +222,9 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     verticalDirection: VerticalDirection.down,
                     children: [
                       const SizedBox(),
-                      PopupMenuButton<String>(
+                      ListenableBuilder(
+                        listenable: sl<UserProfileService>(),
+                        builder: (context, _) => PopupMenuButton<String>(
                         icon: _buildProfileIcon(),
                         color: AppColors.surface,
                         elevation: 8,
@@ -257,6 +259,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                               onLogoutConfirmed: () {},
                               onDeleteAccountConfirmed: () {},
                             ),
+                      ),
                       ),
                     ],
                   ),

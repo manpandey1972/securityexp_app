@@ -117,7 +117,7 @@ class UserProfileViewModel extends ChangeNotifier {
           }
 
           // Set global user profile
-          UserProfileService().setUserProfile(finalProfile);
+          sl<UserProfileService>().setUserProfile(finalProfile);
 
           final isExpert = finalProfile.roles.contains('Expert');
           final isMerchant = finalProfile.roles.contains('Merchant');
@@ -379,7 +379,7 @@ class UserProfileViewModel extends ChangeNotifier {
         );
       }
 
-      UserProfileService().setUserProfile(finalProfile);
+      sl<UserProfileService>().setUserProfile(finalProfile);
 
       final isExpert = finalProfile.roles.contains('Expert');
       final isMerchant = finalProfile.roles.contains('Merchant');
@@ -525,7 +525,7 @@ class UserProfileViewModel extends ChangeNotifier {
         final updated = await _userRepository.updateUser(userModel);
 
         // Update global user profile
-        UserProfileService().updateUserProfile(updated);
+        sl<UserProfileService>().updateUserProfile(updated);
 
         SnackbarService.show('Profile updated successfully');
 

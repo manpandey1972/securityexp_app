@@ -71,7 +71,7 @@ class AccountCleanupService {
 
       // 5. Clear in-memory profile cache
       await _safeRun(
-        () => UserProfileService().clearUserProfile(),
+        () => sl<UserProfileService>().clearUserProfile(),
         'clearUserProfile',
       );
 
