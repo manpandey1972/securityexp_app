@@ -173,6 +173,8 @@ class _MessageBubbleState extends State<MessageBubble> {
       replyAudioWidget: widget.replyAudioWidget,
       replyVideoWidget: widget.replyVideoWidget,
       cacheManager: widget.cacheManager,
+      roomId: widget.roomId,
+      fromMe: widget.fromMe,
     );
   }
 

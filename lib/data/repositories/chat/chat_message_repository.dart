@@ -261,6 +261,14 @@ class ChatMessageRepository implements IChatMessageRepository {
 
                 messageData = encryptedMessage.toJson();
                 messageData['sender_id'] = message.senderId;
+                // Store reply info as plaintext alongside the encrypted payload
+                // so the reply quote can be displayed without decryption.
+                if (message.replyToMessageId != null) {
+                  messageData['replyToMessageId'] = message.replyToMessageId;
+                }
+                if (message.replyToMessage != null) {
+                  messageData['replyToMessage'] = message.replyToMessage!.toJson();
+                }
                 encrypted = true;
               } else {
                 messageData = _buildMessageData(message);
@@ -561,6 +569,10 @@ class ChatMessageRepository implements IChatMessageRepository {
         text: content.text ?? '',
         mediaUrl: content.mediaUrl,
         replyToMessageId: content.replyToMessageId,
+        replyToMessage: data['replyToMessage'] != null
+            ? Message.fromJson(
+                data['replyToMessage'] as Map<String, dynamic>)
+            : null,
         timestamp: encryptedMessage.timestamp,
         metadata: content.metadata,
         isEncrypted: true,

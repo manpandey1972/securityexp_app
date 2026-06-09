@@ -76,6 +76,12 @@ class Message extends Equatable {
           : null,
       timestamp: (json['timestamp'] as Timestamp?) ?? Timestamp.now(),
       metadata: json['metadata'] as Map<String, dynamic>?,
+      isEncrypted: json['isEncrypted'] as bool? ?? false,
+      mediaKey: json['mediaKey'] as String?,
+      mediaHash: json['mediaHash'] as String?,
+      mediaType: json['mediaType'] as String?,
+      mediaSize: json['mediaSize'] as int?,
+      fileName: json['fileName'] as String?,
     );
   }
 
@@ -90,6 +96,12 @@ class Message extends Equatable {
       if (replyToMessage != null) 'replyToMessage': replyToMessage!.toJson(),
       'timestamp': timestamp,
       if (metadata != null) 'metadata': metadata,
+      if (isEncrypted) 'isEncrypted': isEncrypted,
+      if (mediaKey != null) 'mediaKey': mediaKey,
+      if (mediaHash != null) 'mediaHash': mediaHash,
+      if (mediaType != null) 'mediaType': mediaType,
+      if (mediaSize != null) 'mediaSize': mediaSize,
+      if (fileName != null) 'fileName': fileName,
     };
   }
 

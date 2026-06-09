@@ -1,9 +1,13 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:securityexperts_app/core/service_locator.dart';
 import 'package:securityexperts_app/data/models/models.dart';
+import 'package:securityexperts_app/shared/services/media_cache_service.dart';
 import 'package:securityexperts_app/shared/themes/app_theme_dark.dart';
 import 'package:securityexperts_app/shared/themes/app_icon_sizes.dart';
+import '_message_content_widget.dart';
 import 'link_preview_widget.dart';
 
 /// Builds reply preview display (quote bar above message)
@@ -16,6 +20,8 @@ class ReplyPreviewWidget extends StatelessWidget {
   final Widget? replyAudioWidget;
   final Widget? replyVideoWidget;
   final CacheManager? cacheManager;
+  final String? roomId;
+  final bool fromMe;
 
   const ReplyPreviewWidget({
     super.key,
@@ -26,14 +32,16 @@ class ReplyPreviewWidget extends StatelessWidget {
     this.replyAudioWidget,
     this.replyVideoWidget,
     this.cacheManager,
+    this.roomId,
+    this.fromMe = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return _buildReplyQuote();
+    return _buildReplyQuote(context);
   }
 
-  Widget _buildReplyQuote() {
+  Widget _buildReplyQuote(BuildContext context) {
     // Build preview widget based on message type
     Widget previewWidget;
     VoidCallback? onTap;
@@ -41,33 +49,14 @@ class ReplyPreviewWidget extends StatelessWidget {
     switch (repliedMessage.type) {
       case MessageType.image:
         if (repliedMessage.mediaUrl != null && repliedMessage.mediaUrl!.isNotEmpty) {
-          previewWidget = ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: CachedNetworkImage(
-              imageUrl: repliedMessage.mediaUrl!,
-              cacheManager: cacheManager,
-              width: 40,
-              height: 40,
-              fit: BoxFit.cover,
-              memCacheWidth: 80, // 2x for retina
-              fadeInDuration: Duration.zero,
-              fadeOutDuration: Duration.zero,
-              placeholder: (context, url) => Container(
-                width: 40,
-                height: 40,
-                color: AppColors.divider,
-              ),
-              errorWidget: (context, url, error) => Container(
-                width: 40,
-                height: 40,
-                color: AppColors.textSecondary,
-                child: const Icon(Icons.broken_image, size: AppIconSizes.medium),
-              ),
-            ),
+          // _ReplyImageThumbnail handles both encrypted and plain images,
+          // including its own tap-to-preview logic.
+          previewWidget = _ReplyImageThumbnail(
+            message: repliedMessage,
+            roomId: roomId,
+            onShowImagePreview: onShowReplyImagePreview,
           );
-          onTap = onShowReplyImagePreview != null
-              ? () => onShowReplyImagePreview!(repliedMessage.mediaUrl!)
-              : null;
+          // onTap intentionally not set — handled inside _ReplyImageThumbnail
         } else {
           previewWidget = Container(
             width: 40,
@@ -163,6 +152,16 @@ class ReplyPreviewWidget extends StatelessWidget {
             color: AppColors.white,
           ),
         );
+        onTap = () => MessageContentWidget.navigateToDocumentViewer(
+          context,
+          fileName: repliedMessage.fileName ??
+              repliedMessage.metadata?['fileName'] as String? ??
+              repliedMessage.text,
+          mediaUrl: repliedMessage.mediaUrl,
+          roomId: roomId,
+          mediaKey: repliedMessage.mediaKey,
+          mediaHash: repliedMessage.mediaHash,
+        );
         break;
       case MessageType.callLog:
         previewWidget = Container(
@@ -191,54 +190,8 @@ class ReplyPreviewWidget extends StatelessWidget {
 
         if (hasUrl) {
           final url = extractFirstUrl(repliedMessage.text)!;
-          final textWithoutUrl = extractTextWithoutUrl(repliedMessage.text);
-          final domain = _extractDomain(url);
-          final platformInfo = _detectPlatform(url);
-
-          previewWidget = ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 220),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: platformInfo.color,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Icon(platformInfo.icon, color: AppColors.white, size: 18),
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        platformInfo.name ?? domain,
-                        style: AppTypography.badge.copyWith(
-                          color: platformInfo.color,
-                          fontWeight: AppTypography.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (textWithoutUrl != null)
-                        Text(
-                          textWithoutUrl,
-                          style: AppTypography.timestamp.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
+          // Use full LinkPreviewWidget — tap/launch handled internally
+          previewWidget = LinkPreviewWidget(url: url, fromMe: fromMe);
         } else {
           previewWidget = Text(
             repliedMessage.text.isEmpty ? '[Message]' : repliedMessage.text,
@@ -274,84 +227,141 @@ class ReplyPreviewWidget extends StatelessWidget {
     );
   }
 
-  String _extractDomain(String url) {
-    try {
-      final uri = Uri.parse(url);
-      return uri.host.replaceFirst('www.', '');
-    } catch (_) {
-      return url;
-    }
-  }
-
-  _PlatformInfo _detectPlatform(String url) {
-    final lowerUrl = url.toLowerCase();
-
-    if (lowerUrl.contains('youtube.com') ||
-        lowerUrl.contains('youtu.be') ||
-        lowerUrl.contains('youtube-nocookie.com')) {
-      return _PlatformInfo(
-        name: 'YouTube',
-        icon: Icons.play_circle_filled,
-        color: AppColors.error,
-      );
-    }
-    if (lowerUrl.contains('instagram.com') || lowerUrl.contains('instagr.am')) {
-      return _PlatformInfo(
-        name: 'Instagram',
-        icon: Icons.camera_alt,
-        color: AppColors.surfaceVariant,
-      );
-    }
-    if (lowerUrl.contains('twitter.com') || lowerUrl.contains('x.com')) {
-      return _PlatformInfo(
-        name: 'X (Twitter)',
-        icon: Icons.alternate_email,
-        color: AppColors.primary,
-      );
-    }
-    if (lowerUrl.contains('facebook.com') ||
-        lowerUrl.contains('fb.com') ||
-        lowerUrl.contains('fb.watch')) {
-      return _PlatformInfo(
-        name: 'Facebook',
-        icon: Icons.facebook,
-        color: AppColors.primary,
-      );
-    }
-    if (lowerUrl.contains('linkedin.com') || lowerUrl.contains('lnkd.in')) {
-      return _PlatformInfo(
-        name: 'LinkedIn',
-        icon: Icons.business,
-        color: AppColors.primary,
-      );
-    }
-    if (lowerUrl.contains('tiktok.com')) {
-      return _PlatformInfo(
-        name: 'TikTok',
-        icon: Icons.music_note,
-        color: AppColors.textPrimary,
-      );
-    }
-    if (lowerUrl.contains('reddit.com') || lowerUrl.contains('redd.it')) {
-      return _PlatformInfo(
-        name: 'Reddit',
-        icon: Icons.forum,
-        color: AppColors.error,
-      );
-    }
-
-    return _PlatformInfo(
-      name: null,
-      icon: Icons.link,
-      color: AppColors.primary,
-    );
-  }
 }
 
-class _PlatformInfo {
-  final String? name;
-  final IconData icon;
-  final Color color;
+/// Thumbnail for a replied-to image message.
+/// Handles both encrypted (AES-GCM) and plain images.
+class _ReplyImageThumbnail extends StatefulWidget {
+  final Message message;
+  final String? roomId;
+  final Function(String)? onShowImagePreview;
 
-  _PlatformInfo({required this.name, required this.icon, required this.color});
+  const _ReplyImageThumbnail({
+    required this.message,
+    this.roomId,
+    this.onShowImagePreview,
+  });
+
+  @override
+  State<_ReplyImageThumbnail> createState() => _ReplyImageThumbnailState();
+}
+
+class _ReplyImageThumbnailState extends State<_ReplyImageThumbnail> {
+  Future<Uint8List?>? _decryptFuture;
+
+  bool get _isEncrypted =>
+      widget.message.isEncrypted && widget.message.mediaKey != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEncrypted) {
+      _decryptFuture = _loadDecryptedBytes();
+    }
+  }
+
+  Future<Uint8List?> _loadDecryptedBytes() async {
+    try {
+      return await sl<MediaCacheService>().getDecryptedMediaBytes(
+        widget.message.mediaUrl!,
+        mediaKey: widget.message.mediaKey!,
+        mediaHash: widget.message.mediaHash,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _showFullPreview(BuildContext context, Uint8List bytes) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: const Text('Image')),
+          body: Center(
+            child: InteractiveViewer(
+              child: Image.memory(bytes, fit: BoxFit.contain),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isEncrypted) {
+      return FutureBuilder<Uint8List?>(
+        future: _decryptFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              width: 40,
+              height: 40,
+              color: AppColors.divider,
+              child: const Center(
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          }
+          final bytes = snapshot.data;
+          if (bytes == null || bytes.isEmpty) {
+            return Container(
+              width: 40,
+              height: 40,
+              color: AppColors.textSecondary,
+              child: const Icon(Icons.image, size: 20, color: AppColors.white),
+            );
+          }
+          return GestureDetector(
+            onTap: () => _showFullPreview(context, bytes),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.memory(
+                bytes,
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => Container(
+                  width: 40,
+                  height: 40,
+                  color: AppColors.textSecondary,
+                  child: const Icon(Icons.broken_image, size: 20, color: AppColors.white),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    // Non-encrypted image
+    return GestureDetector(
+      onTap: widget.onShowImagePreview != null
+          ? () => widget.onShowImagePreview!(widget.message.mediaUrl!)
+          : null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: CachedNetworkImage(
+          imageUrl: widget.message.mediaUrl!,
+          width: 40,
+          height: 40,
+          fit: BoxFit.cover,
+          fadeInDuration: Duration.zero,
+          fadeOutDuration: Duration.zero,
+          placeholder: (context, url) =>
+              Container(width: 40, height: 40, color: AppColors.divider),
+          errorWidget: (context, url, error) => Container(
+            width: 40,
+            height: 40,
+            color: AppColors.textSecondary,
+            child: const Icon(Icons.broken_image, size: 20, color: AppColors.white),
+          ),
+        ),
+      ),
+    );
+  }
 }

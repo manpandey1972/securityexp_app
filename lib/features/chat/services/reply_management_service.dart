@@ -78,14 +78,22 @@ class ReplyManagementService {
   Widget _buildReplyPreviewContent() {
     final msg = _replyingTo!;
 
-    // Helper to extract filename from path or URL
+    // Helper to strip encryption suffix and extract filename from URL
     String getFileName(String path) {
       if (path.isEmpty) return '';
-      
+
+      // Strip .enc extension added during encryption
+      String stripEnc(String name) {
+        if (name.toLowerCase().endsWith('.enc')) {
+          return name.substring(0, name.length - 4);
+        }
+        return name;
+      }
+
       try {
         // Handle Firebase Storage URLs with encoded paths
         final uri = Uri.parse(path);
-        
+
         // Extract the path component (after /o/)
         if (uri.pathSegments.contains('o') && uri.pathSegments.length > 1) {
           final oIndex = uri.pathSegments.indexOf('o');
@@ -93,10 +101,10 @@ class ReplyManagementService {
             // Decode the URL-encoded path
             final encodedPath = uri.pathSegments[oIndex + 1];
             final decodedPath = Uri.decodeComponent(encodedPath);
-            
-            // Extract just the filename (last part after /)
-            final fileName = decodedPath.split('/').last;
-            
+
+            // Extract just the filename (last part after /) and strip .enc
+            var fileName = stripEnc(decodedPath.split('/').last);
+
             // Limit length and add ellipsis if needed
             if (fileName.length > 30) {
               return '${fileName.substring(0, 27)}...';
@@ -104,16 +112,16 @@ class ReplyManagementService {
             return fileName;
           }
         }
-        
+
         // Fallback for non-Firebase URLs
-        final name = path.split('/').last.split('?').first;
+        var name = stripEnc(path.split('/').last.split('?').first);
         if (name.length > 30) {
           return '${name.substring(0, 27)}...';
         }
         return name;
       } catch (e) {
         // If parsing fails, use simple split
-        final name = path.split('/').last.split('?').first;
+        var name = stripEnc(path.split('/').last.split('?').first);
         if (name.length > 30) {
           return '${name.substring(0, 27)}...';
         }
@@ -123,7 +131,11 @@ class ReplyManagementService {
 
     // Helper to get readable text
     String getDisplayText() {
-      // For media types, prefer filename over full text
+      // Prefer the stored clean filename (avoids .enc exposure)
+      if (msg.fileName != null && msg.fileName!.isNotEmpty) {
+        return msg.fileName!;
+      }
+      // For media types, extract filename from URL as fallback
       if (msg.mediaUrl != null && msg.mediaUrl!.isNotEmpty) {
         final fileName = getFileName(msg.mediaUrl!);
         if (fileName.isNotEmpty) return fileName;
@@ -252,42 +264,40 @@ class ReplyManagementService {
   String getReplyDisplayText() {
     if (_replyingTo == null) return '';
 
-    // Helper to extract filename from path or URL
+    // Helper to strip encryption suffix and extract filename from URL
     String getFileName(String path) {
       if (path.isEmpty) return '';
-      
+
+      String stripEnc(String name) {
+        if (name.toLowerCase().endsWith('.enc')) {
+          return name.substring(0, name.length - 4);
+        }
+        return name;
+      }
+
       try {
-        // Handle Firebase Storage URLs with encoded paths
         final uri = Uri.parse(path);
-        
-        // Extract the path component (after /o/)
+
         if (uri.pathSegments.contains('o') && uri.pathSegments.length > 1) {
           final oIndex = uri.pathSegments.indexOf('o');
           if (oIndex + 1 < uri.pathSegments.length) {
-            // Decode the URL-encoded path
             final encodedPath = uri.pathSegments[oIndex + 1];
             final decodedPath = Uri.decodeComponent(encodedPath);
-            
-            // Extract just the filename (last part after /)
-            final fileName = decodedPath.split('/').last;
-            
-            // Limit length and add ellipsis if needed
+            var fileName = stripEnc(decodedPath.split('/').last);
             if (fileName.length > 30) {
               return '${fileName.substring(0, 27)}...';
             }
             return fileName;
           }
         }
-        
-        // Fallback for non-Firebase URLs
-        final name = path.split('/').last.split('?').first;
+
+        var name = stripEnc(path.split('/').last.split('?').first);
         if (name.length > 30) {
           return '${name.substring(0, 27)}...';
         }
         return name;
       } catch (e) {
-        // If parsing fails, use simple split
-        final name = path.split('/').last.split('?').first;
+        var name = stripEnc(path.split('/').last.split('?').first);
         if (name.length > 30) {
           return '${name.substring(0, 27)}...';
         }
@@ -297,9 +307,11 @@ class ReplyManagementService {
 
     // Get display text based on message type
     String displayText = _replyingTo!.text;
-    
-    // For media types, prefer filename
-    if (_replyingTo!.mediaUrl != null && _replyingTo!.mediaUrl!.isNotEmpty) {
+
+    // Prefer the stored clean filename (avoids .enc exposure)
+    if (_replyingTo!.fileName != null && _replyingTo!.fileName!.isNotEmpty) {
+      displayText = _replyingTo!.fileName!;
+    } else if (_replyingTo!.mediaUrl != null && _replyingTo!.mediaUrl!.isNotEmpty) {
       final fileName = getFileName(_replyingTo!.mediaUrl!);
       if (fileName.isNotEmpty) displayText = fileName;
     }
