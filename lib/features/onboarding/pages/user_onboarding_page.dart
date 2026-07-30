@@ -463,24 +463,17 @@ class _UserOnboardingPageViewState extends State<_UserOnboardingPageView> {
                 Text('Select Your Role *', style: AppTypography.bodyEmphasis),
                 SizedBox(height: AppSpacing.spacing8),
                 FlutterRadioGroup(
-                  titles: const ["Expert", "Merchant", "Other"],
+                  titles: const ["Expert", "Consumer"],
                   labelStyle: AppTypography.bodyRegular,
                   labelVisible: false,
                   titleStyle: AppTypography.bodyRegular,
-                  defaultSelected: state.isExpert
-                      ? 0
-                      : state.isMerchant
-                      ? 1
-                      : 2,
+                  defaultSelected: state.isExpert ? 0 : 1,
                   orientation: RGOrientation.HORIZONTAL,
                   activeColor: AppColors.primary,
                   onChanged: (index) {
                     if (index == 0) {
                       viewModel.setIsExpert(true);
                       viewModel.setIsMerchant(false);
-                    } else if (index == 1) {
-                      viewModel.setIsExpert(false);
-                      viewModel.setIsMerchant(true);
                     } else {
                       viewModel.setIsExpert(false);
                       viewModel.setIsMerchant(false);
