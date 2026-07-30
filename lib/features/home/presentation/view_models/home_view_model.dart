@@ -59,9 +59,12 @@ class HomeViewModel extends ChangeNotifier {
   void _publishExperts(List<User> experts) {
     _expertsRaw = experts;
     final blocked = sl<BlockUserService>().blockedUserIds.toSet();
-    final visible = blocked.isEmpty
-        ? experts
-        : experts.where((e) => !blocked.contains(e.id)).toList();
+    final currentUserId = sl<UserProfileService>().userProfile?.id;
+    final visible = experts.where((e) {
+      final isCurrentUser = currentUserId != null && e.id == currentUserId;
+      final isBlocked = blocked.contains(e.id);
+      return !isCurrentUser && !isBlocked;
+    }).toList();
     _updateState(_state.copyWith(experts: visible));
   }
 
