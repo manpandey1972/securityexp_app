@@ -307,7 +307,9 @@ class _UserProfilePageViewState extends State<_UserProfilePageView> {
                     final roles = <String>[];
                     if (state.isExpert) roles.add('Expert');
                     if (state.isMerchant) roles.add('Merchant');
-                    if (!state.isExpert && !state.isMerchant) roles.add('Other');
+                    if (!state.isExpert && !state.isMerchant) {
+                      roles.add('Consumer');
+                    }
                     return Row(
                       children: roles
                           .map((role) => Container(
