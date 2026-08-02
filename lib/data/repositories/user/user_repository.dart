@@ -294,72 +294,63 @@ class UserRepository implements IUserRepository {
     await updateField('fcms', tokens);
   }
 
-  /// Add a single FCM token to the user's token list
-  /// This replaces any existing tokens to prevent token accumulation
-  /// and keeps only the current device's token
+  /// Add a single FCM token to the user's token list.
+  ///
+  /// Uses `set(merge:true)` + `FieldValue.arrayUnion` rather than a
+  /// transaction so the write is:
+  ///   1. Offline-capable — Firestore's local persistence queues the write
+  ///      and syncs when the network returns. Previously this went through
+  ///      `runTransaction`, which requires an online read for latest-value
+  ///      semantics and fails with `cloud_firestore/unavailable` on flaky
+  ///      networks (observed on Android during app launch, which was leaving
+  ///      the user document without an `fcms` field).
+  ///   2. Concurrent-safe without a transaction — `arrayUnion` is a
+  ///      server-side operation, so parallel updates from multiple devices
+  ///      merge correctly.
+  ///   3. Idempotent — re-adding the same token is a no-op server-side.
+  ///
+  /// Throws on failure so [FirebaseMessagingService] avoids caching the
+  /// token as "persisted" when the write actually failed.
   @override
   Future<void> addFcmToken(String token, {String? oldToken}) async {
-    await ErrorHandler.handle<void>(
-      operation: () async {
-        final currentUser = _auth.currentUser;
-        if (currentUser == null) {
-          _log.warning('No authenticated user found', tag: _tag);
-          throw Exception('No authenticated user');
-        }
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        _log.warning('No authenticated user found', tag: _tag);
+        throw Exception('No authenticated user');
+      }
 
-        final docRef = _firestoreService.db
-            .collection(FirestoreInstance.usersCollection)
-            .doc(currentUser.uid);
+      final docRef = _firestoreService.db
+          .collection(FirestoreInstance.usersCollection)
+          .doc(currentUser.uid);
 
-        // Check if document exists first
-        final docSnapshot = await docRef.get();
+      // Union the current device token. `set(merge:true)` creates the
+      // document if it doesn't exist yet (new user pre-onboarding) and
+      // otherwise only touches the three fields below.
+      await docRef.set({
+        'fcms': FieldValue.arrayUnion([token]),
+        'platform': _getPlatformString(),
+        'updated_at': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
-        if (!docSnapshot.exists) {
-          // Document doesn't exist yet (new user before onboarding completes)
-          // Use merge to create document with just the FCM token
-          await docRef.set({
-            'fcms': [token],
-            'platform': _getPlatformString(),
-            'updated_at': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
-          _log.debug('FCM token saved to new document', tag: _tag);
-          return;
-        }
-
-        // Document exists - use transaction to safely update tokens
-        await _firestoreService.db.runTransaction((transaction) async {
-          final snapshot = await transaction.get(docRef);
-          final data = snapshot.data() as Map<String, dynamic>;
-          final existingTokens = List<String>.from(data['fcms'] ?? []);
-
-          // Remove old token if provided
-          if (oldToken != null && existingTokens.contains(oldToken)) {
-            existingTokens.remove(oldToken);
-          }
-
-          // Add new token if not already present
-          if (!existingTokens.contains(token)) {
-            existingTokens.add(token);
-          }
-
-          // Keep only the most recent 2 tokens to handle multi-device scenarios
-          // while preventing unbounded growth
-          if (existingTokens.length > 2) {
-            existingTokens.removeRange(0, existingTokens.length - 2);
-          }
-
-          transaction.update(docRef, {
-            'fcms': existingTokens,
-            'platform': _getPlatformString(),
-            'updated_at': FieldValue.serverTimestamp(),
-          });
+      // Best-effort cleanup of the previous token stored on this device.
+      // arrayRemove is a no-op if the token is already gone, so this is
+      // safe even if the previous write was partial.
+      if (oldToken != null && oldToken != token) {
+        await docRef.update({
+          'fcms': FieldValue.arrayRemove([oldToken]),
         });
+      }
 
-        _log.debug('FCM token updated', tag: _tag);
-      },
-      onError: (error) =>
-          _log.error('Error adding FCM token: $error', tag: _tag),
-    );
+      _log.debug('FCM token updated', tag: _tag);
+    } catch (e, stackTrace) {
+      _log.error(
+        'Error adding FCM token: $e',
+        tag: _tag,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   /// Get platform string for user document

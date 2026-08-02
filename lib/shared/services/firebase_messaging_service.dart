@@ -117,14 +117,10 @@ class FirebaseMessagingService {
           _log.warning('FCM token is null', tag: _tag);
         }
 
-        // Persist token to backend profile
-        if (_fcmToken != null) {
-          await _saveFcmTokenToFirestore(userId, _fcmToken!);
-        } else {
-          _log.warning('Cannot save FCM token - token is null', tag: _tag);
-        }
-
-        // Set up token refresh listener (only once per instance)
+        // Attach the refresh listener BEFORE the Firestore save so we don't
+        // miss a rotation if the save throws (which we now let propagate so
+        // we don't cache-mask a failed write — see _saveFcmTokenToFirestore).
+        // The `??=` keeps this idempotent across retry attempts.
         _tokenRefreshSubscription ??= _firebaseMessaging.onTokenRefresh.listen((
           newToken,
         ) {
@@ -138,6 +134,13 @@ class FirebaseMessagingService {
             );
           }
         });
+
+        // Persist token to backend profile
+        if (_fcmToken != null) {
+          await _saveFcmTokenToFirestore(userId, _fcmToken!);
+        } else {
+          _log.warning('Cannot save FCM token - token is null', tag: _tag);
+        }
 
         _isInitialized = true;
         _log.info('FCM initialized successfully', tag: _tag);
@@ -174,15 +177,18 @@ class FirebaseMessagingService {
     );
   }
 
-  /// Persist FCM token by adding to the user's profile in Firestore
+  /// Persist FCM token by adding to the user's profile in Firestore.
+  ///
+  /// We deliberately do NOT short-circuit on `cachedToken == token`. Previously
+  /// that early-return meant a transient Firestore write failure on the very
+  /// first save (e.g. flaky network on Android — we saw `Unable to resolve
+  /// host firestore.googleapis.com` in logcat during launch) would still cache
+  /// the token as "persisted", permanently masking the missing `fcms` entry
+  /// on every subsequent launch. Always calling [UserRepository.addFcmToken]
+  /// is idempotent (the transaction inside does not add duplicates) and
+  /// self-heals installs that ended up stuck in the broken state.
   Future<void> _saveFcmTokenToFirestore(String userId, String token) async {
     try {
-      final cachedToken = await _getCachedFcmToken();
-
-      if (cachedToken != null && cachedToken == token) {
-        return; // Token unchanged, skip update
-      }
-
       final fb_auth.User? fbUser = sl<fb_auth.FirebaseAuth>().currentUser;
       if (fbUser == null) {
         _log.warning(
@@ -192,9 +198,15 @@ class FirebaseMessagingService {
         return;
       }
 
-      // Use UserRepository to add the FCM token, passing old token for replacement
+      final cachedToken = await _getCachedFcmToken();
+
+      // addFcmToken now rethrows on failure (previously it swallowed errors
+      // via ErrorHandler.handle, which is what let the broken state above
+      // slip through). We only update the local cache after the write is
+      // confirmed to have succeeded.
       await _userRepository.addFcmToken(token, oldToken: cachedToken);
       await _cacheFcmToken(token);
+      _log.debug('FCM token persisted to Firestore', tag: _tag);
     } catch (e, stackTrace) {
       _log.error('Error saving FCM token', tag: _tag, stackTrace: stackTrace);
       rethrow;

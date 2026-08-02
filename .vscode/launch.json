@@ -36,6 +36,27 @@
       "args": ["-d", "iPhone 17 Pro"]
     },
     {
+      "name": "Flutter iOS - iPhone 17 Pro Simulator",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "iPhone 17 Pro"]
+    },
+    {
+      "name": "Flutter iOS - iPhone 17 Simulator",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "iPhone 17"]
+    },
+    {
+      "name": "Flutter iOS - iPhone 17 Pro Max Simulator",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "iPhone 17 Pro Max"]
+    },
+    {
       "name": "Flutter iOS - manish",
       "request": "launch",
       "type": "dart",
