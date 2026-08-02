@@ -237,7 +237,10 @@ class AudioDeviceService {
   }
 
   /// Set audio output to specific device with error recovery
-  Future<void> setAudioDevice(AudioDevice device) async {
+  Future<void> setAudioDevice(
+    AudioDevice device, {
+    bool reconcileAfterSwitch = true,
+  }) async {
     try {
       if (kIsWeb) {
         _log.warning('Audio device selection not supported on web', tag: _tag);
@@ -249,18 +252,25 @@ class AudioDeviceService {
       await platform.invokeMethod('setAudioDevice', {'device': deviceString});
       _log.debug('Platform method returned successfully', tag: _tag);
 
+      // Update UI immediately for responsive manual switching.
       _currentDevice = device;
-      // Only set override if it's a manual user action (not internal call)
-      // We'll handle the flag setting in the UI layer or add a param here
-      // For now, we assume this method is called by UI mostly, but we called it internally above too.
-      // Let's fix the internal call to NOT set override.
+      _deviceChangeController.add(device);
+
+      // Route changes can be asynchronous on both iOS/Android.
+      // For explicit user choices, avoid immediate reconciliation to prevent
+      // bouncing UI back before routing settles.
+      if (reconcileAfterSwitch) {
+        unawaited(_reconcileCurrentRoute(requested: device));
+      }
+
+      // Keep available devices in sync after routing attempt.
+      await _updateAvailableDevices();
 
       _log.info(
-        'Device set',
+        'Device switch requested',
         tag: _tag,
-        data: {'device': device.toString()},
+        data: {'requested': device.toString()},
       );
-      _deviceChangeController.add(device);
     } catch (e) {
       _log.error(
         'Error setting audio device',
@@ -275,6 +285,9 @@ class AudioDeviceService {
           await platform.invokeMethod('setAudioDevice', {'device': 'speaker'});
           _currentDevice = AudioDevice.speaker;
           _deviceChangeController.add(AudioDevice.speaker);
+          unawaited(
+            _reconcileCurrentRoute(requested: AudioDevice.speaker),
+          );
           _log.info('Fallback to speaker successful', tag: _tag);
         } catch (fallbackError) {
           _log.error('Fallback to speaker also failed', tag: _tag, error: fallbackError);
@@ -288,7 +301,7 @@ class AudioDeviceService {
   /// Set audio output with user override flag
   Future<void> setUserSelectedDevice(AudioDevice device) async {
     _userOverride = true;
-    await setAudioDevice(device);
+    await setAudioDevice(device, reconcileAfterSwitch: false);
     _log.info('User override enabled', tag: _tag, data: {'device': device.toString()});
   }
 
@@ -318,14 +331,64 @@ class AudioDeviceService {
       await platform.invokeMethod('setSpeakerphoneOn', {'enabled': enabled});
       _log.info('Speakerphone', tag: _tag, data: {'state': enabled ? 'ON' : 'OFF'});
 
-      if (enabled) {
-        _currentDevice = AudioDevice.speaker;
-      }
-      _deviceChangeController.add(_currentDevice);
+      final requested = enabled ? AudioDevice.speaker : AudioDevice.earpiece;
+      _currentDevice = requested;
+      _deviceChangeController.add(requested);
+      unawaited(_reconcileCurrentRoute(requested: requested));
     } catch (e) {
       _log.error('Error setting speakerphone', tag: _tag, error: e);
       rethrow;
     }
+  }
+
+  /// Reconcile optimistic UI state with actual routed device reported by platform.
+  Future<void> _reconcileCurrentRoute({required AudioDevice requested}) async {
+    final applied = await _waitForCurrentDevice(requested);
+    if (applied != _currentDevice) {
+      _log.warning(
+        'Reconciling UI to applied route',
+        tag: _tag,
+        data: {
+          'requested': requested.toString(),
+          'applied': applied.toString(),
+          'previousUi': _currentDevice.toString(),
+        },
+      );
+      _currentDevice = applied;
+      if (!_deviceChangeController.isClosed) {
+        _deviceChangeController.add(applied);
+      }
+    }
+  }
+
+  /// Poll current route briefly to confirm what the platform actually applied.
+  Future<AudioDevice> _waitForCurrentDevice(
+    AudioDevice requested, {
+    Duration timeout = const Duration(milliseconds: 1500),
+    Duration interval = const Duration(milliseconds: 120),
+  }) async {
+    final end = DateTime.now().add(timeout);
+    AudioDevice lastKnown = _currentDevice;
+
+    while (DateTime.now().isBefore(end)) {
+      try {
+        final result = await platform.invokeMethod<String>(
+          'getCurrentAudioDevice',
+        );
+        if (result != null) {
+          lastKnown = _parseDevice(result);
+          if (lastKnown == requested) {
+            return lastKnown;
+          }
+        }
+      } catch (_) {
+        // Ignore transient read failures and continue polling.
+      }
+
+      await Future.delayed(interval);
+    }
+
+    return lastKnown;
   }
 
   /// Parse device string to enum

@@ -160,10 +160,14 @@ class AudioSessionManager {
         
         switch device.lowercased() {
         case "speaker":
+            // Clear any pinned input first; otherwise route can stay locked.
+            try audioSession.setPreferredInput(nil)
             try audioSession.overrideOutputAudioPort(.speaker)
             debugPrint("flutter: 🔊 [AudioSessionManager] Set to speaker")
             
         case "earpiece":
+            // Ensure no previous preferred input (e.g., Bluetooth/built-in mic pin).
+            try audioSession.setPreferredInput(nil)
             try audioSession.overrideOutputAudioPort(.none)
             debugPrint("flutter: 📱 [AudioSessionManager] Set to earpiece")
             

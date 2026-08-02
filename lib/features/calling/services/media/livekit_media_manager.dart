@@ -108,6 +108,20 @@ class LiveKitMediaManager extends MediaManager {
         isSpeakerOn.value = isSpeaker;
       }
       selectedAudioOutput.value = device.toString().split('.').last;
+
+      // Intentionally NOT calling `Hardware.instance.setSpeakerphoneOn` here.
+      //
+      // LiveKit's Apple audio session mode (voiceChat vs videoChat) is set
+      // ONCE at connect time based on the call type. Flipping it whenever a
+      // route change is observed causes the iOS native CallKit speaker
+      // toggle to get stuck: switching to speaker would move LiveKit into
+      // videoChat mode (defaults to speaker) and iOS could no longer honour
+      // a subsequent override back to the earpiece.
+      //
+      // Speaker/earpiece toggling is handled purely via
+      // `AVAudioSession.overrideOutputAudioPort` (through AudioDeviceService),
+      // which is reversible in both directions while the LiveKit mode stays
+      // fixed for the call type.
     });
 
     // Listen for remote participant audio and video state changes
@@ -177,6 +191,30 @@ class LiveKitMediaManager extends MediaManager {
     // Set initial video state based on call type (audio vs video call)
     isVideoEnabled.value = session.isVideo;
 
+    // Choose default audio route BEFORE service.connect() so LiveKit configures
+    // the WebRTC audio session with the correct Apple mode when tracks publish:
+    //   - Audio call → voiceChat (earpiece by default, CallKit speaker toggle works)
+    //   - Video call → videoChat (speaker by default)
+    // Without this, livekit_client's default `preferSpeakerOutput = true` forces
+    // videoChat mode for every call, which routes to speaker and prevents the
+    // native iOS CallKit UI from switching to earpiece.
+    final defaultToSpeaker = session.isVideo;
+    isSpeakerOn.value = defaultToSpeaker;
+    selectedAudioOutput.value = defaultToSpeaker
+        ? AudioDevice.speaker.toString().split('.').last
+        : AudioDevice.earpiece.toString().split('.').last;
+    if (!kIsWeb) {
+      try {
+        await Hardware.instance.setSpeakerphoneOn(defaultToSpeaker);
+      } catch (e) {
+        _log.error(
+          'Failed to set default LiveKit speaker route',
+          tag: _tag,
+          error: e,
+        );
+      }
+    }
+
     try {
       await _service.connect(
         url: LiveKitConfig.liveKitServerUrl,
@@ -219,6 +257,36 @@ class LiveKitMediaManager extends MediaManager {
       // Note: isConnected is updated via connectionStateStream listener (single source of truth)
       isVideoEnabled.value = session.isVideo;
       isMuted.value = false;
+
+      // Re-apply the audio route after tracks are published. LiveKit's
+      // `_onAudioTrackCountDidChange` runs when the first local audio track
+      // publishes and reconfigures the WebRTC audio session, which can revert
+      // us to the default (speaker). Setting the preference again here locks
+      // in the correct earpiece/speaker mode for the call type.
+      if (!kIsWeb) {
+        try {
+          await Hardware.instance.setSpeakerphoneOn(defaultToSpeaker);
+        } catch (e) {
+          _log.error(
+            'Failed to re-apply default speaker route after connect',
+            tag: _tag,
+            error: e,
+          );
+        }
+        // Keep the AudioDeviceService/UI in sync (icon + broadcast stream).
+        try {
+          await _audioService.setSpeakerphoneOn(defaultToSpeaker);
+        } catch (e) {
+          _log.error(
+            'Failed to sync AudioDeviceService default route',
+            tag: _tag,
+            error: e,
+          );
+        }
+      }
+      if (!_isDisposed) {
+        isSpeakerOn.value = defaultToSpeaker;
+      }
 
       // Note: Quality monitoring is started lazily when remote participant joins
       // (see _setupListeners -> participantsStream listener)
@@ -339,14 +407,31 @@ class LiveKitMediaManager extends MediaManager {
         ? AudioDevice.earpiece
         : AudioDevice.speaker;
 
-    // Use AudioDeviceService to switch
-    if (targetDevice == AudioDevice.speaker) {
-      await _audioService.setSpeakerphoneOn(true);
-    } else {
-      await _audioService.setSpeakerphoneOn(false);
+    final wantSpeaker = targetDevice == AudioDevice.speaker;
+
+    // Toggle only via AVAudioSession.overrideOutputAudioPort (through
+    // AudioDeviceService). LiveKit's Apple audio mode is fixed for the call
+    // type at connect time (voiceChat for audio call, videoChat for video
+    // call), which lets iOS honour the override in BOTH directions.
+    //
+    // We deliberately do NOT call `Hardware.instance.setSpeakerphoneOn` here:
+    // that would reconfigure the WebRTC session into videoChat mode, and
+    // videoChat defaults back to speaker on every reactivation — leaving
+    // the CallKit speaker button stuck on speaker with no way back to
+    // earpiece.
+    try {
+      await _audioService.setSpeakerphoneOn(wantSpeaker);
+    } catch (e) {
+      _log.error(
+        'AudioDeviceService setSpeakerphoneOn failed',
+        tag: _tag,
+        error: e,
+      );
     }
 
-    // Note: The listener updates the value, but we can optimistically update too
+    if (!_isDisposed) {
+      isSpeakerOn.value = wantSpeaker;
+    }
   }
 
   @override
